@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？ | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-04-11T04:11:21.000Z">
+    <meta property="og:title" content="字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html">
+    <meta name="twitter:title" content="字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？">
+    <meta name="twitter:url" content="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.fca26a64.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1649650556046" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-134.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1649650556046" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1649650556046" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.fca26a64.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1649650556046">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/default.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><a href="/md/hack/default.html" class="nav-link">
+  渗透技术
+</a></div><div class="nav-item"><a href="/md/interview/default.html" class="nav-link">
+  面试
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/default.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><a href="/md/hack/default.html" class="nav-link">
+  渗透技术
+</a></div><div class="nav-item"><a href="/md/interview/default.html" class="nav-link">
+  面试
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>字节码编程</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="active sidebar-link">字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？</a></li><li><a href="/md/middleware/bytecode/2022-04-11-002-使用Javassist动态生成HelloWorld.html" class="sidebar-link">字节码编程 | 使用Javassist动态生成Hello World</a></li><li><a href="/md/middleware/bytecode/2022-04-11-003-使用Javassist生成JavaBean.html" class="sidebar-link">字节码编程 | 使用Javassist生成JavaBean</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="字节码编程-工作多年的你依然重复做着crud-是否接触过这种技术"><a href="#字节码编程-工作多年的你依然重复做着crud-是否接触过这种技术" class="header-anchor">#</a> 字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>最近和不少小伙伴聊天，发现大部分小伙伴，其中可能就包括正在看文章的你和我，工作时间已经不短了，有些小伙伴工作3~5年了，有些甚至超过8年了。</p> <p>但是大部分小伙伴平时的工作都是在简单的做着CRUD，疲于应付日常工作中的业务开发和修复系统Bug，每天都会加班到很晚。根本没时间去提升自己的技术能力，久而久之，自己的技术能力和工作年限出现了严重的不匹配现象。</p> <h2 id="题外话"><a href="#题外话" class="header-anchor">#</a> 题外话</h2> <p>其实，针对这些情况，有不少小伙伴曾不只一次的问过我：<strong>冰河，我感觉我的职业生涯很迷茫，能给我点建议吗？我工作时间不短了，整天做一些CRUD的工作，根本没时间学习啊！</strong></p> <p>说实话，在互联网这个行业里，每个人或多或少的都会有过这种迷茫的阶段吧，我也有过。只不过我会让这种迷茫的感觉瞬间消失，更过的是去思考究竟是什么让我产生了这种迷茫的感觉？是技术能力？是业务理解？是人际交往？是职场规则？等等。。。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/fc82a5602bb439d17d9ca9423862c1db.png" loading="lazy" class="lazy"></p> <p>我会把这些可能导致我迷茫的因素结合自身的实际情况进行深度分析：</p> <ul><li>如果是技术能力不足导致我产生了迷茫感，那我就会抓住一切可利用的业余时间提升自身技术能力。</li> <li>如果是对公司的业务理解不足导致的迷茫感，那我就会加强对业务的理解，不断熟悉、推演、反复论证。</li> <li>如果是人际交往存在问题导致的迷茫感，那我就会加强对于人际关系的处理能力。</li> <li>如果是不熟悉职场规则导致的迷茫感，那我就会加强个人的职场素养。</li> <li>消灭导致迷茫感的其他因素。</li></ul> <p>所以，小伙伴们产生迷茫感并不重要，重要的是要分析出让你产生迷茫感的因素有哪些，是外在因素还是内在因素。找到让你产生迷茫感的因素之后，再将这些问题逐渐分解，慢慢提升自己缺乏的某种技能。这个过程或许比较漫长，可能需要几天，几个星期或者几个月的时间，这就需要各位小伙伴们要踏下心来慢慢沉淀和积累了。</p> <p>冰河送给大家一句话：<strong>持之以恒，贵在坚持，每天进步一点点。</strong></p> <p>说了这么多，算是对正在处于迷茫期的小伙伴们的一点小小的建议吧。</p> <p>好了，为了帮助小伙伴们尽快的度过迷茫期，冰河希望能够在技术上更多的帮助到大家，从今天开始，为大家分享一些关于字节码编程的知识，这或许是你一直从事CRUD工作根本没有接触过的。</p> <h2 id="动态字节码技术"><a href="#动态字节码技术" class="header-anchor">#</a> 动态字节码技术</h2> <p>了解Java的小伙伴都知道，我们使用Java编写的代码是需要编译成字节码之后才能在JVM中运行的，而字节码一旦被加载到JVM的内存中，就可以被解释执行了。而Java源代码并编译后往往会生成对应的class文件，其实只要是文件，或多或少的就可以被修改。</p> <p>如果我们使用某种技术按照某种规则对字节码文件进行了修改，重新定义了字节码的执行逻辑，或者加上我们自己的逻辑，这样不就改变了原有代码的执行逻辑吗？</p> <p>除了修改原有的字节码之外，我们也可以利用动态字节码技术来动态创建一个新的类，使其完成我们想要的业务逻辑。</p> <p>动态字节码的优势就是可以不改变之前的源代码，在程序生成字节码后，对生成的字节码进行修改，或者在运行期间动态生成新的类或者方法，可以真正的做到零侵入。</p> <h2 id="如何实现字节码编程"><a href="#如何实现字节码编程" class="header-anchor">#</a> 如何实现字节码编程</h2> <p>在Java领域，有很多可以实现动态修改字节码的技术，比较流行的应该有三个：ASM、Javassist和Bute-buddy。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/6295c2fee7b6849958744b5ac31abc32.png" loading="lazy" class="lazy"></p> <ul><li>ASM：直接操作字节码的指令，执行的效率比较高，但是要求使用者提前掌握Java字节码文件的格式和指令，对于使用者的要求比较高。</li> <li>Javassist：提供了高级的API，执行的效率和ASM相比，相对要差一些，但是无需了解Java字节码的格式和指令，对于使用者的要求比较低。</li> <li>Bute-buddy：提供了高级的API，执行的效率和ASM相比，相对要差一些，但是无需了解Java字节码的格式和指令，对于使用者的要求比较低。</li></ul> <h2 id="字节码编程使用场景"><a href="#字节码编程使用场景" class="header-anchor">#</a> 字节码编程使用场景</h2> <p>试想，某天，你正坐在工位上愉快的敲着Bug，此时你的技术领导让你实现这样一个需求：在程序的运行期间，向某个类的某个方法的前面和后面加入某段业务代码，或者根据具体的业务场景替换掉某个方法的执行逻辑。你的领导又特别对你提醒了一句：<strong>注意是在运行期间动态修改，要作者零侵入，不要在源代码的基础上修改。</strong></p> <p>听到这个需求时，你或者会想到Spring的AOP代理技术，没错，Spring的AOP代理技术确实可以实现这个需求。但是这样做需要在被代理的方法上添加注解，修改了原有的代码，不符合需求。另外，使用Spring的AOP技术的性能会比字节码编程低。</p> <p>此外，大量的开源框架底层也使用到了字节码编程技术。例如，阿里开源的Dubbo、Arthas等。</p> <p>字节码编程还有一个非常重要的核心应用场景——APM（应用性能管理）的实现。后面冰河会带着大家手撸一个完整的可使用的APM系统。</p> <h2 id="入门案例"><a href="#入门案例" class="header-anchor">#</a> 入门案例</h2> <h3 id="开发环境"><a href="#开发环境" class="header-anchor">#</a> 开发环境</h3> <ul><li>JDK 1.8</li> <li>IDEA 2018.03</li></ul> <h3 id="完整代码"><a href="#完整代码" class="header-anchor">#</a> 完整代码</h3> <p>冰河已将本文章的完整案例代码提交到了GitHub和Gitee，目前正在已案例的形式持续更新，后面会基于字节码编程实现一个可用的APM系统。</p> <blockquote><p>GitHub：https://github.com/sunshinelyz/bytecode</p> <p>Gitee：https://gitee.com/binghe001/bytecode</p></blockquote> <p><strong>本文对应的案例代码为：bytecode-javassist-01。如果文章对你有点帮助，小伙伴们在GitHub和Gitee上点个Star呀~~</strong></p> <h3 id="案例效果"><a href="#案例效果" class="header-anchor">#</a> 案例效果</h3> <p>在main()方法运行之前运行premain()方法。</p> <h3 id="动手实践"><a href="#动手实践" class="header-anchor">#</a> 动手实践</h3> <p>这个入门案例，我们先使用Javassist实现。创建Maven工程 <code>bytecode-javassist-01</code>， 在pom.xml文件中引入Javassist相关的依赖。</p> <div class="language-xml line-numbers-mode"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>javassist.version</span><span class="token punctuation">&gt;</span></span>3.20.0-GA<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>javassist.version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.javassist<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>javassist<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>${javassist.version}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>添加项目构建模块，指定项目的<code>Premain-Class</code>。</p> <div class="language-xml line-numbers-mode"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>build</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugins</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugin</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.apache.maven.plugins<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>maven-jar-plugin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>2.2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>archive</span><span class="token punctuation">&gt;</span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>manifestEntries</span><span class="token punctuation">&gt;</span></span>
+                            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Project-name</span><span class="token punctuation">&gt;</span></span>${project.name}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Project-name</span><span class="token punctuation">&gt;</span></span>
+                            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Project-version</span><span class="token punctuation">&gt;</span></span>${project.version}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Project-version</span><span class="token punctuation">&gt;</span></span>
+                            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Premain-Class</span><span class="token punctuation">&gt;</span></span>io.binghe.bytecode.javassist.test.Premain<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Premain-Class</span><span class="token punctuation">&gt;</span></span>
+                            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Boot-Class-Path</span><span class="token punctuation">&gt;</span></span>javassist-3.20.0-GA.jar<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Boot-Class-Path</span><span class="token punctuation">&gt;</span></span>
+                            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Can-Redefine-Classes</span><span class="token punctuation">&gt;</span></span>false<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Can-Redefine-Classes</span><span class="token punctuation">&gt;</span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>manifestEntries</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>archive</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>skip</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>skip</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugin</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugins</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>build</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><p>创建Main类。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe (公众号：冰河技术)
+ * @version 1.0.0
+ * @description Javassist的第一个测试程序
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;hello main&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>创建Premain类。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe (公众号：冰河技术)
+ * @version 1.0.0
+ * @description 第一个pemain程序，在main方法前面执行
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Premain</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">premain</span><span class="token punctuation">(</span><span class="token class-name">String</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;hello premain&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>看到这里，相信不少小伙伴会明确我们的最终效果了吧，没错，就是运行程序时，先输出<code>hello premain</code> 后输出 <code>hello main</code>。</p> <p>可能又会有小伙伴会问：程序的启动入口不就是main()方法吗？既然main()方法是程序的入口，那为啥不先执行main()方法呢？</p> <p>别急，我们先来看下最终的效果，至于内部的原理，我们会在【字节码编程】专栏后面的文章中详细介绍。</p> <h3 id="第一次运行程序"><a href="#第一次运行程序" class="header-anchor">#</a> 第一次运行程序</h3> <p>这里，我们还是要运行main()方法，控制台输出的效果如下所示。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/41052d6c30a5360cee60178dc542fd33.png" loading="lazy" class="lazy"></p> <p>我去，啥情况，不是说了要先输出<code>hello premain</code> 后输出 <code>hello main</code> 吗？为啥只输出了 <code>hello main</code> ？难道是翻车了？</p> <p>其实，这里是需要对程序进行简单的配置。</p> <h3 id="配置程序"><a href="#配置程序" class="header-anchor">#</a> 配置程序</h3> <p>首先，在IDEA中配置好Maven，将 <code>bytecode-javassist-01</code>项目打包成Jar文件，将打包好的 <code>bytecode-javassist-01-1.0.0-SNAPSHOT.jar</code> 文件拷贝到D盘根目录（可以拷贝到任意目录或者不拷贝都行）。</p> <p>然后在IDEA中配置下main()方法的启动参数，在IDEA的Program arguments中输入如下配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>-javaagent:D:<span class="token punctuation">\</span>bytecode-javassist-01-1.0.0-SNAPSHOT.jar
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/37e7c36c93d678be3da85bbeba0c4ede.png" loading="lazy" class="lazy"></p> <p>点击 <code>Apply</code>，然后点击 <code>OK</code>。完成配置。</p> <h3 id="第二次运行程序"><a href="#第二次运行程序" class="header-anchor">#</a> 第二次运行程序</h3> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/53c43a5ff82b2cd0a3c1f45528a03795.png" loading="lazy" class="lazy"></p> <p>看到没，小伙伴们，确实是先输出了<code>hello premain</code> 后输出了 <code>hello main</code> 。</p> <p>是不是很神奇，在接下来的一段时间内，我们开启一段神奇的字节码编程之旅吧。</p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>作为【字节码编程】的开篇，在文章的开始，就很多小伙伴迷茫的点，冰河给出了一些简单的建议，希望能够给正处于迷茫期的小伙伴们一点帮助。</p> <p>接下来，我们介绍了动态字节码技术、如何实现字节码编程和字节码编程的使用场景。最后我们通过一个小案例让小伙伴们认识到尽管main()方法是整个程序的入口，但是在main()方法运行前，还是可以运行其他方法的。</p> <p><strong>最后，告诉大家一个好消息，经过很长时间的努力，冰河的个人博客也快上线啦，期待ing~~</strong></p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <p><strong>如果你想进大厂，想升职加薪，或者对自己现有的工作比较迷茫，都可以私信我交流，希望我的一些经历能够帮助到大家~~</strong></p> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/4/11</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/md/middleware/bytecode/2022-04-11-002-使用Javassist动态生成HelloWorld.html">
+          字节码编程 | 使用Javassist动态生成Hello World
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#题外话" class="toc-sidebar-link">题外话</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#动态字节码技术" class="toc-sidebar-link">动态字节码技术</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#如何实现字节码编程" class="toc-sidebar-link">如何实现字节码编程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#字节码编程使用场景" class="toc-sidebar-link">字节码编程使用场景</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#入门案例" class="toc-sidebar-link">入门案例</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#开发环境" class="toc-sidebar-link">开发环境</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#完整代码" class="toc-sidebar-link">完整代码</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#案例效果" class="toc-sidebar-link">案例效果</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#动手实践" class="toc-sidebar-link">动手实践</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#第一次运行程序" class="toc-sidebar-link">第一次运行程序</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#配置程序" class="toc-sidebar-link">配置程序</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#第二次运行程序" class="toc-sidebar-link">第二次运行程序</a></li></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">字节码编程 | 工作多年的你依然重复做着CRUD？是否接触过这种技术？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#题外话" class="toc-sidebar-link">题外话</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#动态字节码技术" class="toc-sidebar-link">动态字节码技术</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#如何实现字节码编程" class="toc-sidebar-link">如何实现字节码编程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#字节码编程使用场景" class="toc-sidebar-link">字节码编程使用场景</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#入门案例" class="toc-sidebar-link">入门案例</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#开发环境" class="toc-sidebar-link">开发环境</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#完整代码" class="toc-sidebar-link">完整代码</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#案例效果" class="toc-sidebar-link">案例效果</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#动手实践" class="toc-sidebar-link">动手实践</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#第一次运行程序" class="toc-sidebar-link">第一次运行程序</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#配置程序" class="toc-sidebar-link">配置程序</a></li><li class="toc-sidebar-sub-header"><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#第二次运行程序" class="toc-sidebar-link">第二次运行程序</a></li></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/middleware/bytecode/2022-04-11-001-%E5%B7%A5%E4%BD%9C%E5%A4%9A%E5%B9%B4%E7%9A%84%E4%BD%A0%E4%BE%9D%E7%84%B6%E9%87%8D%E5%A4%8D%E5%81%9A%E7%9D%80CRUD-%E6%98%AF%E5%90%A6%E6%8E%A5%E8%A7%A6%E8%BF%87%E8%BF%99%E7%A7%8D%E6%8A%80%E6%9C%AF.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <!----> <div title="字节码编程 | 使用Javassist动态生成Hello World" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/middleware/bytecode/2022-04-11-002-使用Javassist动态生成HelloWorld.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1649650556046" defer></script><script src="/assets/js/cg-4.js?v=1649650556046" defer></script><script src="/assets/js/cg-3.js?v=1649650556046" defer></script><script src="/assets/js/cg-134.js?v=1649650556046" defer></script><script src="/assets/js/cg-5.js?v=1649650556046" defer></script><script src="/assets/js/cg-6.js?v=1649650556046" defer></script><script src="/assets/js/cg-app.js?v=1649650556046" defer></script>
+  </body>
+</html>
