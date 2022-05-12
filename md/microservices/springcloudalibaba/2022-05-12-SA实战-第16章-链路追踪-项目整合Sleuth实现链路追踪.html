@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-05-12T08:36:19.000Z">
+    <meta property="og:title" content="SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html">
+    <meta name="twitter:title" content="SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪">
+    <meta name="twitter:url" content="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab888ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1652344787436" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-303.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1652344787436" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1652344787436" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab888ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1652344787436">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>SpringBoot</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springboot/default.html" class="sidebar-link">关于我</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>SpringCloudAlibaba</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》专栏开篇啦</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-04-SA实战·第一篇-专栏设计.html" class="sidebar-link">SA实战 · 《SpringCloud Alibaba实战》专栏设计</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-09-SA实战-微服务介绍.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》微服务介绍</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-13-SA实战·项目说明-流程设计-技术选型-模块划分.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》项目说明、流程设计、技术选型与模块划分</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-18-SA实战-开撸-完成通用模块的开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》开撸：完成通用模块的开发</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-21-SA实战-完成三大微服务的搭建与交互开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》快速搭建三大微服务并完成交互开发与测试</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-25-SA实战-服务治理-实现服务的注册与发现.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》服务治理：实现服务的自动注册与发现</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-27-SA实战-第8章-服务治理-实现服务调用的负载均衡.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第8章-服务治理：实现服务调用的负载均衡</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-28-SA实战-第9章-服务容错-服务雪崩与容错方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第9章-服务容错：服务雪崩与容错方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-03-SA实战-第10章-服务容错-Fegin整合Sentinel.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第10章-服务容错：项目整合Sentinel实现限流与容错</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-05-SA实战-第11章-服务容错加餐-Sentinel核心技术与配置规则.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第11章-服务容错加餐：Sentinel核心技术与配置规则（最全使用教程）</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第12章-服务网关-网关概述与核心架构.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第12章-服务网关：网关概述与核心架构</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第13章-服务网关-项目整合SpringCloudGateway.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第13章-服务网关：项目整合SpringCloud Gateway网关</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-10-SA实战-第14章-服务网关-SpringCloudGateway核心技术.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第14章-服务网关加餐：SpringCloud Gateway核心技术</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-11-SA实战-第15章-链路追踪-核心原理与解决方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第15章-链路追踪：核心原理与解决方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html" class="active sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="sa实战-·《springcloud-alibaba实战》第16章-链路追踪-项目整合sleuth实现链路追踪"><a href="#sa实战-·《springcloud-alibaba实战》第16章-链路追踪-项目整合sleuth实现链路追踪" class="header-anchor">#</a> SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</h1> <p><strong>大家好，我是冰河~~</strong></p> <blockquote><p>一不小心《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏都更新到第16章了，再不上车就跟不上了，小伙伴们快跟上啊！</p> <p>注意：本项目完整源码加入 <strong><a href="https://public.zsxq.com/groups/48848484411888.html" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong> 知识星球即可获取，文末有优惠券。</p></blockquote> <p>在《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏前面的文章中，我们实现了用户微服务、商品微服务和订单微服务之间的远程调用，并且实现了服务调用的负载均衡。也基于阿里开源的Sentinel实现了服务的限流与容错，并详细介绍了Sentinel的核心技术与配置规则。简单介绍了服务网关，并对SpringCloud Gateway的核心架构进行了简要说明，也在项目中整合了SpringCloud Gateway网关实现了通过网关访问后端微服务，同时，也基于SpringCloud Gateway整合Sentinel实现了网关的限流功能，详细介绍了SpringCloud Gateway网关的核心技术。</p> <p>在链路追踪章节，我们开始简单介绍了分布式链路追踪技术与解决方案。</p> <p>今天，正式进入链路追踪章节，本章，就正式在项目中整合Sleuth实现链路追踪。</p> <h2 id="本章总览"><a href="#本章总览" class="header-anchor">#</a> 本章总览</h2> <p><img alt="sa-2022-05-12-007" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-007.png" loading="lazy" class="lazy"></p> <h2 id="sleuth概述"><a href="#sleuth概述" class="header-anchor">#</a> Sleuth概述</h2> <p>Sleuth是SpringCloud中提供的一个分布式链路追踪组件，在设计上大量参考并借用了Google Dapper的设计。Sleuth中的核心术语如下。</p> <h3 id="span简介"><a href="#span简介" class="header-anchor">#</a> Span简介</h3> <p>Span代表了一组基本的工作单元。为了统计各处理单元的延迟，当请求到达各个服务组件的时候，通过一个唯一标识（SpanId）来标记它的开始、具体过程和结束。通过SpanId的开始和结束时间戳，就能统计这个Span的调用时间，除此之外，还可以获取如事件的名称。请求息等元数据。</p> <p><strong>总结：远程调用和 Span是一对一的关系，是分布式链路追踪中最基本的工作单元，每次发送一个远程调用服务就会产生一个 Span。Span Id 是一个 64 位的唯一 ID，通过计算 Span 的开始和结束时间，就可以统计每个服务调用所花费的时间。</strong></p> <h3 id="trace简介"><a href="#trace简介" class="header-anchor">#</a> Trace简介</h3> <p>Trace主要由一组Trace Id相同的Span串联形成一个树状结构。为了实现请求跟踪，当请求到达分布式系统的入口端点时，只需要服务跟踪框架为该请求创建一个唯一的标识（即TraceId），同时在分布式系统内部流转的时候，框架始终保持传递这个唯一值，直到整个请求返回。此时就可以使用这个唯一标识将所有的请求串联起来，形成一条完整的请求链路。</p> <p><strong>总结：一个 Trace 可以对应多个 Span，Trace和Span是一对多的关系。Trace是由一系列 Span 组成的树状结构。Trace Id是一个64 位的唯一ID。每次用户端访问微服务系统的 API 接口，中间可能会调用多个微服务，每次调用都会产生一个新的Span，而多个Span组成了一个Trace。</strong></p> <h3 id="annotation简介"><a href="#annotation简介" class="header-anchor">#</a> Annotation简介</h3> <p>Annotation记录了一段时间内的事件，内部使用的重要注解如下所示。</p> <ul><li>cs（Client Send）客户端发出请求，标记整个请求的开始时间。</li> <li>sr（Server Received）服务端收到请求开始进行处理， sr－ cs = 网络延迟（服务调用的时间）。</li> <li>ss（Server Send）服务端处理完毕准备将结果返回给客户端， ss - sr = 服务器上的请求处理时间。</li> <li>cr（Client Reveived）客户端收到服务端的响应，请求结束。 cr - cs = 请求的总时间。</li></ul> <p><strong>总结：链路追踪系统定义了少量核心注解，用来定义一个请求的开始和结束，注意是微服务之间的请求，而不是从浏览器、APP、H5、小程序等发出的请求。</strong></p> <h2 id="项目整合sleuth"><a href="#项目整合sleuth" class="header-anchor">#</a> 项目整合Sleuth</h2> <p>Sleuth提供了分布式链路追踪能力，如果需要使用Sleuth的链路追踪功能，需要在项目中集成Sleuth。</p> <h3 id="最简使用"><a href="#最简使用" class="header-anchor">#</a> 最简使用</h3> <p>（1）在每个微服务（用户微服务shop-user、商品微服务shop-product、订单微服务shop-order、网关服务shop-gateway）下的pom.xml文件中添加如下Sleuth的依赖。</p> <div class="language-xml line-numbers-mode"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.cloud<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-cloud-starter-sleuth<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>（2）将项目的application.yml文件备份成application-pre-filter.yml，并将application.yml文件的内容替换为application-sentinel.yml文件的内容，这一步是为了让整个项目集成Sentinel、SpringCloud Gateway和Nacos。application.yml替换后的文件内容如下所示。</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">server</span><span class="token punctuation">:</span>
+  <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">10002</span>
+<span class="token key atrule">spring</span><span class="token punctuation">:</span>
+  <span class="token key atrule">application</span><span class="token punctuation">:</span>
+    <span class="token key atrule">name</span><span class="token punctuation">:</span> server<span class="token punctuation">-</span>gateway
+  <span class="token key atrule">cloud</span><span class="token punctuation">:</span>
+    <span class="token key atrule">nacos</span><span class="token punctuation">:</span>
+      <span class="token key atrule">discovery</span><span class="token punctuation">:</span>
+        <span class="token key atrule">server-addr</span><span class="token punctuation">:</span> 127.0.0.1<span class="token punctuation">:</span><span class="token number">8848</span>
+    <span class="token key atrule">sentinel</span><span class="token punctuation">:</span>
+      <span class="token key atrule">transport</span><span class="token punctuation">:</span>
+        <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">7777</span>
+        <span class="token key atrule">dashboard</span><span class="token punctuation">:</span> 127.0.0.1<span class="token punctuation">:</span><span class="token number">8888</span>
+      <span class="token key atrule">web-context-unify</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+      <span class="token key atrule">eager</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+
+    <span class="token key atrule">gateway</span><span class="token punctuation">:</span>
+      <span class="token key atrule">globalcors</span><span class="token punctuation">:</span>
+        <span class="token key atrule">cors-configurations</span><span class="token punctuation">:</span>
+          <span class="token key atrule">'[/**]'</span><span class="token punctuation">:</span>
+            <span class="token key atrule">allowedOrigins</span><span class="token punctuation">:</span> <span class="token string">&quot;*&quot;</span>
+            <span class="token key atrule">allowedMethods</span><span class="token punctuation">:</span> <span class="token string">&quot;*&quot;</span>
+            <span class="token key atrule">allowCredentials</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+            <span class="token key atrule">allowedHeaders</span><span class="token punctuation">:</span> <span class="token string">&quot;*&quot;</span>
+      <span class="token key atrule">discovery</span><span class="token punctuation">:</span>
+        <span class="token key atrule">locator</span><span class="token punctuation">:</span>
+          <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+          <span class="token key atrule">route-id-prefix</span><span class="token punctuation">:</span> gateway<span class="token punctuation">-</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br></div></div><p>（3）分别启动Nacos、Sentinel、用户微服务shop-user，商品微服务shop-product，订单微服务shop-order和网关服务shop-gateway，在浏览器中输入链接<code>localhost:10001/server-order/order/submit_order?userId=1001&amp;productId=1001&amp;count=1</code>，如下所示。</p> <p><img alt="sa-2022-05-12-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-001.png" loading="lazy" class="lazy"></p> <p>（4）分别查看用户微服务shop-user，商品微服务shop-product，订单微服务shop-order和网关服务shop-gateway的控制台输出，每个服务的控制台都输出了如下格式所示的信息。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>微服务名称,TraceID,SpanID,是否将结果输出到第三方平台<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>具体如下所示。</p> <ul><li>用户微服务shop-user</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-user,03fef3d312450828,76b298dba54ec579,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><ul><li>商品微服务shop-product</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-product,03fef3d312450828,41ac8836d2df4eec,true<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>server-product,03fef3d312450828,6b7b3662d63372bf,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><ul><li>订单微服务shop-order</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-order,03fef3d312450828,cbd935d57cae84f9,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><ul><li>网关服务shop-gateway</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-gateway,03fef3d312450828,03fef3d312450828,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>可以看到，每个服务都打印出了链路追踪的日志信息，说明引入Sleuth的依赖后，就可以在命令行查看链路追踪情况。</p> <h3 id="抽样采集数据"><a href="#抽样采集数据" class="header-anchor">#</a> 抽样采集数据</h3> <p>Sleuth支持抽样采集数据。尤其是在高并发场景下，如果采集所有的数据，那么采集的数据量就太大了，非常耗费系统的性能。通常的做法是可以减少一部分数据量，特别是对于采用Http方式去发送采集数据，能够提升很大的性能。</p> <p>Sleuth可以采用如下方式配置抽样采集数据。</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">spring</span><span class="token punctuation">:</span>
+  <span class="token key atrule">sleuth</span><span class="token punctuation">:</span>
+    <span class="token key atrule">sampler</span><span class="token punctuation">:</span>
+      <span class="token key atrule">probability</span><span class="token punctuation">:</span> <span class="token number">1.0</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><h3 id="追踪自定义线程池"><a href="#追踪自定义线程池" class="header-anchor">#</a> 追踪自定义线程池</h3> <p>Sleuth支持对异步任务的链路追踪，在项目中使用@Async注解开启一个异步任务后，Sleuth会为异步任务重新生成一个Span。但是如果使用了自定义的异步任务线程池，则会导致Sleuth无法新创建一个Span，而是会重新生成Trace和Span。此时，需要使用Sleuth提供的LazyTraceExecutor类来包装下异步任务线程池，才能在异步任务调用链路中重新创建Span。</p> <p>在服务中开启异步线程池任务，需要使用@EnableAsync。所以，在演示示例前，先在用户微服务shop-user的<code>io.binghe.shop.UserStarter</code>启动类上添加@EnableAsync注解，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe
+ * @version 1.0.0
+ * @description 启动用户服的类
+ */</span>
+<span class="token annotation punctuation">@SpringBootApplication</span>
+<span class="token annotation punctuation">@EnableTransactionManagement</span><span class="token punctuation">(</span>proxyTargetClass <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@MapperScan</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token string">&quot;io.binghe.shop.user.mapper&quot;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@EnableDiscoveryClient</span>
+<span class="token annotation punctuation">@EnableAsync</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserStarter</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">UserStarter</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><h4 id="演示使用-async注解开启任务"><a href="#演示使用-async注解开启任务" class="header-anchor">#</a> 演示使用@Async注解开启任务</h4> <p>（1）在用户微服务shop-user的<code>io.binghe.shop.user.service.UserService</code>接口中定义一个asyncMethod()方法，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">void</span> <span class="token function">asyncMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（2）在用户微服务shop-user的<code>io.binghe.shop.user.service.impl.UserServiceImpl</code>类中实现asyncMethod()方法，并在asyncMethod()方法上添加@Async注解，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Async</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">asyncMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;执行了异步任务...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>（3）在用户微服务shop-user的<code>io.binghe.shop.user.controller.UserController</code>类中新增asyncApi()方法，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">&quot;/async/api&quot;</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">asyncApi</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;执行异步任务开始...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    userService<span class="token punctuation">.</span><span class="token function">asyncMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;异步任务执行结束...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token string">&quot;asyncApi&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>（4）分别启动用户微服务和网关服务，在浏览器中输入链接<code>http://localhost:10001/server-user/user/async/api</code></p> <p><img alt="sa-2022-05-12-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-002.png" loading="lazy" class="lazy"></p> <p>（5）查看用户微服务与网关服务的控制台日志，分别存在如下日志。</p> <ul><li>用户微服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-user,499d6c7128399ed0,a81bd920de0b07de,true<span class="token punctuation">]</span>执行异步任务开始<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,499d6c7128399ed0,a81bd920de0b07de,true<span class="token punctuation">]</span>异步任务执行结束<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,499d6c7128399ed0,e2f297d512f40bb8,true<span class="token punctuation">]</span>执行了异步任务<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><ul><li>网关服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-gateway,499d6c7128399ed0,499d6c7128399ed0,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>可以看到Sleuth为异步任务重新生成了Span。</p> <h4 id="演示自定义任务线程池"><a href="#演示自定义任务线程池" class="header-anchor">#</a> 演示自定义任务线程池</h4> <p>在演示使用@Async注解开启任务的基础上继续演示自定义任务线程池，验证Sleuth是否为自定义线程池新创建了Span。</p> <p>（1）在用户微服务shop-user中新建<code>io.binghe.shop.user.config</code>包，在包下创建ThreadPoolTaskExecutorConfig类，继承<code>org.springframework.scheduling.annotation.AsyncConfigurerSupport</code>类，用来自定义异步任务线程池，代码如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe
+ * @version 1.0.0
+ * @description Sleuth异步线程池配置
+ */</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@EnableAutoConfiguration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreadPoolTaskExecutorConfig</span> <span class="token keyword">extends</span> <span class="token class-name">AsyncConfigurerSupport</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">Executor</span> <span class="token function">getAsyncExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ThreadPoolTaskExecutor</span> executor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolTaskExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setCorePoolSize</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setMaxPoolSize</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setQueueCapacity</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setThreadNamePrefix</span><span class="token punctuation">(</span><span class="token string">&quot;trace-thread-&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> executor<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>（2）以debug的形式启动用户微服务和网关服务，并在<code>io.binghe.shop.user.config.ThreadPoolTaskExecutorConfig#getAsyncExecutor()</code>方法中打上断点，如下所示。</p> <p><img alt="sa-2022-05-12-003" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-003.png" loading="lazy" class="lazy"></p> <p>可以看到，项目启动后并没有进入<code>io.binghe.shop.user.config.ThreadPoolTaskExecutorConfig#getAsyncExecutor()</code>方法，说明项目启动时，并不会创建异步任务线程池。</p> <p>（3）在浏览器中输入链接<code>http://localhost:10001/server-user/user/async/api</code>，此时可以看到程序已经执行到<code>io.binghe.shop.user.config.ThreadPoolTaskExecutorConfig#getAsyncExecutor()</code>方法的断点位置。</p> <p><img alt="sa-2022-05-12-004" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-004.png" loading="lazy" class="lazy"></p> <p>说明异步任务线程池是在调用了异步任务的时候创建的。</p> <p>接下来，按F8跳过断点继续运行程序，可以看到浏览器上的显示结果如下。</p> <p><img alt="sa-2022-05-12-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-002.png" loading="lazy" class="lazy"></p> <p>（4）查看用户微服务与网关服务的控制台日志，分别存在如下日志。</p> <ul><li>用户微服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-user,f89f2355ec3f9df1,4d679555674e96a4,true<span class="token punctuation">]</span>执行异步任务开始<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,f89f2355ec3f9df1,4d679555674e96a4,true<span class="token punctuation">]</span>异步任务执行结束<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,0ee48d47e58e2a42,0ee48d47e58e2a42,true<span class="token punctuation">]</span>执行了异步任务<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><ul><li>网关服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-gateway,f89f2355ec3f9df1,f89f2355ec3f9df1,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>可以看到，使用自定义异步任务线程池时，在用户微服务中在执行异步任务时，重新生成了Trace和Span。</p> <p><strong>注意对比用户微服务中输出的三条日志信息，最后一条日志信息的TraceID和SpanID与前两条日志都不同。</strong></p> <h4 id="演示包装自定义线程池"><a href="#演示包装自定义线程池" class="header-anchor">#</a> 演示包装自定义线程池</h4> <p>在自定义任务线程池的基础上继续演示包装自定义线程池，验证Sleuth是否为包装后的自定义线程池新创建了Span。</p> <p>（1）在用户微服务shop-user的<code>io.binghe.shop.user.config.ThreadPoolTaskExecutorConfig</code>类中注入BeanFactory，并在getAsyncExecutor()方法中使用<code>org.springframework.cloud.sleuth.instrument.async.LazyTraceExecutor()</code>来包装返回的异步任务线程池，修改后的<code>io.binghe.shop.user.config.ThreadPoolTaskExecutorConfig</code>类的代码如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe
+ * @version 1.0.0
+ * @description Sleuth异步线程池配置
+ */</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@EnableAutoConfiguration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreadPoolTaskExecutorConfig</span> <span class="token keyword">extends</span> <span class="token class-name">AsyncConfigurerSupport</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">BeanFactory</span> beanFactory<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">Executor</span> <span class="token function">getAsyncExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ThreadPoolTaskExecutor</span> executor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadPoolTaskExecutor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setCorePoolSize</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setMaxPoolSize</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setQueueCapacity</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">setThreadNamePrefix</span><span class="token punctuation">(</span><span class="token string">&quot;trace-thread-&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        executor<span class="token punctuation">.</span><span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">LazyTraceExecutor</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>beanFactory<span class="token punctuation">,</span> executor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>（2）分别启动用户微服务和网关服务，在浏览器中输入链接<code>http://localhost:10001/server-user/user/async/api</code></p> <p><img alt="sa-2022-05-12-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-002.png" loading="lazy" class="lazy"></p> <p>（3）查看用户微服务与网关服务的控制台日志，分别存在如下日志。</p> <ul><li>用户微服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-user,157891cb90fddb65,0a278842776b1f01,true<span class="token punctuation">]</span>执行异步任务开始<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,157891cb90fddb65,0a278842776b1f01,true<span class="token punctuation">]</span>异步任务执行结束<span class="token punctuation">..</span>.
+<span class="token punctuation">[</span>server-user,157891cb90fddb65,1ba55fd3432b77ae,true<span class="token punctuation">]</span>执行了异步任务<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><ul><li>网关服务</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>server-gateway,157891cb90fddb65,157891cb90fddb65,true<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>可以看到Sleuth为异步任务重新生成了Span。</p> <p><strong>综上说明：Sleuth支持对异步任务的链路追踪，在项目中使用@Async注解开启一个异步任务后，Sleuth会为异步任务重新生成一个Span。但是如果使用了自定义的异步任务线程池，则会导致Sleuth无法新创建一个Span，而是会重新生成Trace和Span。此时，需要使用Sleuth提供的LazyTraceExecutor类来包装下异步任务线程池，才能在异步任务调用链路中重新创建Span。</strong></p> <h3 id="自定义链路过滤器"><a href="#自定义链路过滤器" class="header-anchor">#</a> 自定义链路过滤器</h3> <p>在Sleuth中存在链路过滤器，并且还支持自定义链路过滤器。</p> <h4 id="自定义链路过滤器概述"><a href="#自定义链路过滤器概述" class="header-anchor">#</a> 自定义链路过滤器概述</h4> <p>TracingFilter是Sleuth中负责处理请求和响应的组件，可以通过注册自定义的TracingFilter实例来实现一些扩展性的需求。</p> <h4 id="演示自定义链路过滤器"><a href="#演示自定义链路过滤器" class="header-anchor">#</a> 演示自定义链路过滤器</h4> <p>本案例演示通过过滤器验证只有HTTP或者HTTPS请求才能访问接口，并且在访问的链接不是静态文件时，将traceId放入HttpRequest中在服务端获取，并在响应结果中添加自定义Header，名称为SLEUTH-HEADER，值为traceId。</p> <p>（1）在用户微服务shop-user中新建<code>io.binghe.shop.user.filter</code>包，并创建MyGenericFilter类，继承<code>org.springframework.web.filter.GenericFilterBean</code>类，代码如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author binghe
+ * @version 1.0.0
+ * @description 链路过滤器
+ */</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Order</span><span class="token punctuation">(</span> <span class="token class-name">Ordered</span><span class="token punctuation">.</span>HIGHEST_PRECEDENCE <span class="token operator">+</span> <span class="token number">6</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyGenericFilter</span> <span class="token keyword">extends</span> <span class="token class-name">GenericFilterBean</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">Pattern</span> skipPattern <span class="token operator">=</span> <span class="token class-name">Pattern</span><span class="token punctuation">.</span><span class="token function">compile</span><span class="token punctuation">(</span><span class="token class-name">SleuthWebProperties</span><span class="token punctuation">.</span>DEFAULT_SKIP_PATTERN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Tracer</span> tracer<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token class-name">MyGenericFilter</span><span class="token punctuation">(</span><span class="token class-name">Tracer</span> tracer<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>tracer <span class="token operator">=</span> tracer<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">doFilter</span><span class="token punctuation">(</span><span class="token class-name">ServletRequest</span> request<span class="token punctuation">,</span> <span class="token class-name">ServletResponse</span> response<span class="token punctuation">,</span>
+                         <span class="token class-name">FilterChain</span> chain<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span><span class="token punctuation">,</span> <span class="token class-name">ServletException</span> <span class="token punctuation">{</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>request <span class="token keyword">instanceof</span> <span class="token class-name">HttpServletRequest</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token operator">!</span><span class="token punctuation">(</span>response <span class="token keyword">instanceof</span> <span class="token class-name">HttpServletResponse</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ServletException</span><span class="token punctuation">(</span><span class="token string">&quot;只支持HTTP访问&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">Span</span> currentSpan <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>tracer<span class="token punctuation">.</span><span class="token function">currentSpan</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>currentSpan <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            chain<span class="token punctuation">.</span><span class="token function">doFilter</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">HttpServletRequest</span> httpServletRequest <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span><span class="token punctuation">)</span> request<span class="token punctuation">;</span>
+        <span class="token class-name">HttpServletResponse</span> httpServletResponse <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span><span class="token punctuation">)</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">boolean</span> skipFlag <span class="token operator">=</span> skipPattern<span class="token punctuation">.</span><span class="token function">matcher</span><span class="token punctuation">(</span>httpServletRequest<span class="token punctuation">.</span><span class="token function">getRequestURI</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>skipFlag<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token class-name">String</span> traceId <span class="token operator">=</span> currentSpan<span class="token punctuation">.</span><span class="token function">context</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">traceIdString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            httpServletRequest<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">&quot;traceId&quot;</span><span class="token punctuation">,</span> traceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            httpServletResponse<span class="token punctuation">.</span><span class="token function">addHeader</span><span class="token punctuation">(</span><span class="token string">&quot;SLEUTH-HEADER&quot;</span><span class="token punctuation">,</span> traceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        chain<span class="token punctuation">.</span><span class="token function">doFilter</span><span class="token punctuation">(</span>httpServletRequest<span class="token punctuation">,</span> httpServletResponse<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br></div></div><p>（2）在用户微服务shop-user的<code>io.binghe.shop.user.controller.UserController</code>类中新建sleuthFilter()方法，在sleuthFilter()方法中获取并打印traceId，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">&quot;/sleuth/filter/api&quot;</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">sleuthFilter</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Object</span> traceIdObj <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token string">&quot;traceId&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> traceId <span class="token operator">=</span> traceIdObj <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token string">&quot;&quot;</span> <span class="token operator">:</span> traceIdObj<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">&quot;获取到的traceId为: &quot;</span> <span class="token operator">+</span> traceId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token string">&quot;sleuthFilter&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>（3）分别启动用户微服务和网关服务，在浏览器中输入<code>http://localhost:10001/server-user/user/sleuth/filter/api</code>，如下所示。</p> <p><img alt="sa-2022-05-12-005" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-005.png" loading="lazy" class="lazy"></p> <p>查看用户微服务的控制台会输出如下信息。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>获取到的traceId为: f63ae7702f6f4bba
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>查看浏览器的控制台，看到在响应的结果信息中新增了一个名称为SLEUTH-HEADER，值为f63ae7702f6f4bba的Header，如下所示。</p> <p><img alt="sa-2022-05-12-006" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-12-006.png" loading="lazy" class="lazy"></p> <p>说明使用Sleuth的过滤器可以处理请求和响应信息，并且可以在Sleuth的过滤器中获取到TraceID。</p> <p><strong>好了，今天我们就到儿吧，限于篇幅，文中并未给出完整的案例源代码，想要完整源代码的小伙伴可加入【冰河技术】知识星球获取源码。也可以加我微信：hacker_binghe，一起交流技术。</strong></p> <p><strong>另外，一不小心就写了16章了，小伙伴们你们再不上车就真的跟不上了！！！</strong></p> <h2 id="关于星球"><a href="#关于星球" class="header-anchor">#</a> 关于星球</h2> <p>最近，冰河创建了【冰河技术】知识星球，《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500214&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏的源码获取方式会放到知识星球中，同时在微信上会创建专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <p>今天，【冰河技术】知识星球再开放200张优惠券，还没上车的小伙伴赶紧啦，再不上车就跟不上啦！！</p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>2.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>3.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>4.提供站点 https://binghe001.github.io 所有学习内容的指导、帮助</p> <p>5.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>6.可以发送你的简历到我的邮箱，提供简历批阅服务</p> <p>7.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>8.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>9.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="星球门票价格"><a href="#星球门票价格" class="header-anchor">#</a> 星球门票价格</h3> <p>星球目前的门票价格50元，随着每次加入新实战项目和分享硬核技术上调入场价格。</p> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信「hacker_binghe」扫二维码，或者去公众号「冰河技术」回复「星球」扫二维码进圈。</p> <p>最后，小伙伴们可以扫描或者长按下图中的二维码加入星球，也可以在 <strong>冰河技术</strong> 公众号回复 “ <strong>星球</strong> ” ，领取入场优惠券。</p> <p><img alt="sa-2022-04-21-007" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-04-28-008.png" loading="lazy" class="lazy"></p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/5/12</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/microservices/springcloudalibaba/2022-05-11-SA实战-第15章-链路追踪-核心原理与解决方案.html" class="prev">
+          SA实战 ·《SpringCloud Alibaba实战》第15章-链路追踪：核心原理与解决方案
+        </a></span> <!----></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#sleuth概述" class="toc-sidebar-link">Sleuth概述</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#span简介" class="toc-sidebar-link">Span简介</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#trace简介" class="toc-sidebar-link">Trace简介</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#annotation简介" class="toc-sidebar-link">Annotation简介</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#项目整合sleuth" class="toc-sidebar-link">项目整合Sleuth</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#最简使用" class="toc-sidebar-link">最简使用</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#抽样采集数据" class="toc-sidebar-link">抽样采集数据</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#追踪自定义线程池" class="toc-sidebar-link">追踪自定义线程池</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#自定义链路过滤器" class="toc-sidebar-link">自定义链路过滤器</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#sleuth概述" class="toc-sidebar-link">Sleuth概述</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#span简介" class="toc-sidebar-link">Span简介</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#trace简介" class="toc-sidebar-link">Trace简介</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#annotation简介" class="toc-sidebar-link">Annotation简介</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#项目整合sleuth" class="toc-sidebar-link">项目整合Sleuth</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#最简使用" class="toc-sidebar-link">最简使用</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#抽样采集数据" class="toc-sidebar-link">抽样采集数据</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#追踪自定义线程池" class="toc-sidebar-link">追踪自定义线程池</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#自定义链路过滤器" class="toc-sidebar-link">自定义链路过滤器</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/microservices/springcloudalibaba/2022-05-12-SA%E5%AE%9E%E6%88%98-%E7%AC%AC16%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-%E9%A1%B9%E7%9B%AE%E6%95%B4%E5%90%88Sleuth%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="SA实战 ·《SpringCloud Alibaba实战》第15章-链路追踪：核心原理与解决方案" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/microservices/springcloudalibaba/2022-05-11-SA实战-第15章-链路追踪-核心原理与解决方案.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <!----></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1652344787436" defer></script><script src="/assets/js/cg-4.js?v=1652344787436" defer></script><script src="/assets/js/cg-3.js?v=1652344787436" defer></script><script src="/assets/js/cg-303.js?v=1652344787436" defer></script><script src="/assets/js/cg-5.js?v=1652344787436" defer></script><script src="/assets/js/cg-6.js?v=1652344787436" defer></script><script src="/assets/js/cg-app.js?v=1652344787436" defer></script>
+  </body>
+</html>
