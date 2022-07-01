@@ -21,7 +21,7 @@
             })();
             </script>
     <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
-    <meta property="article:modified_time" content="2022-06-30T08:55:33.000Z">
+    <meta property="article:modified_time" content="2022-07-01T04:25:20.000Z">
     <meta property="og:title" content="SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin">
     <meta property="og:type" content="article">
     <meta property="og:url" content="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html">
@@ -36,303 +36,303 @@
     <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <link rel="preload" href="/assets/css/0.styles.399be451.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1656579432482" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-307.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1656579432482" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1656579432482" as="script">
-    <link rel="stylesheet" href="/assets/css/0.styles.399be451.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1656579432482">
+    <link rel="preload" href="/assets/css/0.styles.e945b360.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1656650094664" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-307.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1656650094664" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1656650094664" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.e945b360.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1656650094664">
   </head>
   <body>
     <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-  导读
-</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          Java核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-  Java基础
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-  Java进阶
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-  Java高级
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-  Java8新特性
-</a></li></ul></li><li class="dropdown-item"><h4>
-          Spring核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-  IOC核心技术
-</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-  AOP核心技术
-</a></li></ul></li><li class="dropdown-item"><h4>
-          JVM核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-  JVM调优技术
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-  JVM性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-  Tomcat性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-  MySQL性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-  操作系统性能调优
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-  底层技术
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-  源码分析
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-  基础案例
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-  实战案例
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-  面试
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-  系统架构
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-  Spring源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-  SpringMVC源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-  MyBatis源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-  Dubbo源码
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          缓存技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-  Redis
-</a></li></ul></li><li class="dropdown-item"><h4>
-          服务注册发现
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-  Zookeeper
-</a></li></ul></li><li class="dropdown-item"><h4>
-          消息中间件
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-  RabbitMQ
-</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-  RocketMQ
-</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-  Kafka
-</a></li></ul></li><li class="dropdown-item"><h4>
-          网络通信
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-  Netty
-</a></li></ul></li><li class="dropdown-item"><h4>
-          远程调用
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-  Dubbo
-</a></li></ul></li><li class="dropdown-item"><h4>
-          数据库
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-  MongoDB
-</a></li></ul></li><li class="dropdown-item"><h4>
-          搜索引擎
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-  ElasticSearch
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-  SpringBoot
-</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-  SpringCloudAlibaba
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-  字节码编程
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-  手写线程池
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-  分布式限流
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-  开源项目
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-  SpringCloud Alibaba实战
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-  log4j重大漏洞
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-  基础环境篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-  渗透工具篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-  木马篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-  SQL注入篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-  漏洞拿Shell篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-  暴力破解篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-  渗透脚本篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-  数据与系统提权篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-  客户端渗透篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-  社会工程学
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-  问题记录篇
-</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-  面试必问系列
-</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          出版图书
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-  《深入理解高并发编程：核心原理与案例实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-  《深入理解分布式事务：原理与实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-  《MySQL技术大全：开发、优化与运维实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-  《海量数据处理与大数据技术实战》
-</a></li></ul></li><li class="dropdown-item"><h4>
-          电子书籍
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-  冰河的渗透实战笔记
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-  关于自己
-</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-  关于学习
-</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-  关于职场
-</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-  B站
-  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-  Github
-  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-  导读
-</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          Java核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-  Java基础
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-  Java进阶
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-  Java高级
-</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-  Java8新特性
-</a></li></ul></li><li class="dropdown-item"><h4>
-          Spring核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-  IOC核心技术
-</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-  AOP核心技术
-</a></li></ul></li><li class="dropdown-item"><h4>
-          JVM核心技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-  JVM调优技术
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-  JVM性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-  Tomcat性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-  MySQL性能调优
-</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-  操作系统性能调优
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-  底层技术
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-  源码分析
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-  基础案例
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-  实战案例
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-  面试
-</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-  系统架构
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-  Spring源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-  SpringMVC源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-  MyBatis源码
-</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-  Dubbo源码
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          缓存技术
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-  Redis
-</a></li></ul></li><li class="dropdown-item"><h4>
-          服务注册发现
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-  Zookeeper
-</a></li></ul></li><li class="dropdown-item"><h4>
-          消息中间件
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-  RabbitMQ
-</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-  RocketMQ
-</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-  Kafka
-</a></li></ul></li><li class="dropdown-item"><h4>
-          网络通信
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-  Netty
-</a></li></ul></li><li class="dropdown-item"><h4>
-          远程调用
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-  Dubbo
-</a></li></ul></li><li class="dropdown-item"><h4>
-          数据库
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-  MongoDB
-</a></li></ul></li><li class="dropdown-item"><h4>
-          搜索引擎
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-  ElasticSearch
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-  SpringBoot
-</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-  SpringCloudAlibaba
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-  字节码编程
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-  手写线程池
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-  分布式限流
-</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-  开源项目
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-  SpringCloud Alibaba实战
-</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-  log4j重大漏洞
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-  基础环境篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-  渗透工具篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-  木马篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-  SQL注入篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-  漏洞拿Shell篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-  暴力破解篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-  渗透脚本篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-  数据与系统提权篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-  客户端渗透篇
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-  社会工程学
-</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-  问题记录篇
-</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-  面试必问系列
-</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-          出版图书
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-  《深入理解高并发编程：核心原理与案例实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-  《深入理解分布式事务：原理与实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-  《MySQL技术大全：开发、优化与运维实战》
-</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-  《海量数据处理与大数据技术实战》
-</a></li></ul></li><li class="dropdown-item"><h4>
-          电子书籍
-        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-  冰河的渗透实战笔记
-</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-  关于自己
-</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-  关于学习
-</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-  关于职场
-</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-  B站
-  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-  Github
-  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>SpringBoot</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springboot/default.html" class="sidebar-link">关于我</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>SpringCloudAlibaba</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》专栏开篇啦</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-04-SA实战·第一篇-专栏设计.html" class="sidebar-link">SA实战 · 《SpringCloud Alibaba实战》专栏设计</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-09-SA实战-微服务介绍.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》微服务介绍</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-13-SA实战·项目说明-流程设计-技术选型-模块划分.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》项目说明、流程设计、技术选型与模块划分</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-18-SA实战-开撸-完成通用模块的开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》开撸：完成通用模块的开发</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-21-SA实战-完成三大微服务的搭建与交互开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》快速搭建三大微服务并完成交互开发与测试</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-25-SA实战-服务治理-实现服务的注册与发现.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》服务治理：实现服务的自动注册与发现</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-27-SA实战-第8章-服务治理-实现服务调用的负载均衡.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第8章-服务治理：实现服务调用的负载均衡</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-28-SA实战-第9章-服务容错-服务雪崩与容错方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第9章-服务容错：服务雪崩与容错方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-03-SA实战-第10章-服务容错-Fegin整合Sentinel.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第10章-服务容错：项目整合Sentinel实现限流与容错</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-05-SA实战-第11章-服务容错加餐-Sentinel核心技术与配置规则.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第11章-服务容错加餐：Sentinel核心技术与配置规则（最全使用教程）</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第12章-服务网关-网关概述与核心架构.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第12章-服务网关：网关概述与核心架构</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第13章-服务网关-项目整合SpringCloudGateway.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第13章-服务网关：项目整合SpringCloud Gateway网关</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-10-SA实战-第14章-服务网关-SpringCloudGateway核心技术.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第14章-服务网关加餐：SpringCloud Gateway核心技术</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-11-SA实战-第15章-链路追踪-核心原理与解决方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第15章-链路追踪：核心原理与解决方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA实战-第17章-链路追踪-Sleuth整合ZipKin.html" class="active sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-17-SA实战-第18章-消息服务-MQ使用场景与选型对比.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第18章-消息服务：MQ使用场景与选型对比</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-18-SA实战-第19章-消息服务-项目整合RocketMQ.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第19章-消息服务：项目整合RocketMQ</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-20-SA实战-第20章-消息服务-RocketMQ核心技术.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第20章-消息服务：RocketMQ核心技术</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-21-SA实战-第21章-服务配置-服务配置介绍与Nacos核心概念.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第21章-服务配置：服务配置介绍与Nacos核心概念</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-23-SA实战-第22章-服务配置-项目整合Nacos配置中心.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第22章-服务配置：项目整合Nacos配置中心</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-24-SA实战-第23章-服务配置-实现动态刷新与配置共享.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第23章-服务配置：实现动态刷新与配置共享</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-25-SA实战-第24章-分布式事务-分布式事务核心原理与Seata介绍.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第24章-分布式事务：分布式事务核心原理与Seata介绍</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-25-SA实战-第25章-分布式事务-项目整合Seata实现分布式事务.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第25章-分布式事务：项目整合Seata实现分布式事务</a></li><li><a href="/md/microservices/springcloudalibaba/2022-06-15-SA实战-第26章-专栏结束语.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第26章-专栏结束语</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="sa实战-·《springcloud-alibaba实战》第17章-链路追踪-sleuth整合zipkin"><a href="#sa实战-·《springcloud-alibaba实战》第17章-链路追踪-sleuth整合zipkin" class="header-anchor">#</a> SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</h1> <p><strong>大家好，我是冰河~~</strong></p> <blockquote><p>一不小心《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏都更新到第17章了，再不上车就跟不上了，小伙伴们快跟上啊！</p> <p>注意：本项目完整源码加入 <strong><a href="https://public.zsxq.com/groups/48848484411888.html" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong> 知识星球即可获取，文末有优惠券。</p></blockquote> <p>在《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏前面的文章中，我们实现了用户微服务、商品微服务和订单微服务之间的远程调用，并且实现了服务调用的负载均衡。也基于阿里开源的Sentinel实现了服务的限流与容错，并详细介绍了Sentinel的核心技术与配置规则。简单介绍了服务网关，并对SpringCloud Gateway的核心架构进行了简要说明，也在项目中整合了SpringCloud Gateway网关实现了通过网关访问后端微服务，同时，也基于SpringCloud Gateway整合Sentinel实现了网关的限流功能，详细介绍了SpringCloud Gateway网关的核心技术。在链路追踪章节，我们开始简单介绍了分布式链路追踪技术与解决方案，随后在项目中整合Sleuth实现了链路追踪。</p> <h2 id="本章总览"><a href="#本章总览" class="header-anchor">#</a> 本章总览</h2> <p><img alt="sa-2022-05-13-019" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-019.png" loading="lazy" class="lazy"></p> <p><strong>注意：有很多小伙伴反馈说，在使用Zipkin整合ES时，报错了，这里，我使用ElasticSearch8.2.0是因为我修改了ZipKin的源码，解决了ZipKin与ElasticSearch8.2.0的兼容性问题，目前我使用的版本暂不开放，如果大家在整合的过程中出现了问题，可以使用ZipKin 2.23.16 + ElasticSearch 7.17.4。项目代码无需修改。</strong></p> <h2 id="本章概述"><a href="#本章概述" class="header-anchor">#</a> 本章概述</h2> <p>在前面整合Sleuth实现链路追踪时，我们是通过查看日志的情况来了解系统调用的链路情况，这并不是一种很好的解决方案，如果系统所包含的微服务越来越多，通过查看日志的方式来分析系统的调用是非常复杂的，在实际项目中根本不可行。此时，我们可以将Sleuth和ZipKin进行整合，利用ZipKin将日志进行聚合，将链路日志进行可视化展示，并支持全文检索。</p> <h2 id="zipkin核心架构"><a href="#zipkin核心架构" class="header-anchor">#</a> ZipKin核心架构</h2> <p>Zipkin 是 Twitter 的一个开源项目，它基于Google Dapper论文实现，可以收集微服务运行过程中的实时链路数据，并进行展示。</p> <h3 id="zipkin概述"><a href="#zipkin概述" class="header-anchor">#</a> ZipKin概述</h3> <p>Zipkin是一种分布式链路跟踪系统，能够收集微服务运行过程中的实时调用链路信息，并能够将这些调用链路信息展示到Web界面上供开发人员分析，开发人员能够从ZipKin中分析出调用链路中的性能瓶颈，识别出存在问题的应用程序，进而定位问题和解决问题。</p> <h3 id="zipkin核心架构-2"><a href="#zipkin核心架构-2" class="header-anchor">#</a> ZipKin核心架构</h3> <p>ZipKin的核心架构图如下所示。</p> <p><img alt="sa-2022-05-13-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-001.png" loading="lazy" class="lazy"></p> <p align="right"><font size="1">注：图片来源：https://zipkin.io/pages/architecture.html</font></p> <p>其中，ZipKin核心组件的功能如下所示。</p> <ul><li>Reporter：ZipKin中上报链路数据的模块，主要配置在具体的微服务应用中。</li> <li>Transport：ZipKin中传输链路数据的模块，此模块可以配置为Kafka，RocketMQ、RabbitMQ等。</li> <li>Collector：ZipKin中收集并消费链路数据的模块，默认是通过http协议收集，可以配置为Kafka消费。</li> <li>Storage：ZipKin中存储链路数据的模块，此模块的具体可以配置为ElasticSearch、Cassandra或者MySQL，目前ZipKin支持这三种数据持久化方式。</li> <li>API：ZipKin中的API 组件，主要用来提供外部访问接口。比如给客户端展示跟踪信息，或是开放给外部系统实现监控等。</li> <li>UI： ZipKin中的UI 组件，基于API组件实现的上层应用。通过UI组件用户可以方便并且很直观地查询和分析跟踪信息。</li></ul> <p>Zipkin在总体上会分为两个端，一个是Zipkin服务端，一个是Zipkin客户端，客户端主要是配置在微服务应用中，收集微服务中的调用链路信息，将数据发送给ZipKin服务端。</p> <h2 id="项目整合zipkin"><a href="#项目整合zipkin" class="header-anchor">#</a> 项目整合ZipKin</h2> <p>Zipkin总体上分为服务端和客户端，我们需要下载并启动ZipKin服务端的Jar包，在微服务中集成ZipKin的客户端。</p> <h3 id="下载安装zipkin服务端"><a href="#下载安装zipkin服务端" class="header-anchor">#</a> 下载安装ZipKin服务端</h3> <p>（1）下载ZipKin服务端Jar文件，可以直接在浏览器中输入如下链接进行下载。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>https://search.maven.org/remote_content?g<span class="token operator">=</span>io.zipkin.java<span class="token operator">&amp;</span><span class="token assign-left variable">a</span><span class="token operator">=</span>zipkin-server<span class="token operator">&amp;</span><span class="token assign-left variable">v</span><span class="token operator">=</span>LATEST<span class="token operator">&amp;</span><span class="token assign-left variable">c</span><span class="token operator">=</span>exec
+    导读
+  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            Java核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+    Java基础
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+    Java进阶
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+    Java高级
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+    Java8新特性
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            Spring核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+    IOC核心技术
+  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+    AOP核心技术
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            JVM核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+    JVM调优技术
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+    JVM性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+    Tomcat性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+    MySQL性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+    操作系统性能调优
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+    底层技术
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+    源码分析
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+    基础案例
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+    实战案例
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+    面试
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+    系统架构
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+    Spring源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+    SpringMVC源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+    MyBatis源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+    Dubbo源码
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            缓存技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+    Redis
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            服务注册发现
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+    Zookeeper
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            消息中间件
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+    RabbitMQ
+  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+    RocketMQ
+  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+    Kafka
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            网络通信
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+    Netty
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            远程调用
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+    Dubbo
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            数据库
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+    MongoDB
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            搜索引擎
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+    ElasticSearch
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+    SpringBoot
+  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+    SpringCloudAlibaba
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+    字节码编程
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+    手写线程池
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+    分布式限流
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+    开源项目
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+    SpringCloud Alibaba实战
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+    log4j重大漏洞
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+    基础环境篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+    渗透工具篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+    木马篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+    SQL注入篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+    漏洞拿Shell篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+    暴力破解篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+    渗透脚本篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+    数据与系统提权篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+    客户端渗透篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+    社会工程学
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+    问题记录篇
+  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+    面试必问系列
+  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            出版图书
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+    《深入理解高并发编程：核心原理与案例实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+    《深入理解分布式事务：原理与实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+    《MySQL技术大全：开发、优化与运维实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+    《海量数据处理与大数据技术实战》
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            电子书籍
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+    冰河的渗透实战笔记
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+    关于自己
+  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+    关于学习
+  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+    关于职场
+  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+    B站
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+    导读
+  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            Java核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+    Java基础
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+    Java进阶
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+    Java高级
+  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+    Java8新特性
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            Spring核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+    IOC核心技术
+  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+    AOP核心技术
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            JVM核心技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+    JVM调优技术
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+    JVM性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+    Tomcat性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+    MySQL性能调优
+  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+    操作系统性能调优
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+    底层技术
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+    源码分析
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+    基础案例
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+    实战案例
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+    面试
+  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+    系统架构
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+    Spring源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+    SpringMVC源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+    MyBatis源码
+  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+    Dubbo源码
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            缓存技术
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+    Redis
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            服务注册发现
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+    Zookeeper
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            消息中间件
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+    RabbitMQ
+  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+    RocketMQ
+  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+    Kafka
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            网络通信
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+    Netty
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            远程调用
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+    Dubbo
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            数据库
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+    MongoDB
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            搜索引擎
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+    ElasticSearch
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+    SpringBoot
+  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+    SpringCloudAlibaba
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+    字节码编程
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+    手写线程池
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+    分布式限流
+  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+    开源项目
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+    SpringCloud Alibaba实战
+  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+    log4j重大漏洞
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+    基础环境篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+    渗透工具篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+    木马篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+    SQL注入篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+    漏洞拿Shell篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+    暴力破解篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+    渗透脚本篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+    数据与系统提权篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+    客户端渗透篇
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+    社会工程学
+  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+    问题记录篇
+  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+    面试必问系列
+  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+            出版图书
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+    《深入理解高并发编程：核心原理与案例实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+    《深入理解分布式事务：原理与实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+    《MySQL技术大全：开发、优化与运维实战》
+  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+    《海量数据处理与大数据技术实战》
+  </a></li></ul></li><li class="dropdown-item"><h4>
+            电子书籍
+          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+    冰河的渗透实战笔记
+  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+    关于自己
+  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+    关于学习
+  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+    关于职场
+  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+    B站
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>SpringBoot</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springboot/default.html" class="sidebar-link">关于我</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>SpringCloudAlibaba</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》专栏开篇啦</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-04-SA实战·第一篇-专栏设计.html" class="sidebar-link">SA实战 · 《SpringCloud Alibaba实战》专栏设计</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-09-SA实战-微服务介绍.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》微服务介绍</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-13-SA实战·项目说明-流程设计-技术选型-模块划分.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》项目说明、流程设计、技术选型与模块划分</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-18-SA实战-开撸-完成通用模块的开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》开撸：完成通用模块的开发</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-21-SA实战-完成三大微服务的搭建与交互开发.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》快速搭建三大微服务并完成交互开发与测试</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-25-SA实战-服务治理-实现服务的注册与发现.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》服务治理：实现服务的自动注册与发现</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-27-SA实战-第8章-服务治理-实现服务调用的负载均衡.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第8章-服务治理：实现服务调用的负载均衡</a></li><li><a href="/md/microservices/springcloudalibaba/2022-04-28-SA实战-第9章-服务容错-服务雪崩与容错方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第9章-服务容错：服务雪崩与容错方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-03-SA实战-第10章-服务容错-Fegin整合Sentinel.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第10章-服务容错：项目整合Sentinel实现限流与容错</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-05-SA实战-第11章-服务容错加餐-Sentinel核心技术与配置规则.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第11章-服务容错加餐：Sentinel核心技术与配置规则（最全使用教程）</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第12章-服务网关-网关概述与核心架构.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第12章-服务网关：网关概述与核心架构</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-08-SA实战-第13章-服务网关-项目整合SpringCloudGateway.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第13章-服务网关：项目整合SpringCloud Gateway网关</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-10-SA实战-第14章-服务网关-SpringCloudGateway核心技术.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第14章-服务网关加餐：SpringCloud Gateway核心技术</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-11-SA实战-第15章-链路追踪-核心原理与解决方案.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第15章-链路追踪：核心原理与解决方案</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA实战-第17章-链路追踪-Sleuth整合ZipKin.html" class="active sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-17-SA实战-第18章-消息服务-MQ使用场景与选型对比.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第18章-消息服务：MQ使用场景与选型对比</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-18-SA实战-第19章-消息服务-项目整合RocketMQ.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第19章-消息服务：项目整合RocketMQ</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-20-SA实战-第20章-消息服务-RocketMQ核心技术.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第20章-消息服务：RocketMQ核心技术</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-21-SA实战-第21章-服务配置-服务配置介绍与Nacos核心概念.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第21章-服务配置：服务配置介绍与Nacos核心概念</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-23-SA实战-第22章-服务配置-项目整合Nacos配置中心.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第22章-服务配置：项目整合Nacos配置中心</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-24-SA实战-第23章-服务配置-实现动态刷新与配置共享.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第23章-服务配置：实现动态刷新与配置共享</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-25-SA实战-第24章-分布式事务-分布式事务核心原理与Seata介绍.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第24章-分布式事务：分布式事务核心原理与Seata介绍</a></li><li><a href="/md/microservices/springcloudalibaba/2022-05-25-SA实战-第25章-分布式事务-项目整合Seata实现分布式事务.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第25章-分布式事务：项目整合Seata实现分布式事务</a></li><li><a href="/md/microservices/springcloudalibaba/2022-06-15-SA实战-第26章-专栏结束语.html" class="sidebar-link">SA实战 ·《SpringCloud Alibaba实战》第26章-专栏结束语</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="sa实战-·《springcloud-alibaba实战》第17章-链路追踪-sleuth整合zipkin"><a href="#sa实战-·《springcloud-alibaba实战》第17章-链路追踪-sleuth整合zipkin" class="header-anchor">#</a> SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</h1> <p><strong>大家好，我是冰河~~</strong></p> <blockquote><p>一不小心《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏都更新到第17章了，再不上车就跟不上了，小伙伴们快跟上啊！</p> <p>注意：本项目完整源码加入 <strong><a href="https://public.zsxq.com/groups/48848484411888.html" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong> 知识星球即可获取，文末有优惠券。</p></blockquote> <p>在《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500408&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏前面的文章中，我们实现了用户微服务、商品微服务和订单微服务之间的远程调用，并且实现了服务调用的负载均衡。也基于阿里开源的Sentinel实现了服务的限流与容错，并详细介绍了Sentinel的核心技术与配置规则。简单介绍了服务网关，并对SpringCloud Gateway的核心架构进行了简要说明，也在项目中整合了SpringCloud Gateway网关实现了通过网关访问后端微服务，同时，也基于SpringCloud Gateway整合Sentinel实现了网关的限流功能，详细介绍了SpringCloud Gateway网关的核心技术。在链路追踪章节，我们开始简单介绍了分布式链路追踪技术与解决方案，随后在项目中整合Sleuth实现了链路追踪。</p> <h2 id="本章总览"><a href="#本章总览" class="header-anchor">#</a> 本章总览</h2> <p><img alt="sa-2022-05-13-019" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-019.png" loading="lazy" class="lazy"></p> <p><strong>注意：有很多小伙伴反馈说，在使用Zipkin整合ES时，报错了，这里，我使用ElasticSearch8.2.0是因为我修改了ZipKin的源码，解决了ZipKin与ElasticSearch8.2.0的兼容性问题，目前我使用的版本暂不开放，如果大家在整合的过程中出现了问题，可以使用ZipKin 2.23.16 + ElasticSearch 7.17.4。项目代码无需修改。</strong></p> <h2 id="本章概述"><a href="#本章概述" class="header-anchor">#</a> 本章概述</h2> <p>在前面整合Sleuth实现链路追踪时，我们是通过查看日志的情况来了解系统调用的链路情况，这并不是一种很好的解决方案，如果系统所包含的微服务越来越多，通过查看日志的方式来分析系统的调用是非常复杂的，在实际项目中根本不可行。此时，我们可以将Sleuth和ZipKin进行整合，利用ZipKin将日志进行聚合，将链路日志进行可视化展示，并支持全文检索。</p> <h2 id="zipkin核心架构"><a href="#zipkin核心架构" class="header-anchor">#</a> ZipKin核心架构</h2> <p>Zipkin 是 Twitter 的一个开源项目，它基于Google Dapper论文实现，可以收集微服务运行过程中的实时链路数据，并进行展示。</p> <h3 id="zipkin概述"><a href="#zipkin概述" class="header-anchor">#</a> ZipKin概述</h3> <p>Zipkin是一种分布式链路跟踪系统，能够收集微服务运行过程中的实时调用链路信息，并能够将这些调用链路信息展示到Web界面上供开发人员分析，开发人员能够从ZipKin中分析出调用链路中的性能瓶颈，识别出存在问题的应用程序，进而定位问题和解决问题。</p> <h3 id="zipkin核心架构-2"><a href="#zipkin核心架构-2" class="header-anchor">#</a> ZipKin核心架构</h3> <p>ZipKin的核心架构图如下所示。</p> <p><img alt="sa-2022-05-13-001" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-001.png" loading="lazy" class="lazy"></p> <p align="right"><font size="1">注：图片来源：https://zipkin.io/pages/architecture.html</font></p> <p>其中，ZipKin核心组件的功能如下所示。</p> <ul><li>Reporter：ZipKin中上报链路数据的模块，主要配置在具体的微服务应用中。</li> <li>Transport：ZipKin中传输链路数据的模块，此模块可以配置为Kafka，RocketMQ、RabbitMQ等。</li> <li>Collector：ZipKin中收集并消费链路数据的模块，默认是通过http协议收集，可以配置为Kafka消费。</li> <li>Storage：ZipKin中存储链路数据的模块，此模块的具体可以配置为ElasticSearch、Cassandra或者MySQL，目前ZipKin支持这三种数据持久化方式。</li> <li>API：ZipKin中的API 组件，主要用来提供外部访问接口。比如给客户端展示跟踪信息，或是开放给外部系统实现监控等。</li> <li>UI： ZipKin中的UI 组件，基于API组件实现的上层应用。通过UI组件用户可以方便并且很直观地查询和分析跟踪信息。</li></ul> <p>Zipkin在总体上会分为两个端，一个是Zipkin服务端，一个是Zipkin客户端，客户端主要是配置在微服务应用中，收集微服务中的调用链路信息，将数据发送给ZipKin服务端。</p> <h2 id="项目整合zipkin"><a href="#项目整合zipkin" class="header-anchor">#</a> 项目整合ZipKin</h2> <p>Zipkin总体上分为服务端和客户端，我们需要下载并启动ZipKin服务端的Jar包，在微服务中集成ZipKin的客户端。</p> <h3 id="下载安装zipkin服务端"><a href="#下载安装zipkin服务端" class="header-anchor">#</a> 下载安装ZipKin服务端</h3> <p>（1）下载ZipKin服务端Jar文件，可以直接在浏览器中输入如下链接进行下载。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>https://search.maven.org/remote_content?g<span class="token operator">=</span>io.zipkin.java<span class="token operator">&amp;</span><span class="token assign-left variable">a</span><span class="token operator">=</span>zipkin-server<span class="token operator">&amp;</span><span class="token assign-left variable">v</span><span class="token operator">=</span>LATEST<span class="token operator">&amp;</span><span class="token assign-left variable">c</span><span class="token operator">=</span>exec
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>如果大家使用的是Linux操作系统，也可以在命令行输入如下命令进行下载。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token function">wget</span> https://search.maven.org/remote_content?g<span class="token operator">=</span>io.zipkin.java<span class="token operator">&amp;</span><span class="token assign-left variable">a</span><span class="token operator">=</span>zipkin-server<span class="token operator">&amp;</span><span class="token assign-left variable">v</span><span class="token operator">=</span>LATEST<span class="token operator">&amp;</span><span class="token assign-left variable">c</span><span class="token operator">=</span>exec
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>这里，我通过浏览器下载的ZipKin服务端Jar文件为：zipkin-server-2.12.9-exec.jar。</p> <p>（2）在命令行输入如下命令启动ZipKin服务端。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>java -jar zipkin-server-2.12.9-exec.jar
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（3）由于ZipKin服务端启动时，默认监听的端口号为9411，所以，在浏览器中输入<code>http://localhost:9411</code>链接就可以打开ZipKin的界面，如下所示。</p> <p><img alt="sa-2022-05-13-002" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-002.png" loading="lazy" class="lazy"></p> <p>在浏览器中输入<code>http://localhost:9411</code>链接能够打开上述页面就说明ZipKin服务端已经准备好啦。</p> <h3 id="项目整合zipkin客户端"><a href="#项目整合zipkin客户端" class="header-anchor">#</a> 项目整合ZipKin客户端</h3> <p>（1）在每个微服务（用户微服务shop-user，商品微服务shop-product，订单微服务shop-order，网关服务shop-gateway）中添加ZipKin依赖，如下所示。</p> <div class="language-xml line-numbers-mode"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
@@ -557,15 +557,15 @@
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br></div></div><p>小伙伴们也可以根据Json数据分析下系统的调用链路。</p> <h2 id="zipkin数据持久化"><a href="#zipkin数据持久化" class="header-anchor">#</a> ZipKin数据持久化</h2> <p>我们实现了在项目中集成ZipKin，但是此时我们集成ZipKin后，ZipKin中的数据是保存在系统内存中的，如果我们重启了ZipKin，则保存在系统内存中的数据就会丢失，那我如何避免数据丢失呢？ZipKin支持将数据进行持久化来防止数据丢失，可以将数据保存到ElasticSearch、Cassandra或者MySQL中。这里，我们重点介绍下如何将数据保存到MySQL和ElasticSearch中。</p> <h3 id="zipkin数据持久化到mysql"><a href="#zipkin数据持久化到mysql" class="header-anchor">#</a> ZipKin数据持久化到MySQL</h3> <p>（1）将Zipkin数据持久化到MySQL，我们需要知道MySQL的数据表结构，好在ZipKin提供了MySQL脚本，小伙伴们可以在链接：https://github.com/openzipkin/zipkin/tree/master/zipkin-storage里面下载。</p> <p><img alt="sa-2022-05-13-014" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-014.png" loading="lazy" class="lazy"></p> <p>当然，我将下载后的MySQL脚本放到了网关服务shop-gateway的resources目录下的scripts目录下。</p> <p><img alt="sa-2022-05-13-015" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-015.png" loading="lazy" class="lazy"></p> <p>（2）在MySQL数据库中新建zipkin数据库，如下所示。</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">database</span> <span class="token keyword">if</span> <span class="token operator">not</span> <span class="token keyword">exists</span> zipkin<span class="token punctuation">;</span>
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（3）在新建的数据库zipkin中运行mysql.sql脚本，运行脚本后的效果如下所示。</p> <p><img alt="sa-2022-05-13-016" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-016.png" loading="lazy" class="lazy"></p> <p>可以看到，在zipkin数据库中新建了zipkin_annotations、zipkin_dependencies和zipkin_spans三张数据表。</p> <p>（4）启动ZipKin时指定MySQL数据源，如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>java -jar zipkin-server-2.12.9-exec.jar --STORAGE_TYPE<span class="token operator">=</span>mysql --MYSQL_HOST<span class="token operator">=</span><span class="token number">127.0</span>.0.1 --MYSQL_TCP_PORT<span class="token operator">=</span><span class="token number">3306</span> --MYSQL_DB<span class="token operator">=</span>zipkin --MYSQL_USER<span class="token operator">=</span>root --MYSQL_PASS<span class="token operator">=</span>root
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（5）启动ZipKin后，在浏览器中访问链接<code>http://localhost:10001/server-order/order/submit_order?userId=1001&amp;productId=1001&amp;count=1</code>，如下所示。</p> <p><img alt="sa-2022-05-13-003" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-003.png" loading="lazy" class="lazy"></p> <p>（6）查看zipkin数据库中的数据，发现zipkin_annotations数据表与zipkin_spans数据表已经存在系统的调用链路数据。</p> <ul><li>zipkin_annotations数据表部分数据如下所示。</li></ul> <p><img alt="sa-2022-05-13-017" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-017.png" loading="lazy" class="lazy"></p> <ul><li>zipkin_spans数据表部分数据如下所示。</li></ul> <p><img alt="sa-2022-05-13-018" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-018.png" loading="lazy" class="lazy"></p> <p>可以看到，ZipKin已经将数据持久化到MySQL中，重启ZipKin后就会从MySQL中读取数据，数据也不会丢失了。</p> <h3 id="zipkin数据持久化到elasticsearch"><a href="#zipkin数据持久化到elasticsearch" class="header-anchor">#</a> ZipKin数据持久化到ElasticSearch</h3> <p>（1）到ElasticSearch官网下载ElasticSearch，链接为：https://www.elastic.co/cn/downloads/elasticsearch。这里下载的安装包是：elasticsearch-8.2.0-windows-x86_64.zip。</p> <p>（2）解压elasticsearch-8.2.0-windows-x86_64.zip，在解压后的bin目录下找到elasticsearch.bat脚本，双击运行ElasticSearch。</p> <p>（3）启动ZipKin服务端时，指定ElasticSearch，如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>java -jar zipkin-server-2.12.9-exec.jar --STORAGE_TYPE<span class="token operator">=</span>elasticsearch --ESHOST<span class="token operator">=</span>localhost:9200
-</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（4）启动ZipKin服务端后，在浏览器中访问链接<code>http://localhost:10001/server-order/order/submit_order?userId=1001&amp;productId=1001&amp;count=1</code>，如下所示。</p> <p><img alt="sa-2022-05-13-003" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-003.png" loading="lazy" class="lazy"></p> <p>ZipKin就会将请求的链路信息保存到ElasticSearch中进行持久化。</p> <p><strong>注意：有很多小伙伴反馈说，在使用Zipkin整合ES时，报错了，这里，我使用ElasticSearch8.2.0是因为我修改了ZipKin的源码，解决了ZipKin与ElasticSearch8.2.0的兼容性问题，目前我使用的版本暂不开放，如果大家在整合的过程中出现了问题，可以使用ZipKin 2.23.16 + ElasticSearch 7.17.4。项目代码无需修改。</strong></p> <p><strong>好了，今天我们就到儿吧，限于篇幅，文中并未给出完整的案例源代码，想要完整源代码的小伙伴可加入【冰河技术】知识星球获取源码。也可以加我微信：hacker_binghe，一起交流技术。</strong></p> <p><strong>另外，一不小心就写了17章了，小伙伴们你们再不上车就真的跟不上了！！！</strong></p> <h2 id="关于星球"><a href="#关于星球" class="header-anchor">#</a> 关于星球</h2> <p>最近，冰河创建了【冰河技术】知识星球，《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500214&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏的源码获取方式会放到知识星球中，同时在微信上会创建专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <p>今天，【冰河技术】知识星球再开放200张优惠券，还没上车的小伙伴赶紧啦，再不上车就跟不上啦！！</p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>2.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>3.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>4.提供站点 https://binghe001.github.io 所有学习内容的指导、帮助</p> <p>5.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>6.可以发送你的简历到我的邮箱，提供简历批阅服务</p> <p>7.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>8.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>9.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="星球门票价格"><a href="#星球门票价格" class="header-anchor">#</a> 星球门票价格</h3> <p>星球目前的门票价格50元，随着每次加入新实战项目和分享硬核技术上调入场价格。</p> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信「hacker_binghe」扫二维码，或者去公众号「冰河技术」回复「星球」扫二维码进圈。</p> <p>最后，小伙伴们可以扫描或者长按下图中的二维码加入星球，也可以在 <strong>冰河技术</strong> 公众号回复 “ <strong>星球</strong> ” ，领取入场优惠券。</p> <p><img alt="sa-2022-04-21-007" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-04-28-008.png" loading="lazy" class="lazy"></p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/microservices/springcloudalibaba/2022-05-13-SA实战-第17章-链路追踪-Sleuth整合ZipKin.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/6/30</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
-        ←
-        <a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html" class="prev">
-          SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪
-        </a></span> <span class="next"><a href="/md/microservices/springcloudalibaba/2022-05-17-SA实战-第18章-消息服务-MQ使用场景与选型对比.html">
-          SA实战 ·《SpringCloud Alibaba实战》第18章-消息服务：MQ使用场景与选型对比
-        </a>
-        →
-      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章概述" class="toc-sidebar-link">本章概述</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构" class="toc-sidebar-link">ZipKin核心架构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin概述" class="toc-sidebar-link">ZipKin概述</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构-2" class="toc-sidebar-link">ZipKin核心架构</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin" class="toc-sidebar-link">项目整合ZipKin</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#下载安装zipkin服务端" class="toc-sidebar-link">下载安装ZipKin服务端</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin客户端" class="toc-sidebar-link">项目整合ZipKin客户端</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化" class="toc-sidebar-link">ZipKin数据持久化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到mysql" class="toc-sidebar-link">ZipKin数据持久化到MySQL</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到elasticsearch" class="toc-sidebar-link">ZipKin数据持久化到ElasticSearch</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章概述" class="toc-sidebar-link">本章概述</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构" class="toc-sidebar-link">ZipKin核心架构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin概述" class="toc-sidebar-link">ZipKin概述</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构-2" class="toc-sidebar-link">ZipKin核心架构</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin" class="toc-sidebar-link">项目整合ZipKin</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#下载安装zipkin服务端" class="toc-sidebar-link">下载安装ZipKin服务端</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin客户端" class="toc-sidebar-link">项目整合ZipKin客户端</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化" class="toc-sidebar-link">ZipKin数据持久化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到mysql" class="toc-sidebar-link">ZipKin数据持久化到MySQL</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到elasticsearch" class="toc-sidebar-link">ZipKin数据持久化到ElasticSearch</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html" style="margin:10px;">
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（4）启动ZipKin服务端后，在浏览器中访问链接<code>http://localhost:10001/server-order/order/submit_order?userId=1001&amp;productId=1001&amp;count=1</code>，如下所示。</p> <p><img alt="sa-2022-05-13-003" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-05-13-003.png" loading="lazy" class="lazy"></p> <p>ZipKin就会将请求的链路信息保存到ElasticSearch中进行持久化。</p> <p><strong>注意：有很多小伙伴反馈说，在使用Zipkin整合ES时，报错了，这里，我使用ElasticSearch8.2.0是因为我修改了ZipKin的源码，解决了ZipKin与ElasticSearch8.2.0的兼容性问题，目前我使用的版本暂不开放，如果大家在整合的过程中出现了问题，可以使用ZipKin 2.23.16 + ElasticSearch 7.17.4。项目代码无需修改。</strong></p> <p><strong>好了，今天我们就到儿吧，限于篇幅，文中并未给出完整的案例源代码，想要完整源代码的小伙伴可加入【冰河技术】知识星球获取源码。也可以加我微信：hacker_binghe，一起交流技术。</strong></p> <p><strong>另外，一不小心就写了17章了，小伙伴们你们再不上车就真的跟不上了！！！</strong></p> <h2 id="关于星球"><a href="#关于星球" class="header-anchor">#</a> 关于星球</h2> <p>最近，冰河创建了【冰河技术】知识星球，《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2337104419664084992&amp;scene=173&amp;from_msgid=2247500214&amp;from_itemidx=1&amp;count=3&amp;nolastread=1#wechat_redirect" target="_blank" rel="noopener noreferrer">SpringCloud Alibaba实战<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》专栏的源码获取方式会放到知识星球中，同时在微信上会创建专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <p>今天，【冰河技术】知识星球再开放200张优惠券，还没上车的小伙伴赶紧啦，再不上车就跟不上啦！！</p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>2.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>3.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>4.提供站点 https://binghe001.github.io 所有学习内容的指导、帮助</p> <p>5.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>6.可以发送你的简历到我的邮箱，提供简历批阅服务</p> <p>7.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>8.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>9.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="星球门票价格"><a href="#星球门票价格" class="header-anchor">#</a> 星球门票价格</h3> <p>星球目前的门票价格50元，随着每次加入新实战项目和分享硬核技术上调入场价格。</p> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信「hacker_binghe」扫二维码，或者去公众号「冰河技术」回复「星球」扫二维码进圈。</p> <p>最后，小伙伴们可以扫描或者长按下图中的二维码加入星球，也可以在 <strong>冰河技术</strong> 公众号回复 “ <strong>星球</strong> ” ，领取入场优惠券。</p> <p><img alt="sa-2022-04-21-007" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-04-28-008.png" loading="lazy" class="lazy"></p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/microservices/springcloudalibaba/2022-05-13-SA实战-第17章-链路追踪-Sleuth整合ZipKin.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/1</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+          ←
+          <a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html" class="prev">
+            SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪
+          </a></span> <span class="next"><a href="/md/microservices/springcloudalibaba/2022-05-17-SA实战-第18章-消息服务-MQ使用场景与选型对比.html">
+            SA实战 ·《SpringCloud Alibaba实战》第18章-消息服务：MQ使用场景与选型对比
+          </a>
+          →
+        </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章概述" class="toc-sidebar-link">本章概述</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构" class="toc-sidebar-link">ZipKin核心架构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin概述" class="toc-sidebar-link">ZipKin概述</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构-2" class="toc-sidebar-link">ZipKin核心架构</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin" class="toc-sidebar-link">项目整合ZipKin</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#下载安装zipkin服务端" class="toc-sidebar-link">下载安装ZipKin服务端</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin客户端" class="toc-sidebar-link">项目整合ZipKin客户端</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化" class="toc-sidebar-link">ZipKin数据持久化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到mysql" class="toc-sidebar-link">ZipKin数据持久化到MySQL</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到elasticsearch" class="toc-sidebar-link">ZipKin数据持久化到ElasticSearch</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">SA实战 ·《SpringCloud Alibaba实战》第17章-链路追踪：Sleuth整合ZipKin</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章总览" class="toc-sidebar-link">本章总览</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#本章概述" class="toc-sidebar-link">本章概述</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构" class="toc-sidebar-link">ZipKin核心架构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin概述" class="toc-sidebar-link">ZipKin概述</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin核心架构-2" class="toc-sidebar-link">ZipKin核心架构</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin" class="toc-sidebar-link">项目整合ZipKin</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#下载安装zipkin服务端" class="toc-sidebar-link">下载安装ZipKin服务端</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#项目整合zipkin客户端" class="toc-sidebar-link">项目整合ZipKin客户端</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化" class="toc-sidebar-link">ZipKin数据持久化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到mysql" class="toc-sidebar-link">ZipKin数据持久化到MySQL</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#zipkin数据持久化到elasticsearch" class="toc-sidebar-link">ZipKin数据持久化到ElasticSearch</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#星球门票价格" class="toc-sidebar-link">星球门票价格</a></li></ul></li><li><a href="/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/microservices/springcloudalibaba/2022-05-13-SA%E5%AE%9E%E6%88%98-%E7%AC%AC17%E7%AB%A0-%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA-Sleuth%E6%95%B4%E5%90%88ZipKin.html" style="margin:10px;">
                 可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
             </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
                 PS：添加时请备注<b>读者加群</b>，谢谢！
@@ -573,7 +573,7 @@
               </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
                 <br>2. 时刻警醒自己保持技术人的初心；
               </div></div></div></div> <div title="SA实战 ·《SpringCloud Alibaba实战》第16章-链路追踪：项目整合Sleuth实现链路追踪" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/microservices/springcloudalibaba/2022-05-12-SA实战-第16章-链路追踪-项目整合Sleuth实现链路追踪.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="SA实战 ·《SpringCloud Alibaba实战》第18章-消息服务：MQ使用场景与选型对比" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/microservices/springcloudalibaba/2022-05-17-SA实战-第18章-消息服务-MQ使用场景与选型对比.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
-                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
-    <script src="/assets/js/cg-styles.js?v=1656579432482" defer></script><script src="/assets/js/cg-3.js?v=1656579432482" defer></script><script src="/assets/js/cg-4.js?v=1656579432482" defer></script><script src="/assets/js/cg-307.js?v=1656579432482" defer></script><script src="/assets/js/cg-5.js?v=1656579432482" defer></script><script src="/assets/js/cg-6.js?v=1656579432482" defer></script><script src="/assets/js/cg-app.js?v=1656579432482" defer></script>
+                    扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1656650094664" defer></script><script src="/assets/js/cg-3.js?v=1656650094664" defer></script><script src="/assets/js/cg-4.js?v=1656650094664" defer></script><script src="/assets/js/cg-307.js?v=1656650094664" defer></script><script src="/assets/js/cg-5.js?v=1656650094664" defer></script><script src="/assets/js/cg-6.js?v=1656650094664" defer></script><script src="/assets/js/cg-app.js?v=1656650094664" defer></script>
   </body>
 </html>
