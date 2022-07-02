@@ -109,7 +109,7 @@
 回复 “**互联网工程**” 领取《跟冰河学习互联网工程技术》PDF电子书。  
 
 
-## 公众号文章同步
+## 公众号文章同步（善用 Ctrl+F 搜索文章）
 
 ### 我的新书
 
@@ -164,7 +164,6 @@
 * [面试高并发，凉了！！（全程高能，建议收藏）](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247499600&idx=1&sn=cdb4b375676fc71357cbca6a30d9b93d&chksm=cf564851f821c147617db702fe4af386fe1e2acea1caa318ba33a3dd3878f538ae4ce74d3ea4&token=2138570566&lang=zh_CN#rd)
 * [放假了再撸一篇：StampedLock（建议收藏）](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247499371&idx=1&sn=4651483f83675642657c0bfc71cfdc5c&chksm=cf56496af821c07cbc5acf16ee24e36da72f73554916a5b01427e0b2d36e728e19e885b3a94c&token=2138570566&lang=zh_CN#rd)
 * [一个Callable接口能有多少知识点？](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247499203&idx=1&sn=ec3fed322fbb7497563921d1a31924b8&chksm=cf564ac2f821c3d467b6efa428c2b67885e466e13b67fd8c363cbb3ab0ae0edbba86c18b269e&token=2138570566&lang=zh_CN#rd)
-
 * [10分钟手撸Java线程池，yyds！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247497033&idx=1&sn=2d4dfe36a6799e8484915d0faf86c7d5&chksm=cf564248f821cb5e88fd823c1203a534fe3f9dff4b81cd29cebf5c43fc0619a765716bc7a093&token=1170633251&lang=zh_CN#rd)
 * [不得不说的几种限流算法](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247496873&idx=2&sn=be0a6919734f01d042c63a12cf692d03&chksm=cf5643a8f821cabeae2c37ab468552b9a104f3e0ed5f81ffb862faa1c6da982754eae2c0ac6d&token=1170633251&lang=zh_CN#rd)
 * [一文扫尽Java中的并发原子类，yyds！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247496611&idx=1&sn=12885d386beeda9ebaa7192eeb74de07&chksm=cf5644a2f821cdb4b458a43e26c8f3af2c1f3d274d82ecc53ca9e0873f36cd12022a3c179a42&token=627091476&lang=zh_CN#rd)
@@ -816,7 +815,6 @@
 * [冰河十年前的预测如今被阿里实现了！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247499326&idx=1&sn=7984a35462a1d664ea3134954589b07f&chksm=cf56493ff821c02983d959ad131a7f182cd5030d24a0437567f26561cb3326f42880fc31ae3a&token=2138570566&lang=zh_CN#rd)
 * [冰河写的这本书在阿里巴巴火了！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247498952&idx=1&sn=4c585cd34e7145fa29d62b5df1e12c5f&chksm=cf564bc9f821c2dfd05d3db88cfae52cb60e8eb1ee4dd85e5b91cafc7ef5f37cd2c9ebaabf90&token=2138570566&lang=zh_CN#rd)
 * [这个月，4本书上架阿里藏经阁！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247498919&idx=1&sn=067fb09ae6143ebcb78454b25a12e3ec&chksm=cf564ba6f821c2b074b57c79cea6c0f35424c6d64a97f89d4614710dd72e3eb8a756b4bd3748&token=2138570566&lang=zh_CN#rd)
-
 * [冰河最新电子书上架第一天阅读超15万！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247498685&idx=1&sn=b96cfb7e32ed9fd3a5c0614c10175901&chksm=cf564cbcf821c5aa9bee21d05b5399ef22e21adf7e2650073c3b288d7bdfe08e8b00b544c698&token=2138570566&lang=zh_CN#rd)
 * [B站来袭！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247498662&idx=1&sn=f07ef67769b1beeee24bf41ace71100f&chksm=cf564ca7f821c5b1fdd85fd3bffc61b83e69cc018f34bf2107d8667f2fd7fb1103546b981e61&token=2138570566&lang=zh_CN#rd)
 * [Spring Cloud 突发重大漏洞！！](https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&mid=2247499908&idx=1&sn=54c792a0519eff9d7ae1e600805aeef7&chksm=cf567785f821fe93d9abc40abe3a01306ba97b53069e59b4a685a3a76698d9d2c437b46caee1&token=2138570566&lang=zh_CN#rd)
