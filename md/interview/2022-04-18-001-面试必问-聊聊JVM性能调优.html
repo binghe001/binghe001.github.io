@@ -21,7 +21,7 @@
             })();
             </script>
     <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
-    <meta property="article:modified_time" content="2022-07-04T16:25:04.000Z">
+    <meta property="article:modified_time" content="2022-07-11T06:38:52.000Z">
     <meta property="og:title" content="面试必问 | 聊聊JVM性能调优？">
     <meta property="og:type" content="article">
     <meta property="og:url" content="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html">
@@ -36,303 +36,311 @@
     <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <link rel="preload" href="/assets/css/0.styles.e945b360.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1656952104620" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-276.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1656952104620" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1656952104620" as="script">
-    <link rel="stylesheet" href="/assets/css/0.styles.e945b360.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1656952104620">
+    <link rel="preload" href="/assets/css/0.styles.399be451.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1657521753750" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-277.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1657521753750" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1657521753750" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.399be451.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1657521753750">
   </head>
   <body>
     <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-    导读
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            Java核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-    Java基础
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-    Java进阶
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-    Java高级
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-    Java8新特性
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            Spring核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-    IOC核心技术
-  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-    AOP核心技术
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            JVM核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-    JVM调优技术
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-    JVM性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-    Tomcat性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-    MySQL性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-    操作系统性能调优
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-    底层技术
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-    源码分析
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-    基础案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-    实战案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-    面试
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-    系统架构
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-    Spring源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-    SpringMVC源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-    MyBatis源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-    Dubbo源码
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            缓存技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-    Redis
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            服务注册发现
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-    Zookeeper
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            消息中间件
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-    RabbitMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-    RocketMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-    Kafka
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            网络通信
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-    Netty
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            远程调用
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-    Dubbo
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            数据库
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-    MongoDB
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            搜索引擎
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-    ElasticSearch
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-    SpringBoot
-  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloudAlibaba
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-    字节码编程
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-    手写线程池
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-    分布式限流
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-    开源项目
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloud Alibaba实战
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-    log4j重大漏洞
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-    基础环境篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-    渗透工具篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-    木马篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-    SQL注入篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-    漏洞拿Shell篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-    暴力破解篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-    渗透脚本篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-    数据与系统提权篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-    客户端渗透篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-    社会工程学
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-    问题记录篇
-  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-    面试必问系列
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            出版图书
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-    《深入理解高并发编程：核心原理与案例实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-    《深入理解分布式事务：原理与实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-    《MySQL技术大全：开发、优化与运维实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-    《海量数据处理与大数据技术实战》
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            电子书籍
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-    冰河的渗透实战笔记
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-    关于自己
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-    关于学习
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-    关于职场
-  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    B站
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    Github
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
-    导读
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            Java核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
-    Java基础
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
-    Java进阶
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
-    Java高级
-  </a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
-    Java8新特性
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            Spring核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
-    IOC核心技术
-  </a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
-    AOP核心技术
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            JVM核心技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
-    JVM调优技术
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
-    JVM性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
-    Tomcat性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
-    MySQL性能调优
-  </a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
-    操作系统性能调优
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
-    底层技术
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
-    源码分析
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
-    基础案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
-    实战案例
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
-    面试
-  </a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
-    系统架构
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
-    Spring源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
-    SpringMVC源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
-    MyBatis源码
-  </a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
-    Dubbo源码
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            缓存技术
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
-    Redis
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            服务注册发现
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
-    Zookeeper
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            消息中间件
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
-    RabbitMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
-    RocketMQ
-  </a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
-    Kafka
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            网络通信
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
-    Netty
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            远程调用
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
-    Dubbo
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            数据库
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
-    MongoDB
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            搜索引擎
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
-    ElasticSearch
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
-    SpringBoot
-  </a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloudAlibaba
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
-    字节码编程
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
-    手写线程池
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
-    分布式限流
-  </a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
-    开源项目
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
-    SpringCloud Alibaba实战
-  </a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
-    log4j重大漏洞
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
-    基础环境篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
-    渗透工具篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
-    木马篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
-    SQL注入篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
-    漏洞拿Shell篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
-    暴力破解篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
-    渗透脚本篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
-    数据与系统提权篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
-    客户端渗透篇
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
-    社会工程学
-  </a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
-    问题记录篇
-  </a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
-    面试必问系列
-  </a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
-            出版图书
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
-    《深入理解高并发编程：核心原理与案例实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
-    《深入理解分布式事务：原理与实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
-    《MySQL技术大全：开发、优化与运维实战》
-  </a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
-    《海量数据处理与大数据技术实战》
-  </a></li></ul></li><li class="dropdown-item"><h4>
-            电子书籍
-          </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
-    冰河的渗透实战笔记
-  </a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
-    关于自己
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
-    关于学习
-  </a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
-    关于职场
-  </a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    B站
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
-    Github
-    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>面试必问系列</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="active sidebar-link">面试必问 | 聊聊JVM性能调优？</a></li><li><a href="/md/interview/2022-04-18-002-面试必问-聊聊MyBatis执行流程.html" class="sidebar-link">面试必问 | 聊聊MyBatis执行流程？</a></li><li><a href="/md/interview/2022-05-06-面试必问-哪些场景下Spring的事务会失效.html" class="sidebar-link">面试必问 | 哪些场景下Spring的事务会失效？</a></li><li><a href="/md/interview/2022-05-06-面试必问-如何设计一款高并发的消息中间件.html" class="sidebar-link">面试必问 | 如何设计一款高并发的消息中间件？</a></li><li><a href="/md/interview/2022-05-09-面试必问-聊聊MySQL三大核心日志的实现原理.html" class="sidebar-link">面试必问 | 聊聊MySQL三大核心日志的实现原理？</a></li><li><a href="/md/interview/2022-05-16-面试必问-聊聊Kafka的消费模型.html" class="sidebar-link">面试必问 | 聊聊Kafka的消费模型？</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="面试必问-聊聊jvm性能调优"><a href="#面试必问-聊聊jvm性能调优" class="header-anchor">#</a> 面试必问 | 聊聊JVM性能调优？</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>之前在写【<a href="https://blog.csdn.net/l1028386804/category_11717326.html" target="_blank" rel="noopener noreferrer">字节码编程<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>】系列时，不少小伙伴希望我能写一些关于面试的知识，出一些相对来说有一点技术深度的面试知识点。</p> <p>经过几天的思考，我决定暂时放下【<a href="https://blog.csdn.net/l1028386804/category_11717326.html" target="_blank" rel="noopener noreferrer">字节码编程<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>】的更新，先更新一些面试中经常会被问及的一些知识点，以便能够帮助小伙伴们系统的梳理面试中需要掌握的知识技能。</p> <p>主要的方式是以面试的角度，深度聊聊面试中经常被问及的各项知识点。</p> <p>对于工作3年左右的Java程序员来说，在面试大厂的过程中，面试官可能不会太关注你做了多少个项目、你的CRUD水平如何。更多的是关注你对某项技术点的理解深度，所以说，工作3年左右的小伙伴一定要把自己的重心放到技术的深度上来。</p> <p>今天，我们先一起聊聊关于JVM性能调优的话题，本文的主要结构如下所示。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/5871d32e4ac3164edb448ea9bd28da5d.png" loading="lazy" class="lazy"></p> <h2 id="常见面试题"><a href="#常见面试题" class="header-anchor">#</a> 常见面试题</h2> <p>关于JVM，一道常见的面试题就是：<strong>Java中创建的对象是存储在JVM中的哪个区域的？</strong></p> <p>例如，这里，我们简单的列举一行代码，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token class-name">User</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>面试必问系列</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="active sidebar-link">面试必问 | 聊聊JVM性能调优？</a></li><li><a href="/md/interview/2022-04-18-002-面试必问-聊聊MyBatis执行流程.html" class="sidebar-link">面试必问 | 聊聊MyBatis执行流程？</a></li><li><a href="/md/interview/2022-05-06-面试必问-哪些场景下Spring的事务会失效.html" class="sidebar-link">面试必问 | 哪些场景下Spring的事务会失效？</a></li><li><a href="/md/interview/2022-05-06-面试必问-如何设计一款高并发的消息中间件.html" class="sidebar-link">面试必问 | 如何设计一款高并发的消息中间件？</a></li><li><a href="/md/interview/2022-05-09-面试必问-聊聊MySQL三大核心日志的实现原理.html" class="sidebar-link">面试必问 | 聊聊MySQL三大核心日志的实现原理？</a></li><li><a href="/md/interview/2022-05-16-面试必问-聊聊Kafka的消费模型.html" class="sidebar-link">面试必问 | 聊聊Kafka的消费模型？</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="面试必问-聊聊jvm性能调优"><a href="#面试必问-聊聊jvm性能调优" class="header-anchor">#</a> 面试必问 | 聊聊JVM性能调优？</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>之前在写【<a href="https://blog.csdn.net/l1028386804/category_11717326.html" target="_blank" rel="noopener noreferrer">字节码编程<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>】系列时，不少小伙伴希望我能写一些关于面试的知识，出一些相对来说有一点技术深度的面试知识点。</p> <p>经过几天的思考，我决定暂时放下【<a href="https://blog.csdn.net/l1028386804/category_11717326.html" target="_blank" rel="noopener noreferrer">字节码编程<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>】的更新，先更新一些面试中经常会被问及的一些知识点，以便能够帮助小伙伴们系统的梳理面试中需要掌握的知识技能。</p> <p>主要的方式是以面试的角度，深度聊聊面试中经常被问及的各项知识点。</p> <p>对于工作3年左右的Java程序员来说，在面试大厂的过程中，面试官可能不会太关注你做了多少个项目、你的CRUD水平如何。更多的是关注你对某项技术点的理解深度，所以说，工作3年左右的小伙伴一定要把自己的重心放到技术的深度上来。</p> <p>今天，我们先一起聊聊关于JVM性能调优的话题，本文的主要结构如下所示。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/5871d32e4ac3164edb448ea9bd28da5d.png" loading="lazy" class="lazy"></p> <h2 id="常见面试题"><a href="#常见面试题" class="header-anchor">#</a> 常见面试题</h2> <p>关于JVM，一道常见的面试题就是：<strong>Java中创建的对象是存储在JVM中的哪个区域的？</strong></p> <p>例如，这里，我们简单的列举一行代码，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token class-name">User</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>关于上面的代码，不少小伙伴都知道，创建出来的User对象是放在JVM中的堆区域的，而User对象的引用是放在栈中的。但如果你只是了解到这种程度，那面试官就会认为你了解的太浅显了，可能就会达不到他们的要求。其实面试官想要了解你是否对JVM有一个更深入的认识。</p> <p>站在面试官的角度来看这个问题时，回答创建出来的User对象是放在JVM的堆区，也并没有错。但是JVM的堆内存区域又会分为年轻代和老年代，而年轻代又会分为Eden区和Survivor区。JVM堆空间的逻辑结构如下图所示。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/8f038390ec2b606e7a6f2ee1000481a1.png" loading="lazy" class="lazy"></p> <p>而面试官更想了解的是你能不能说出来创建的对象具体是存放在JVM堆空间的哪个区域。</p> <p>在JVM内部，会将整个堆空间划分成年轻代和老年代，年轻代默认会占整个堆内存空间的1/3，老年代默认会占整个堆内存空间的2/3。年轻代又会划分为Eden区和两个Survivor区，它们之间的默认比例是Eden：Survivor1：Survivor2 = 8:1:1。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/904de9f1387734dc3dd17aadc0cedda1.png" loading="lazy" class="lazy"></p> <p>如果你能回答出 <strong>新创建的User对象是存放在JVM堆空间中年轻代的Eden区</strong>，那面试官就会对你刮目相看了。当然，这里没有考虑JVM的逃逸分析情况，关于JVM的逃逸分析，大家可以参考《<a href="https://mp.weixin.qq.com/s?__biz=Mzg4MjU0OTM1OA==&amp;mid=2247497051&amp;idx=1&amp;sn=38312719e86b7f9cef31c00102da6c48&amp;chksm=cf56425af821cb4c779873fdd793a73af274305f74de7ae72a06fcd2d9224f44541f4a2cad40&amp;token=617806450&amp;lang=zh_CN&amp;scene=21#wechat_redirect" target="_blank" rel="noopener noreferrer">逃逸分析<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》一文。</p> <h2 id="jvm体系结构"><a href="#jvm体系结构" class="header-anchor">#</a> JVM体系结构</h2> <p>JVM主要由三个子系统构成，分别为：<strong>类加载器子系统、运行时数据区（内存结构）和字节码执行引擎</strong>。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/799117a5b87fd6b62858817d75893521.png" loading="lazy" class="lazy"></p> <p>关于JVM的体系结构全貌，我们先来看一张图。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/a56723f6dba185cce78511bc61dce842.png" loading="lazy" class="lazy"></p> <p>当我们开发Java程序时，首先会编写.java文件，之后，会将.java文件编译成.class文件。</p> <p>JVM中，会通过类装载子系统将.class文件的内容装载到JVM的运行时数据区，而JVM的运行时数据区又会分为：<strong>方法区、堆、栈、本地方法栈和程序计数器</strong> 几个部分。</p> <p>在装载class文件的内容时，会将class文件的内容拆分为几个部分，分别装载到JVM运行时数据区的几个部分。其中，值得注意的是：<strong>程序计数器的作用是：记录程序执行的下一条指令的地址。</strong></p> <p>方法区也叫作元空间，主要包含了：运行时常量池、类型信息、字段信息、方法信息、类加载器的引用、对应的Class实例的引用等信息。</p> <p>在JVM中，程序的执行是通过执行引擎进行的，执行引擎会调用本地方法的接口来执行本地方法库，进而完成整个程序逻辑的执行。</p> <p>我们常说的垃圾收集器是包含在执行引擎中的，在程序的运行过程中，执行引擎会开启垃圾收集器，并在后台运行，垃圾收集器会不断监控程序运行过程中产生的内存垃圾信息，并根据相应的策略对垃圾信息进行清理。</p> <p><strong>这里，大家需要注意的是：栈、本地方法栈和程序计数器是每个线程运行时独占的，而方法区和堆是所有线程共享的。所以，栈、本地方法栈和程序计数器不会涉及线程安全问题，而方法区和堆会涉及线程安全问题。</strong></p> <h3 id="方法区-元空间"><a href="#方法区-元空间" class="header-anchor">#</a> 方法区（元空间）</h3> <p>很多小伙伴一看到方法区三个字，脑海中的第一印象可能是存储方法的地方吧。</p> <p>实则不然，方法区的另一个名字叫作元空间，相信不少小伙伴或多或少的听说过元空间。这个区域是JDK1.8中划分出来的。主要包含：运行时常量池、类型信息、字段信息、方法信息、类加载器的引用、对应的Class实例的引用等信息。方法区中的信息能够被多个线程共享。</p> <p>例如，在程序中声明的常量、静态变量和有关于类的信息等的引用，都会存放在方法区，而这些引用所指向的具体对象 <strong>一般都会在堆中开辟单独的空间进行存储，也可能会在直接内存中进行存储</strong>。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/c097cd77d232d6023ca542d6141274af.png" loading="lazy" class="lazy"></p> <h3 id="堆"><a href="#堆" class="header-anchor">#</a> 堆</h3> <p>堆中主要存储的是实际创建的对象，也就是会存储通过new关键字创建的对象，堆中的对象能够被多个线程共享。堆中的数据不需要事先明确生存期，可以动态的分配内存，不再使用的数据和对象由JVM中的GC机制自动回收。<strong>对JVM的性能调优一般就是对堆内存的调优</strong>。</p> <p>Java中基本类型的包装类：Byte、Short、Integer、Long、Float、Double、Boolean、Character类型的数据是存储在堆中的。</p> <p>堆一般会被分成年轻代和老年代。而年轻代又会被进一步分为1个Eden区和2个Survivor区。在内存分配上，如果保持默认配置的话，年轻代和老年代的内存大小比例为1 : 2，年轻代中的1个Eden区和2个Survivor区的内存大小比例为：8 : 1 : 1。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/014da608994611bd6b48f36c4d40245f.png" loading="lazy" class="lazy"></p> <h3 id="栈"><a href="#栈" class="header-anchor">#</a> 栈</h3> <p>栈一般又叫作线程栈或虚拟机栈，一般存储的是局部变量。在Java中，每个线程都会有一个单独的栈区，每个栈中的元素都是私有的，不会被其他的栈所访问。栈中的数据大小和生存期都是确定的，存取速度比较快。</p> <p>在Java中，所有的基本数据类型（byte、short、int、long、float、double、boolean、char）和引用变量（对象引用）都是在栈中的。<strong>一般情况下，线程退出或者方法退出时，栈中的数据会被自动清除</strong>。</p> <p>程序在执行过程中，会在栈中为不同的方法创建不同的栈帧，在栈帧中又包含了：<strong>局部变量表、操作数栈、动态链接和方法出口。</strong></p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/17a0a62bb8868a65c644965db2d8081c.png" loading="lazy" class="lazy"></p> <p>关于局部变量表、操作数栈、动态链接和方法出口的具体作用，会在《<a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=Mzg4MjU0OTM1OA==&amp;action=getalbum&amp;album_id=2028693320121548800#wechat_redirect" target="_blank" rel="noopener noreferrer">架构师进阶系列<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》中的后续文章中详细阐述。</p> <p>栈中一般会存储对象的引用，这些引用所指向的具体对象一般都会在堆中开辟单独的地址空间进行存储，也有可能存储在直接内存中。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/63af485ca90f4f132e0e00b2c03ab285.png" loading="lazy" class="lazy"></p> <p><strong>注意：这里说的是这些引用所指向的具体对象一般都会在堆中开辟单独的地址空间进行存储，也有可能存储在直接内存中。</strong></p> <p><strong>因为在JVM中，如果开启了逃逸分析和标量替换，则可能不会再在堆上创建对象，可能会将对象直接分配到栈上，也可能不再创建对象，而是进一步分解对象中的成员变量，将其直接在栈上分配空间并赋值。</strong></p> <h3 id="本地方法栈"><a href="#本地方法栈" class="header-anchor">#</a> 本地方法栈</h3> <p>本地方法栈相对来说比较简单，就是保存native方法进入区域的地址。</p> <p>例如，在Java中创建线程，调用Thread对象的start()方法时，会通过本地方法start0()调用操作系统创建线程的方法。此时，本地方法栈就会保存start0()方法进入区域的内存地址。</p> <h3 id="程序计数器"><a href="#程序计数器" class="header-anchor">#</a> 程序计数器</h3> <p>程序计数器也叫作PC计数器，只要存储的是下一条将要执行的命令的地址。</p> <h2 id="双亲委派机制"><a href="#双亲委派机制" class="header-anchor">#</a> 双亲委派机制</h2> <h3 id="何为双亲委派"><a href="#何为双亲委派" class="header-anchor">#</a> 何为双亲委派？</h3> <p>JVM中是通过类的双亲委派机制来加载的，那什么是双亲委派机制呢？我们先来看一张图。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/25399a6b2f57c661899a9c318d23ea49.png" loading="lazy" class="lazy"></p> <p>当JVM加载某个类的时候，不会直接使用当前类的加载器加载该类，会先委托父加载器寻找要加载的目标类，找不到再委托上层的父加载器进行加载，直到引导类加载器同样找不到要加载的目标类，就会在自己的类加载路径中查找并加载目标类。</p> <p><strong>简单来说：双亲委派机制就是：先使用父加载器加载，如果父加载器找不到要加载的目标类，就使用子加载器自己加载。</strong></p> <h3 id="为何使用双亲委派机制"><a href="#为何使用双亲委派机制" class="header-anchor">#</a> 为何使用双亲委派机制？</h3> <p>这里，小伙伴们有没有想过这样一个问题：<strong>JVM为何要使用双亲委派机制呢？</strong></p> <p>为了更好的说明问题，我们自己创建一个<code>java.lang</code>包，并在<code>java.lang</code>包下，创建一个String类，如下所示。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">java<span class="token punctuation">.</span>lang</span><span class="token punctuation">;</span>
 
 <span class="token comment">/**
@@ -368,11 +376,11 @@ null
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>在准备阶段会为count赋予一个默认值0，而在初始化阶段才会真正将count赋值为100。</p> <h2 id="jvm调优参数"><a href="#jvm调优参数" class="header-anchor">#</a> JVM调优参数</h2> <p>在JVM中，主要是对堆（新生代）、方法区和栈进行性能调优。各个区域的调优参数如下所示。</p> <ul><li>堆：-Xms、-Xmx</li> <li>新生代：-Xmn</li> <li>方法区（元空间）：-XX:MetaspaceSize、-XX:MaxMetaspaceSize</li> <li>栈（线程）：-Xss</li></ul> <p>为了更加直观的表述，我们可以将JVM的内存区域和对应的调优参数总结成下图所示。</p> <p><img alt="" data-src="https://img-blog.csdnimg.cn/img_convert/671cb5c3336ee5cd81845945234ad335.png" loading="lazy" class="lazy"></p> <p><strong>在设置JVM启动参数时，需要特别注意方法区（元空间）的参数设置。</strong></p> <p>关于方法区（元空间）的JVM参数主要有两个：-XX:MetaspaceSize和-XX:MaxMetaspaceSize。</p> <p><strong>-XX:MetaspaceSize：</strong> 指的是方法区（元空间）触发Full GC的初始内存大小（方法区没有固定的初始内存大小），以字节为单位，默认为21M。达到设置的值时，会触发Full GC，同时垃圾收集器会对这个值进行修改。</p> <p>如果在发生Full GC时，回收了大量内存空间，则垃圾收集器会适当降低此值的大小；如果在发生Full GC时，释放的空间比较少，则在不超过设置的-XX:MetaspaceSize值或者在没设置-XX:MetaspaceSize的值时不超过21M，适当提高此值。</p> <p><strong>-XX:MaxMetaspaceSize：</strong> 指的是方法区（元空间）的最大值，默认值为-1，不受堆内存大小限制，此时，只会受限于本地内存大小。</p> <p><strong>最后需要注意的是：</strong> 调整方法区（元空间）的大小会发生Full GC，这种操作的代价是非常昂贵的。如果发现应用在启动的时候发生了Full GC，则很有可能是方法区（元空间）的大小被动态调整了。</p> <p><strong>所以，为了尽量不让JVM动态调整方法区（元空间）的大小造成频繁的Full GC，一般将-XX:MetaspaceSize和-XX:MaxMetaspaceSize设置成一样的值。例如，物理内存8G，可以将这两个值设置为256M</strong></p> <p>最后，我们一起看下在物理内存8G的情况下，启动应用程序时，可以设置的JVM参数。当然，我这里给出的是一些经验值，实际部署到生产环境时，需要经过压测找到最佳的参数值。</p> <ul><li>启动SpringBoot</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>java ‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:MetaspaceSize<span class="token operator">=</span>256M ‐XX:MaxMetaspaceSize<span class="token operator">=</span>256M ‐jar xxx.jar
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><ul><li>启动Tomcat（Linux）</li></ul> <p>在Tomcat bin目录下catalina.sh文件里配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:MetaspaceSize<span class="token operator">=</span>256M ‐XX:MaxMetaspaceSize<span class="token operator">=</span>256M
 </code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><ul><li>启动Tomcat（Windows）</li></ul> <p>在Tomcat bin目录下catalina.bat文件里配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>‐Xms2048M ‐Xmx2048M ‐Xmn1024M ‐Xss512K ‐XX:MetaspaceSize<span class="token operator">=</span>256M ‐XX:MaxMetaspaceSize<span class="token operator">=</span>256M
-</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>本文以面试为背景，探讨了有关JVM的常见面试问题。文章开头以一个常见的面试题举例，说明了JVM在互联网大厂面试中的重要性。接下里，介绍了JVM的体系结构，包含：方法区（元空间）、堆、栈、本地方法栈和程序计数器。</p> <p>随后，介绍了JVM中的双亲委派机制，说明了何为双亲委派，为何使用双亲委派机制，类加载器的父子关系。需要注意的是：这里说的类加载器的父子关系并不是父类和子类的关系。随后，介绍了各个类加载器要加载哪些类。</p> <p>接下来，介绍了类的加载过程，主要包含：加载、验证、准备、解析和初始化等步骤，同时，说明了各个步骤的主要作用。</p> <p>最后，介绍了JVM中常用的调优参数，涵盖堆、新生代、方法区（元空间）和栈（线程）常用的调优参数。并以Tomcat调优为例，详细说明了如何使用这些调优参数。</p> <p>说了这么多你都掌握了吗？</p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/4</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/md/interview/2022-04-18-002-面试必问-聊聊MyBatis执行流程.html">
-            面试必问 | 聊聊MyBatis执行流程？
-          </a>
-          →
-        </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">面试必问 | 聊聊JVM性能调优？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#常见面试题" class="toc-sidebar-link">常见面试题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm体系结构" class="toc-sidebar-link">JVM体系结构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#方法区-元空间" class="toc-sidebar-link">方法区（元空间）</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#堆" class="toc-sidebar-link">堆</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#栈" class="toc-sidebar-link">栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#本地方法栈" class="toc-sidebar-link">本地方法栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#程序计数器" class="toc-sidebar-link">程序计数器</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#双亲委派机制" class="toc-sidebar-link">双亲委派机制</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#何为双亲委派" class="toc-sidebar-link">何为双亲委派？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#为何使用双亲委派机制" class="toc-sidebar-link">为何使用双亲委派机制？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器的父子关系" class="toc-sidebar-link">类加载器的父子关系</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器加载的类" class="toc-sidebar-link">类加载器加载的类</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类的加载过程" class="toc-sidebar-link">类的加载过程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm调优参数" class="toc-sidebar-link">JVM调优参数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">面试必问 | 聊聊JVM性能调优？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#常见面试题" class="toc-sidebar-link">常见面试题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm体系结构" class="toc-sidebar-link">JVM体系结构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#方法区-元空间" class="toc-sidebar-link">方法区（元空间）</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#堆" class="toc-sidebar-link">堆</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#栈" class="toc-sidebar-link">栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#本地方法栈" class="toc-sidebar-link">本地方法栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#程序计数器" class="toc-sidebar-link">程序计数器</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#双亲委派机制" class="toc-sidebar-link">双亲委派机制</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#何为双亲委派" class="toc-sidebar-link">何为双亲委派？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#为何使用双亲委派机制" class="toc-sidebar-link">为何使用双亲委派机制？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器的父子关系" class="toc-sidebar-link">类加载器的父子关系</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器加载的类" class="toc-sidebar-link">类加载器加载的类</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类的加载过程" class="toc-sidebar-link">类的加载过程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm调优参数" class="toc-sidebar-link">JVM调优参数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html" style="margin:10px;">
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>本文以面试为背景，探讨了有关JVM的常见面试问题。文章开头以一个常见的面试题举例，说明了JVM在互联网大厂面试中的重要性。接下里，介绍了JVM的体系结构，包含：方法区（元空间）、堆、栈、本地方法栈和程序计数器。</p> <p>随后，介绍了JVM中的双亲委派机制，说明了何为双亲委派，为何使用双亲委派机制，类加载器的父子关系。需要注意的是：这里说的类加载器的父子关系并不是父类和子类的关系。随后，介绍了各个类加载器要加载哪些类。</p> <p>接下来，介绍了类的加载过程，主要包含：加载、验证、准备、解析和初始化等步骤，同时，说明了各个步骤的主要作用。</p> <p>最后，介绍了JVM中常用的调优参数，涵盖堆、新生代、方法区（元空间）和栈（线程）常用的调优参数。并以Tomcat调优为例，详细说明了如何使用这些调优参数。</p> <p>说了这么多你都掌握了吗？</p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/11</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/md/interview/2022-04-18-002-面试必问-聊聊MyBatis执行流程.html">
+          面试必问 | 聊聊MyBatis执行流程？
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">面试必问 | 聊聊JVM性能调优？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#常见面试题" class="toc-sidebar-link">常见面试题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm体系结构" class="toc-sidebar-link">JVM体系结构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#方法区-元空间" class="toc-sidebar-link">方法区（元空间）</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#堆" class="toc-sidebar-link">堆</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#栈" class="toc-sidebar-link">栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#本地方法栈" class="toc-sidebar-link">本地方法栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#程序计数器" class="toc-sidebar-link">程序计数器</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#双亲委派机制" class="toc-sidebar-link">双亲委派机制</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#何为双亲委派" class="toc-sidebar-link">何为双亲委派？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#为何使用双亲委派机制" class="toc-sidebar-link">为何使用双亲委派机制？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器的父子关系" class="toc-sidebar-link">类加载器的父子关系</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器加载的类" class="toc-sidebar-link">类加载器加载的类</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类的加载过程" class="toc-sidebar-link">类的加载过程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm调优参数" class="toc-sidebar-link">JVM调优参数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">面试必问 | 聊聊JVM性能调优？</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#常见面试题" class="toc-sidebar-link">常见面试题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm体系结构" class="toc-sidebar-link">JVM体系结构</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#方法区-元空间" class="toc-sidebar-link">方法区（元空间）</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#堆" class="toc-sidebar-link">堆</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#栈" class="toc-sidebar-link">栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#本地方法栈" class="toc-sidebar-link">本地方法栈</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#程序计数器" class="toc-sidebar-link">程序计数器</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#双亲委派机制" class="toc-sidebar-link">双亲委派机制</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#何为双亲委派" class="toc-sidebar-link">何为双亲委派？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#为何使用双亲委派机制" class="toc-sidebar-link">为何使用双亲委派机制？</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器的父子关系" class="toc-sidebar-link">类加载器的父子关系</a></li><li class="toc-sidebar-sub-header"><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类加载器加载的类" class="toc-sidebar-link">类加载器加载的类</a></li></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#类的加载过程" class="toc-sidebar-link">类的加载过程</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#jvm调优参数" class="toc-sidebar-link">JVM调优参数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#总结" class="toc-sidebar-link">总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/interview/2022-04-18-001-%E9%9D%A2%E8%AF%95%E5%BF%85%E9%97%AE-%E8%81%8A%E8%81%8AJVM%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98.html" style="margin:10px;">
                 可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
             </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
                 PS：添加时请备注<b>读者加群</b>，谢谢！
@@ -380,7 +388,7 @@ null
               </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
                 <br>2. 时刻警醒自己保持技术人的初心；
               </div></div></div></div> <!----> <div title="面试必问 | 聊聊MyBatis执行流程？" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/interview/2022-04-18-002-面试必问-聊聊MyBatis执行流程.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
-                    扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
-    <script src="/assets/js/cg-styles.js?v=1656952104620" defer></script><script src="/assets/js/cg-3.js?v=1656952104620" defer></script><script src="/assets/js/cg-4.js?v=1656952104620" defer></script><script src="/assets/js/cg-276.js?v=1656952104620" defer></script><script src="/assets/js/cg-5.js?v=1656952104620" defer></script><script src="/assets/js/cg-6.js?v=1656952104620" defer></script><script src="/assets/js/cg-app.js?v=1656952104620" defer></script>
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1657521753750" defer></script><script src="/assets/js/cg-3.js?v=1657521753750" defer></script><script src="/assets/js/cg-4.js?v=1657521753750" defer></script><script src="/assets/js/cg-277.js?v=1657521753750" defer></script><script src="/assets/js/cg-5.js?v=1657521753750" defer></script><script src="/assets/js/cg-6.js?v=1657521753750" defer></script><script src="/assets/js/cg-app.js?v=1657521753750" defer></script>
   </body>
 </html>
