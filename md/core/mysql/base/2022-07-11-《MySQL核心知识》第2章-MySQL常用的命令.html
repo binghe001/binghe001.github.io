@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>《MySQL核心知识》第2章：MySQL常用的命令 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2022-07-14T02:34:24.000Z">
+    <meta property="og:title" content="《MySQL核心知识》第2章：MySQL常用的命令">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html">
+    <meta name="twitter:title" content="《MySQL核心知识》第2章：MySQL常用的命令">
+    <meta name="twitter:url" content="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.d474d013.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1657766173157" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-77.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1657766173157" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1657766173157" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.d474d013.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1657766173157">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/other/guide-to-reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/default.html" class="nav-link">
+  Spring源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/springmvc/default.html" class="nav-link">
+  SpringMVC源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/mybatis/default.html" class="nav-link">
+  MyBatis源码
+</a></li><li class="dropdown-item"><!----> <a href="/md/frame/dubbo/default.html" class="nav-link">
+  Dubbo源码
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="中间件" class="dropdown-title"><span class="title">中间件</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  字节码编程
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/threadpool/default.html" class="nav-link">
+  手写线程池
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/limiter/default.html" class="nav-link">
+  分布式限流
+</a></li><li class="dropdown-item"><!----> <a href="/md/middleware/independent/default.html" class="nav-link">
+  开源项目
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloud Alibaba实战
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问系列
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚PDF" class="dropdown-title"><span class="title">📚PDF</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  冰河的渗透实战笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>MySQL基础篇</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="sidebar-link">《MySQL核心知识》第1章：开篇：专栏介绍</a></li><li><a href="/md/core/mysql/base/2022-07-11-《MySQL核心知识》第2章-MySQL常用的命令.html" class="active sidebar-link">《MySQL核心知识》第2章：MySQL常用的命令</a></li><li><a href="/md/core/mysql/base/2022-07-13-《MySQL核心知识》第3章-MySQL中的运算符.html" class="sidebar-link">《MySQL核心知识》第3章：MySQL中的运算符</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="《mysql核心知识》第2章-mysql常用的命令"><a href="#《mysql核心知识》第2章-mysql常用的命令" class="header-anchor">#</a> 《MySQL核心知识》第2章：MySQL常用的命令</h1> <blockquote><p>《RPC手撸专栏》已经在 <strong>冰河技术</strong> 知识星球开始更新了，冰河要带你从零开始手撸一个可在实际环境使用的高性能、可扩展的RPC框架，想要一起手撸RPC的小伙伴文末有加入星球的方式。</p></blockquote> <p><strong>大家好，我是冰河~~</strong></p> <p>今天是《MySQL核心知识》的第2章，今天给大家讲讲MySQL的常用命令，好了，不多说了，开始今天的正题。</p> <h2 id="mysql常用命令"><a href="#mysql常用命令" class="header-anchor">#</a> MySQL常用命令</h2> <ul><li>启动：net start mySql;</li> <li>进入：mysql -u root -p/mysql -h localhost -u root -p databaseName;</li> <li>列出数据库：show databases;</li> <li>选择数据库：use databaseName;</li> <li>列出数据表：show tables；</li> <li>显示表格列的属性：show columns from tableName；</li> <li>建立数据库：source fileName.txt;</li> <li>匹配字符：可以用通配符_代表任何一个字符，％代表任何字符串;</li> <li>增加一个字段：alter table tabelName add column fieldName dateType;</li> <li>增加多个字段：alter table tabelName add column fieldName1 dateType,add columns fieldName2 dateType;</li> <li>多行命令输入:注意不能将单词断开;当插入或更改数据时，不能将字段的字符串展开到多行里，否则硬回车将被储存到数据中;</li> <li>增加一个管理员帐户：grant all on <em>.</em> to user@localhost identified by &quot;password&quot;;</li> <li>每条语句输入完毕后要在末尾填加分号';'，或者填加'\g'也可以；</li> <li>查询时间：select now();</li> <li>查询当前用户：select user();</li> <li>查询数据库版本：select version();</li> <li>查询当前使用的数据库：select database();</li></ul> <p>1、删除student_course数据库中的students数据表：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>rm <span class="token operator">-</span>f student_course<span class="token operator">/</span>students<span class="token punctuation">.</span><span class="token operator">*</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>2、备份数据库：(将数据库test备份)</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysqldump <span class="token operator">-</span>u root <span class="token operator">-</span>p test<span class="token operator">&gt;</span>c:\test<span class="token punctuation">.</span>txt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>备份表格：(备份test数据库下的mytable表格)</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysqldump <span class="token operator">-</span>u root <span class="token operator">-</span>p test mytable<span class="token operator">&gt;</span>c:\test<span class="token punctuation">.</span>txt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>将备份数据导入到数据库：(导回test数据库)</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql <span class="token operator">-</span>u root <span class="token operator">-</span>p test<span class="token operator">&lt;</span>c:\test<span class="token punctuation">.</span>txt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>3、创建临时表：(建立临时表zengchao)</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">temporary</span> <span class="token keyword">table</span> zengchao<span class="token punctuation">(</span>name <span class="token keyword">varchar</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>4、创建表是先判断表是否存在</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">table</span> <span class="token keyword">if</span> <span class="token operator">not</span> <span class="token keyword">exists</span> students<span class="token punctuation">(</span>……<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>5、从已经有的表中复制表的结构</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">table</span> table2 <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> table1 <span class="token keyword">where</span> <span class="token number">1</span><span class="token operator">&lt;&gt;</span><span class="token number">1</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>6、复制表</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">table</span> table2 <span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> table1<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>7、对表重新命名</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">alter</span> <span class="token keyword">table</span> table1 <span class="token keyword">rename</span> <span class="token keyword">as</span> table2<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>8、修改列的类型</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">alter</span> <span class="token keyword">table</span> table1 <span class="token keyword">modify</span> id <span class="token keyword">int</span> <span class="token keyword">unsigned</span><span class="token punctuation">;</span><span class="token comment">//修改列id的类型为int unsigned</span>
+<span class="token keyword">alter</span> <span class="token keyword">table</span> table1 change id sid <span class="token keyword">int</span> <span class="token keyword">unsigned</span><span class="token punctuation">;</span><span class="token comment">//修改列id的名字为sid，而且把属性修改为int unsigned</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>9、创建索引</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">alter</span> <span class="token keyword">table</span> table1 <span class="token keyword">add</span> <span class="token keyword">index</span> ind_id <span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">index</span> ind_id <span class="token keyword">on</span> table1 <span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">create</span> <span class="token keyword">unique</span> <span class="token keyword">index</span> ind_id <span class="token keyword">on</span> table1 <span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//建立唯一性索引</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>10、删除索引</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">drop</span> <span class="token keyword">index</span> idx_id <span class="token keyword">on</span> table1<span class="token punctuation">;</span>
+<span class="token keyword">alter</span> <span class="token keyword">table</span> table1 <span class="token keyword">drop</span> <span class="token keyword">index</span> ind_id<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>11、联合字符或者多个列(将列id与&quot;:&quot;和列name和&quot;=&quot;连接)</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> concat<span class="token punctuation">(</span>id<span class="token punctuation">,</span><span class="token string">':'</span><span class="token punctuation">,</span>name<span class="token punctuation">,</span><span class="token string">'='</span><span class="token punctuation">)</span> <span class="token keyword">from</span> students<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>12、limit(选出10到20条)&lt;第一个记录集的编号是0&gt;</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> students <span class="token keyword">order</span> <span class="token keyword">by</span> id <span class="token keyword">limit</span> <span class="token number">9</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>13、MySQL支持的功能</p> <p>事务，视图，外键和引用完整性，存储过程和触发器</p> <p>14、MySQL会使用索引的操作符号</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token operator">&lt;</span><span class="token punctuation">,</span><span class="token operator">&lt;=</span><span class="token punctuation">,</span><span class="token operator">&gt;=</span><span class="token punctuation">,</span><span class="token operator">&gt;</span><span class="token punctuation">,</span><span class="token operator">=</span><span class="token punctuation">,</span><span class="token operator">between</span><span class="token punctuation">,</span><span class="token operator">in</span><span class="token punctuation">,</span>不带<span class="token operator">%</span>或者_开头的<span class="token operator">like</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>15、使用索引的缺点</p> <p>1)减慢增删改数据的速度；</p> <p>2）占用磁盘空间；</p> <p>3）增加查询优化器的负担；</p> <p>当查询优化器生成执行计划时，会考虑索引，太多的索引会给查询优化器增加工作量，导致无法选择最优的查询方案；</p> <p>16、分析索引效率</p> <p>方法：在一般的SQL语句前加上explain；</p> <p>分析结果的含义：</p> <p>1）table：表名；</p> <p>2）type：连接的类型，(ALL/Range/Ref)。其中ref是最理想的；</p> <p>3）possible_keys：查询可以利用的索引名；</p> <p>4）key：实际使用的索引；</p> <p>5）key_len：索引中被使用部分的长度（字节）；</p> <p>6）ref：显示列名字或者&quot;const&quot;（不明白什么意思）；</p> <p>7）rows：显示MySQL认为在找到正确结果之前必须扫描的行数；</p> <p>8）extra：MySQL的建议；</p> <p>17、使用较短的定长列</p> <p>1）尽可能使用较短的数据类型；</p> <p>2）尽可能使用定长数据类型；</p> <p>a）用char代替varchar，固定长度的数据处理比变长的快些；</p> <p>b）对于频繁修改的表，磁盘容易形成碎片，从而影响数据库的整体性能；</p> <p>c）万一出现数据表崩溃，使用固定长度数据行的表更容易重新构造。使用固定长度的数据行，每个记录的开始位置都是固定记录长度的倍数，可以很容易被检测到，但是使用可变长度的数据行就不一定了；</p> <p>d）对于MyISAM类型的数据表，虽然转换成固定长度的数据列可以提高性能，但是占据的空间也大；</p> <p>18、使用not null和enum</p> <p>尽量将列定义为not null，这样可使数据的出来更快，所需的空间更少，而且在查询时，MySQL不需要检查是否存在特例，即null值，从而优化查询；</p> <p>如果一列只含有有限数目的特定值，如性别，是否有效或者入学年份等，在这种情况下应该考虑将其转换为enum列的值，MySQL处理的更快，因为所有的enum值在系统内都是以标识数值来表示的；</p> <p>19、使用optimize table</p> <p>对于经常修改的表，容易产生碎片，使在查询数据库时必须读取更多的磁盘块，降低查询性能。具有可变长的表都存在磁盘碎片问题，这个问题对blob数据类型更为突出，因为其尺寸变化非常大。可以通过使用optimize table来整理碎片，保证数据库性能不下降，优化那些受碎片影响的数据表。 optimize table可以用于MyISAM和BDB类型的数据表。实际上任何碎片整理方法都是用mysqldump来转存数据表，然后使用转存后的文件并重新建数据表；</p> <p>20、使用procedure analyse()</p> <p>可以使用procedure analyse()显示最佳类型的建议，使用很简单，在select语句后面加上procedure analyse()就可以了；例如：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> students <span class="token keyword">procedure</span> analyse<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> students <span class="token keyword">procedure</span> analyse<span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span><span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>第二条语句要求procedure analyse()不要建议含有多于16个值，或者含有多于256字节的enum类型，如果没有限制，输出可能会很长；</p> <p>21、使用查询缓存</p> <p>1）查询缓存的工作方式：</p> <p>第一次执行某条select语句时，服务器记住该查询的文本内容和查询结果，存储在缓存中，下次碰到这个语句时，直接从缓存中返回结果；当更新数据表后，该数据表的任何缓存查询都变成无效的，并且会被丢弃。</p> <p>2）配置缓存参数：</p> <p>变量：query_cache _type，查询缓存的操作模式。</p> <p>有3中模式：</p> <ul><li>0：不缓存；</li> <li>1：缓存查询，除非与select sql_no_cache开头；</li> <li>2：根据需要只缓存那些以select sql_cache开头的查询；</li></ul> <p>query_cache_size：设置查询缓存的最大结果集的大小，比这个值大的不会被缓存。</p> <p>22、调整硬件</p> <p>1）在机器上装更多的内存；</p> <p>2）增加更快的硬盘以减少I/O等待时间；</p> <p>寻道时间是决定性能的主要因素，逐字地移动磁头是最慢的，一旦磁头定位，从磁道读则很快；</p> <p>3）在不同的物理硬盘设备上重新分配磁盘活动；</p> <p>如果可能，应将最繁忙的数据库存放在不同的物理设备上，这跟使用同一物理设备的不同分区是不同的，因为它们将争用相同的物理资源（磁头）。</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">database</span> name<span class="token punctuation">;</span> 创建数据库
+<span class="token keyword">use</span> databasename<span class="token punctuation">;</span> 选择数据库
+<span class="token keyword">drop</span> <span class="token keyword">database</span> name 直接删除数据库，不提醒
+<span class="token keyword">show</span> <span class="token keyword">tables</span><span class="token punctuation">;</span> 显示表
+<span class="token keyword">describe</span> tablename<span class="token punctuation">;</span> 表的详细描述
+<span class="token keyword">select</span> 中加上<span class="token keyword">distinct</span>去除重复字段
+mysqladmin <span class="token keyword">drop</span> databasename 删除数据库前，有提示。
+<span class="token keyword">select</span> version<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token keyword">current_date</span><span class="token punctuation">;</span> 显示当前mysql版本和当前日期
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>23、修改mysql中root的密码：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>shell<span class="token operator">&gt;</span>mysql <span class="token operator">-</span>u root <span class="token operator">-</span>p
+mysql<span class="token operator">&gt;</span> <span class="token keyword">update</span> <span class="token keyword">user</span> <span class="token keyword">set</span> password<span class="token operator">=</span>password<span class="token punctuation">(</span>”xueok654123″<span class="token punctuation">)</span> <span class="token keyword">where</span> <span class="token keyword">user</span><span class="token operator">=</span>’root’<span class="token punctuation">;</span>
+mysql<span class="token operator">&gt;</span> flush <span class="token keyword">privileges</span> <span class="token comment">//刷新数据库</span>
+mysql<span class="token operator">&gt;</span><span class="token keyword">use</span> dbname； 打开数据库：
+mysql<span class="token operator">&gt;</span><span class="token keyword">show</span> <span class="token keyword">databases</span><span class="token punctuation">;</span> 显示所有数据库
+mysql<span class="token operator">&gt;</span><span class="token keyword">show</span> <span class="token keyword">tables</span><span class="token punctuation">;</span> 显示数据库mysql中所有的表：先<span class="token keyword">use</span> mysql；然后
+mysql<span class="token operator">&gt;</span><span class="token keyword">describe</span> <span class="token keyword">user</span><span class="token punctuation">;</span> 显示表mysql数据库中<span class="token keyword">user</span>表的列信息）；
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>24、grant</p> <p>创建一个可以从任何地方连接服务器的一个完全的超级用户，但是必须使用一个口令something做这个</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql<span class="token operator">&gt;</span> <span class="token keyword">grant</span> <span class="token keyword">all</span> <span class="token keyword">privileges</span> <span class="token keyword">on</span> <span class="token punctuation">.</span> <span class="token keyword">to</span> identified <span class="token keyword">by</span> ’something’ <span class="token keyword">with</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>增加新用户</p> <p>格式：grant select on 数据库.* to 用户名@登录主机 identified by “密码”</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code><span class="token keyword">GRANT</span> <span class="token keyword">ALL</span> <span class="token keyword">PRIVILEGES</span> <span class="token keyword">ON</span> <span class="token punctuation">.</span> <span class="token keyword">TO</span> IDENTIFIED <span class="token keyword">BY</span> ’something’ <span class="token keyword">WITH</span> <span class="token keyword">GRANT</span> <span class="token keyword">OPTION</span><span class="token punctuation">;</span>
+<span class="token keyword">GRANT</span> <span class="token keyword">ALL</span> <span class="token keyword">PRIVILEGES</span> <span class="token keyword">ON</span> <span class="token punctuation">.</span> <span class="token keyword">TO</span> ” IDENTIFIED <span class="token keyword">BY</span> ’something’ <span class="token keyword">WITH</span> <span class="token keyword">GRANT</span> <span class="token keyword">OPTION</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>删除授权：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql<span class="token operator">&gt;</span> <span class="token keyword">revoke</span> <span class="token keyword">all</span> <span class="token keyword">privileges</span> <span class="token keyword">on</span> <span class="token punctuation">.</span> <span class="token keyword">from</span> ”<span class="token punctuation">;</span>
+mysql<span class="token operator">&gt;</span> <span class="token keyword">delete</span> <span class="token keyword">from</span> <span class="token keyword">user</span> <span class="token keyword">where</span> <span class="token keyword">user</span><span class="token operator">=</span>”root” <span class="token operator">and</span> host<span class="token operator">=</span>”<span class="token operator">%</span>”<span class="token punctuation">;</span>
+mysql<span class="token operator">&gt;</span> flush <span class="token keyword">privileges</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>创建一个用户custom在特定客户端it363.com登录，可访问特定数据库fangchandb</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql <span class="token operator">&gt;</span><span class="token keyword">grant</span> <span class="token keyword">select</span><span class="token punctuation">,</span> <span class="token keyword">insert</span><span class="token punctuation">,</span> <span class="token keyword">update</span><span class="token punctuation">,</span> <span class="token keyword">delete</span><span class="token punctuation">,</span> <span class="token keyword">create</span><span class="token punctuation">,</span><span class="token keyword">drop</span> <span class="token keyword">on</span> fangchandb<span class="token punctuation">.</span><span class="token operator">*</span> <span class="token keyword">to</span> custom@ it363<span class="token punctuation">.</span>com identified <span class="token keyword">by</span> ‘ passwd’
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>重命名表:</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql <span class="token operator">&gt;</span> <span class="token keyword">alter</span> <span class="token keyword">table</span> t1 <span class="token keyword">rename</span> t2<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>25、mysqldump</p> <p>备份数据库</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>shell<span class="token operator">&gt;</span> mysqldump <span class="token operator">-</span>h host <span class="token operator">-</span>u root <span class="token operator">-</span>p dbname <span class="token operator">&gt;</span>dbname_backup<span class="token punctuation">.</span><span class="token keyword">sql</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>恢复数据库</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>shell<span class="token operator">&gt;</span> mysqladmin <span class="token operator">-</span>h myhost <span class="token operator">-</span>u root <span class="token operator">-</span>p <span class="token keyword">create</span> dbname
+shell<span class="token operator">&gt;</span> mysqldump <span class="token operator">-</span>h host <span class="token operator">-</span>u root <span class="token operator">-</span>p dbname <span class="token operator">&lt;</span> dbname_backup<span class="token punctuation">.</span><span class="token keyword">sql</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>如果只想卸出建表指令，则命令如下：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>shell<span class="token operator">&gt;</span> mysqladmin <span class="token operator">-</span>u root <span class="token operator">-</span>p <span class="token operator">-</span>d databasename <span class="token operator">&gt;</span> a<span class="token punctuation">.</span><span class="token keyword">sql</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>如果只想卸出插入数据的sql命令，而不需要建表命令，则命令如下：</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>shell<span class="token operator">&gt;</span> mysqladmin <span class="token operator">-</span>u root <span class="token operator">-</span>p <span class="token operator">-</span>t databasename <span class="token operator">&gt;</span> a<span class="token punctuation">.</span><span class="token keyword">sql</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>那么如果我只想要数据，而不想要什么sql命令时，应该如何操作呢？</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysqldump <span class="token operator">-</span>T<span class="token punctuation">.</span><span class="token operator">/</span> phptest driver
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>其中，只有指定了-T参数才可以卸出纯文本文件，表示卸出数据的目录，./表示当前目录，即与mysqldump同一目录。如果不指定driver 表，则将卸出整个数据库的数据。每个表会生成两个文件，一个为.sql文件，包含建表执行。另一个为.txt文件，只包含数据，且没有sql指令。</p> <p>26、可将查询存储在一个文件中并告诉mysql从文件中读取查询而不是等待键盘输入。可利用外壳程序键入重定向实用程序来完成这项工作。例如，如果在文件my_file.sql 中存放有查询，可如下执行这些查询：</p> <p>例如，如果您想将建表语句提前写在sql.txt中:</p> <div class="language-sql line-numbers-mode"><pre class="language-sql"><code>mysql <span class="token operator">&gt;</span> mysql <span class="token operator">-</span>h myhost <span class="token operator">-</span>u root <span class="token operator">-</span>p <span class="token keyword">database</span> <span class="token operator">&lt;</span> <span class="token keyword">sql</span><span class="token punctuation">.</span>txt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>好了，今天的开篇文章就到这儿吧，如果文章对你有点帮助，记得给冰河一键三连哦，欢迎将文章转发给更多的小伙伴，冰河将不胜感激~~</strong></p> <h2 id="关于星球"><a href="#关于星球" class="header-anchor">#</a> 关于星球</h2> <p><strong>冰河技术</strong> 知识星球《RPC手撸专栏》已经开始了，我会将《RPC手撸专栏》的源码放到知识星球中，同时在微信上会创建专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习从零开始手撸可用于实际场景的高性能、可扩展的RPC框架项目</p> <p>2.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>3.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>4.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>5.提供站点 https://binghe001.github.io 所有学习内容的指导、帮助</p> <p>6.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>7.可以发送你的简历到我的邮箱，提供简历批阅服务</p> <p>8.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>9.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>10.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="如何加入星球"><a href="#如何加入星球" class="header-anchor">#</a> 如何加入星球</h3> <ul><li><strong>链接</strong> ：打开链接 <a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <p><img alt="sa-2022-04-21-007" data-src="https://binghe001.github.io/assets/images/microservices/springcloudalibaba/sa-2022-04-28-008.png" loading="lazy" class="lazy"></p> <p><strong>如果图片二维码过期，去公众号 冰河技术 回复 星球 扫二维码加入星球, 好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote> <p><img alt="" data-src="https://img-blog.csdnimg.cn/20200906013715889.png" loading="lazy" class="lazy"></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/core/mysql/base/2022-07-11-《MySQL核心知识》第2章-MySQL常用的命令.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2022/7/14</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html" class="prev">
+          《MySQL核心知识》第1章：开篇：专栏介绍
+        </a></span> <span class="next"><a href="/md/core/mysql/base/2022-07-13-《MySQL核心知识》第3章-MySQL中的运算符.html">
+          《MySQL核心知识》第3章：MySQL中的运算符
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">《MySQL核心知识》第2章：MySQL常用的命令</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#mysql常用命令" class="toc-sidebar-link">MySQL常用命令</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">《MySQL核心知识》第2章：MySQL常用的命令</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#mysql常用命令" class="toc-sidebar-link">MySQL常用命令</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#关于星球" class="toc-sidebar-link">关于星球</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li><li><a href="/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe001.github.io/md/core/mysql/base/2022-07-11-%E3%80%8AMySQL%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E3%80%8B%E7%AC%AC2%E7%AB%A0-MySQL%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="《MySQL核心知识》第1章：开篇：专栏介绍" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/core/mysql/base/2022-07-09-《MySQL核心知识》第1章-开篇-专栏介绍.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="《MySQL核心知识》第3章：MySQL中的运算符" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/core/mysql/base/2022-07-13-《MySQL核心知识》第3章-MySQL中的运算符.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1657766173157" defer></script><script src="/assets/js/cg-3.js?v=1657766173157" defer></script><script src="/assets/js/cg-4.js?v=1657766173157" defer></script><script src="/assets/js/cg-77.js?v=1657766173157" defer></script><script src="/assets/js/cg-5.js?v=1657766173157" defer></script><script src="/assets/js/cg-6.js?v=1657766173157" defer></script><script src="/assets/js/cg-app.js?v=1657766173157" defer></script>
+  </body>
+</html>
