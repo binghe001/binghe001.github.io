@@ -181,6 +181,7 @@
 * [《RPC手撸专栏》第15章：服务消费者同步、异步、单向调用的实现](https://articles.zsxq.com/id_oixsibgwepmu.html)
 * [《RPC手撸专栏》第16章：服务消费者回调方法的实现](https://articles.zsxq.com/id_7nlqbj3z8rgw.html)
 * [《RPC手撸专栏》第17章：服务消费者实现动态代理功能屏蔽构建请求协议对象的细节](https://articles.zsxq.com/id_bv0jkh6fhr1w.html)
+* [《RPC手撸专栏》第18章：服务消费者整合动态代理实现直接调用接口返回结果数据](https://articles.zsxq.com/id_r6u3xt22wf67.html)
 
 ### 精通高并发系列
 
