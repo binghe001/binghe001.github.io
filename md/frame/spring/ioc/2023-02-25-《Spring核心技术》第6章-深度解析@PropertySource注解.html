@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第06章：深度解析@PropertySource注解 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.8">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2023-02-25T17:47:47.000Z">
+    <meta property="og:title" content="第06章：深度解析@PropertySource注解">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html">
+    <meta name="twitter:title" content="第06章：深度解析@PropertySource注解">
+    <meta name="twitter:url" content="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.06e10c60.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1677347365659" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-159.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1677347365659" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1677347365659" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.06e10c60.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1677347365659">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  🔥《RPC手撸专栏》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  《字节码编程》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/threadpool/default.html" class="nav-link">
+  《手写线程池》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/limiter/default.html" class="nav-link">
+  《分布式限流》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/independent/default.html" class="nav-link">
+  《开源项目》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/starball/2023-01-01-2023星球新年规划.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  🔥《RPC手撸专栏》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  《字节码编程》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/threadpool/default.html" class="nav-link">
+  《手写线程池》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/limiter/default.html" class="nav-link">
+  《分布式限流》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/independent/default.html" class="nav-link">
+  《开源项目》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/starball/2023-01-01-2023星球新年规划.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>专栏介绍</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="sidebar-link">第00章：开篇：我要带你一步步调试Spring6.0源码啦！</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>第一篇：IOC容器</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/ioc/2022-12-05-《Spring核心技术》第1章-@Configuration注解-你了解的还不够深入.html" class="sidebar-link">第01章：深度解析@Configuration注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-12-《Spring核心技术》第2章-深度解析@ComponentScans注解与@ComponentScan注解.html" class="sidebar-link">第02章：深度解析@ComponentScan注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-21-《Spring核心技术》第3章-深度解析@Bean注解.html" class="sidebar-link">第03章：深度解析@Bean注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-22-《Spring核心技术》第4章-深度解析从IOC容器中获取Bean的过程.html" class="sidebar-link">第04章：深度解析从IOC容器中获取Bean的过程</a></li><li><a href="/md/frame/spring/ioc/2023-02-24-《Spring核心技术》第5章-深度解析@Import注解.html" class="sidebar-link">第05章：深度解析@Import注解</a></li><li><a href="/md/frame/spring/ioc/2023-02-25-《Spring核心技术》第6章-深度解析@PropertySource注解.html" class="active sidebar-link">第06章：深度解析@PropertySource注解</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第二篇：AOP切面(待更新)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/springmvc/default.html" class="sidebar-link">关于我</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第三篇：声明式事务(待更新)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/springmvc/default.html" class="sidebar-link">关于我</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第四篇：SpringMVC(待更新)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/springmvc/default.html" class="sidebar-link">关于我</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="《spring核心技术》第6章-深度解析-propertysource注解"><a href="#《spring核心技术》第6章-深度解析-propertysource注解" class="header-anchor">#</a> 《Spring核心技术》第6章：深度解析@PropertySource注解</h1> <p>作者：冰河
+<br>星球：<a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>博客：<a href="https://binghe.gitcode.host" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>文章汇总：<a href="https://binghe.gitcode.host/md/all/all.html" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host/md/all/all.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>源码地址：<a href="https://github.com/binghe001/spring-annotation-book/tree/master/spring-annotation-chapter-06" target="_blank" rel="noopener noreferrer">https://github.com/binghe001/spring-annotation-book/tree/master/spring-annotation-chapter-06<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <blockquote><p>沉淀，成长，突破，帮助他人，成就自我。</p></blockquote> <p><strong>大家好，我是冰河~~</strong></p> <hr> <ul><li><p><strong>本章难度</strong>：★★★☆☆</p></li> <li><p><strong>本章重点</strong>：进一步学习并掌握@PropertySource注解加载配置文件的案例和流程，从源码级别彻底掌握@PropertySource注解在Spring底层的执行流程。</p></li></ul> <hr> <p>本节目录如下所示：</p> <ul><li>学习指引</li> <li>注解说明
+<ul><li>注解源码</li> <li>注解使用场景</li></ul></li> <li>使用案例</li> <li>源码时序图</li> <li>源码解析</li> <li>总结</li> <li>思考</li> <li>VIP服务</li></ul> <h2 id="一、学习指引"><a href="#一、学习指引" class="header-anchor">#</a> 一、学习指引</h2> <p><code>@PropertySource注解是用来干啥的呢？</code></p> <p>在日常开发中，你有没有遇到过这样一种场景：项目中需要编写很多配置文件，将一些系统信息配置化，此时，往往需要编写专门的工具类或者方法来读取并解析这些配置文件，将配置文件中的配置项内容加载到系统内存中。后续在使用这些配置项时，可以直接通过工具类或者方法获取加载到内存中的配置项。</p> <p>没错，@PropertySource注解就是Spring中提供的一个可以加载配置文件的注解，并且可以将配置文件中的内容存放到Spring的环境变量中。</p> <h2 id="二、注解说明"><a href="#二、注解说明" class="header-anchor">#</a> 二、注解说明</h2> <p><code>简单介绍下@PropertySource注解吧！</code></p> <p>@PropertySource注解是Spring中提供的一个通过指定配置文件位置来加载配置文件的注解，并且可以将配置文件中的内容存放到Spring的环境变量中。除了可以通过Spring的环境变量读取配置项之外，还可以通过@Value注解获取配置项的值。</p> <p>另外，Spring中还提供了一个@PropertySources注解，在@PropertySources注解注解中，可以引入多个@PropertySource注解。</p> <h3 id="_2-1-注解源码"><a href="#_2-1-注解源码" class="header-anchor">#</a> 2.1 注解源码</h3> <p>Spring中提供了@PropertySource和@PropertySources两个注解来加载配置文件。</p> <p><strong>1.@PropertySource注解</strong></p> <p>@PropertySource注解只能标注到类上，能够通过指定配置文件的位置来加载配置文件，@PropertySource注解除了可以加载properties配置文件外，也可以加载xml配置文件和yml配置文件。如果加载yml配置文件时，可以自定义PropertySourceFactory实现yml配置文件的解析操作。</p> <p>@PropertySource注解的源码详见：org.springframework.context.annotation.PropertySource。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author Chris Beams
+ * @author Juergen Hoeller
+ * @author Phillip Webb
+ * @author Sam Brannen
+ * @since 3.1
+ */</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Repeatable</span><span class="token punctuation">(</span><span class="token class-name">PropertySources</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">PropertySource</span> <span class="token punctuation">{</span>
+	<span class="token class-name">String</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+	<span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">/**
+	 * @since 4.0
+	 */</span>
+	<span class="token keyword">boolean</span> <span class="token function">ignoreResourceNotFound</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+	<span class="token comment">/**
+	 * @since 4.3
+	 */</span>
+	<span class="token class-name">String</span> <span class="token function">encoding</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+	<span class="token comment">/**
+	 * @since 4.3
+	 */</span>
+	<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">PropertySourceFactory</span><span class="token punctuation">&gt;</span></span> <span class="token function">factory</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token class-name">PropertySourceFactory</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br></div></div><p>从源码可以看出，@PropertySource注解是从Spring3.1版本开始提供的注解，注解中各个属性的含义如下所示。</p> <ul><li>name：表示加载的资源的名称，如果为空，则会根据加载的配置文件自动生成一个名称。</li> <li>value：表示加载的资源的路径，这个路径可以是类路径，也可以是文件路径。</li> <li>ignoreResourceNotFound：表示当配置文件未找到时，是否忽略文件未找到的错误。默认值为false，也就是说当未找到配置文件时，Spring启动就会报错。</li> <li>encoding：表示解析配置文件使用的字符集编码。</li> <li>factory：表示读取对应配置文件的工厂类，默认的工厂类是PropertySourceFactory。</li></ul> <p><strong>2.@PropertySources注解</strong></p> <p>除了@PropertySource注解，Spring中还提供了一个@PropertySources注解。@PropertySources注解中的源码详见：org.springframework.context.annotation.PropertySources。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author Phillip Webb
+ * @since 4.0
+ */</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">PropertySources</span> <span class="token punctuation">{</span>
+	<span class="token class-name">PropertySource</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>从源码可以看出，@PropertySources是从Spring4.0版本开始提供的注解，在@PropertySources注解中，只提供了一个PropertySource数组类型的value属性。所以，@PropertySources注解可以引入多个@PropertySource注解。</p> <h3 id="_2-2-注解使用场景"><a href="#_2-2-注解使用场景" class="header-anchor">#</a> 2.2 注解使用场景</h3> <p>在基于Spring的注解开发项目的过程中，由于不再使用Spring的XML文件进行配置，如果将配置项直接写到类中，就会造成配置项与类的紧耦合，后续对于配置项的修改操作非常不方便，不利于项目的维护和扩展。此时，可以将这些配置项写到properties文件或者yml文件中，通过@PropertySource注解加载配置文件。</p> <p>另外，如果项目本身就存在大量的properties配置文件或者yml配置文件，也可以统一由Spring的@PropertySource注解进行加载。</p> <h2 id="三、使用案例"><a href="#三、使用案例" class="header-anchor">#</a> 三、使用案例</h2> <p><code>结合案例学着印象才会更深刻~~</code></p> <p>本节，主要实现一个通过@PropertySource注解加载properties配置文件，将properties配置文件中的配置项加载到Spring的环境变量中，获取Spring环境变量中配置项的值，并进行打印。案例的具体实现步骤如下所示。</p> <p><strong>（1）新增test.properties文件</strong></p> <p>在spring-annotation-chapter-06工程的resources目录下新增test.properties文件，文件内容如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token assign-left variable">name</span><span class="token operator">=</span>binghe
+<span class="token assign-left variable">age</span><span class="token operator">=</span><span class="token number">18</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p><strong>（2）新增PropertySourceConfig类</strong></p> <p>PropertySourceConfig类的源码详见：spring-annotation-chapter-06工程下的io.binghe.spring.annotation.chapter06.config.PropertySourceConfig。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@PropertySource</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">&quot;classpath:test.properties&quot;</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PropertySourceConfig</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>可以看到，PropertySourceConfig类是Spring的配置类，并且使用@PropertySource注解指定了test.properties配置文件的路径。</p> <p><strong>（3）新增PropertySourceTest类</strong></p> <p>PropertySourceTest类的源码详见：spring-annotation-chapter-06工程下的io.binghe.spring.annotation.chapter06.PropertySourceTest。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PropertySourceTest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">AnnotationConfigApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">PropertySourceConfig</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">ConfigurableEnvironment</span> environment <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getEnvironment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>environment<span class="token punctuation">.</span><span class="token function">getProperty</span><span class="token punctuation">(</span><span class="token string">&quot;name&quot;</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">&quot; ====&gt;&gt;&gt; &quot;</span> <span class="token operator">+</span> environment<span class="token punctuation">.</span><span class="token function">getProperty</span><span class="token punctuation">(</span><span class="token string">&quot;age&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>可以看到，在PropertySourceTest类的main()方法中，通过AnnotationConfigApplicationContext类的对象获取到ConfigurableEnvironment类型的环境变量对象environment，然后通过environment对象获取配置文件中的name和age的值并进行打印。</p> <p><strong>（4）运行PropertySourceTest类</strong></p> <p>运行PropertySourceTest类的main()方法，输出的结果信息如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>binghe <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">&gt;&gt;</span><span class="token operator">&gt;</span> <span class="token number">18</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>可以看到，正确的输出了配置文件中的值。</p> <p><strong>说明：使用@PropertySource注解可以加载properties配置文件中的配置项，并将配置项加载到Spring的环境变量中，通过Spring的环境变量就可以获取到配置项的值。</strong></p> <h2 id="四、源码时序图"><a href="#四、源码时序图" class="header-anchor">#</a> 四、源码时序图</h2> <p><code>结合时序图理解源码会事半功倍，你觉得呢？</code></p> <p>本节，就以源码时序图的方式，直观的感受下@PropertySource注解在Spring源码层面的执行流程。@PropertySource注解在Spring源码层面的执行流程如图6-1~6-2所示。</p> <p><img alt="图6-1" data-src="https://binghe.gitcode.host/assets/images/frame/spring/ioc/spring-core-2023-02-25-001.png" loading="lazy" class="lazy"></p> <p><img alt="图6-2" data-src="https://binghe.gitcode.host/assets/images/frame/spring/ioc/spring-core-2023-02-25-002.png" loading="lazy" class="lazy"></p> <p>由图6-1~图6-2可以看出，@PropertySource注解在Spring源码层面的执行流程会涉及到PropertySourceTest类、AnnotationConfigApplicationContext类、AbstractApplicationContext类、PostProcessorRegistrationDelegate类、ConfigurationClassPostProcessor类、ConfigurationClassParser类、PropertySourceRegistry类、PropertySourceProcessor类和DefaultPropertySourceFactory类。具体的源码执行细节参见源码解析部分。</p> <h2 id="五、源码解析"><a href="#五、源码解析" class="header-anchor">#</a> 五、源码解析</h2> <p><code>源码时序图整清楚了，那就整源码解析呗！</code></p> <p>@PropertySource注解在Spring源码层面的执行流程，结合源码执行的时序图，会理解的更加深刻。</p> <p>（1）运行案例程序启动类</p> <p>案例程序启动类源码详见：spring-annotation-chapter-06工程下的io.binghe.spring.annotation.chapter06.PropertySourceTest，运行PropertySourceTest类的main()方法。</p> <p>在PropertySourceTest类的main()方法中调用了AnnotationConfigApplicationContext类的构造方法，并传入了PropertySourceConfig类的Class对象来创建IOC容器。接下来，会进入AnnotationConfigApplicationContext类的构造方法。</p> <p><strong>注意：@PropertySource注解在Spring源码中的执行流程的（2）~（11）步与第5章的@Import注解相同，这里不再赘述，直接跳到ConfigurationClassParser类的doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)方法。</String></strong></p> <p>（2）解析ConfigurationClassParser类的doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)方法</String></p> <p>源码详见：org.springframework.context.annotation.ConfigurationClassParser#doProcessConfigurationClass(ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)，重点关注如下代码片段。</String></p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">protected</span> <span class="token keyword">final</span> <span class="token class-name">SourceClass</span> <span class="token function">doProcessConfigurationClass</span><span class="token punctuation">(</span>
+    <span class="token class-name">ConfigurationClass</span> configClass<span class="token punctuation">,</span> <span class="token class-name">SourceClass</span> sourceClass<span class="token punctuation">,</span> <span class="token class-name">Predicate</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> filter<span class="token punctuation">)</span>
+    <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token comment">//#############省略其他代码################</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">AnnotationAttributes</span> propertySource <span class="token operator">:</span> <span class="token class-name">AnnotationConfigUtils</span><span class="token punctuation">.</span><span class="token function">attributesForRepeatable</span><span class="token punctuation">(</span>
+        sourceClass<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">PropertySources</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+        <span class="token class-name"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>context<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span>PropertySource</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceRegistry <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceRegistry<span class="token punctuation">.</span><span class="token function">processPropertySource</span><span class="token punctuation">(</span>propertySource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+	<span class="token comment">//#############省略其他代码################</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><p>可以看到，在ConfigurationClassParser类的doProcessConfigurationClass()方法中，遍历获取到的@PropertySources注解和@PropertySource注解的属性，并且调用propertySourceRegistry对象的processPropertySource()方法解析注解属性的值。</p> <p>（3）解析PropertySourceRegistry类的processPropertySource(AnnotationAttributes propertySource)方法</p> <p>源码详见：org.springframework.context.annotation.PropertySourceRegistry#processPropertySource(AnnotationAttributes propertySource)。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">void</span> <span class="token function">processPropertySource</span><span class="token punctuation">(</span><span class="token class-name">AnnotationAttributes</span> propertySource<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> name <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">&quot;name&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">hasLength</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        name <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token class-name">String</span> encoding <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">&quot;encoding&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">hasLength</span><span class="token punctuation">(</span>encoding<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        encoding <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> locations <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getStringArray</span><span class="token punctuation">(</span><span class="token string">&quot;value&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Assert</span><span class="token punctuation">.</span><span class="token function">isTrue</span><span class="token punctuation">(</span>locations<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">&quot;At least one @PropertySource(value) location is required&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span> ignoreResourceNotFound <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getBoolean</span><span class="token punctuation">(</span><span class="token string">&quot;ignoreResourceNotFound&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">PropertySourceFactory</span><span class="token punctuation">&gt;</span></span> factoryClass <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token string">&quot;factory&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">PropertySourceFactory</span><span class="token punctuation">&gt;</span></span> factorClassToUse <span class="token operator">=</span> <span class="token punctuation">(</span>factoryClass <span class="token operator">!=</span> <span class="token class-name">PropertySourceFactory</span><span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token operator">?</span> factoryClass <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">PropertySourceDescriptor</span> descriptor <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PropertySourceDescriptor</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span>locations<span class="token punctuation">)</span><span class="token punctuation">,</span> ignoreResourceNotFound<span class="token punctuation">,</span> name<span class="token punctuation">,</span> factorClassToUse<span class="token punctuation">,</span> encoding<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceProcessor<span class="token punctuation">.</span><span class="token function">processPropertySource</span><span class="token punctuation">(</span>descriptor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>descriptors<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>descriptor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>可以看到，在PropertySourceRegistry类的processPropertySource()方法中，解析@PropertySource注解中的属性后，将解析出的属性值封装到PropertySourceDescriptor对象中，调用propertySourceProcessor对象的processPropertySource()方法，并传入PropertySourceDescriptor对象进行进一步处理。</p> <p>（4）解析PropertySourceProcessor类的processPropertySource(PropertySourceDescriptor descriptor)方法</p> <p>源码详见：org.springframework.core.io.support.PropertySourceProcessor#processPropertySource(PropertySourceDescriptor descriptor)。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">processPropertySource</span><span class="token punctuation">(</span><span class="token class-name">PropertySourceDescriptor</span> descriptor<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> name <span class="token operator">=</span> descriptor<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> encoding <span class="token operator">=</span> descriptor<span class="token punctuation">.</span><span class="token function">encoding</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> locations <span class="token operator">=</span> descriptor<span class="token punctuation">.</span><span class="token function">locations</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Assert</span><span class="token punctuation">.</span><span class="token function">isTrue</span><span class="token punctuation">(</span>locations<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token string">&quot;At least one @PropertySource(value) location is required&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">boolean</span> ignoreResourceNotFound <span class="token operator">=</span> descriptor<span class="token punctuation">.</span><span class="token function">ignoreResourceNotFound</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">PropertySourceFactory</span> factory <span class="token operator">=</span> <span class="token punctuation">(</span>descriptor<span class="token punctuation">.</span><span class="token function">propertySourceFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token function">instantiateClass</span><span class="token punctuation">(</span>descriptor<span class="token punctuation">.</span><span class="token function">propertySourceFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token constant">DEFAULT_PROPERTY_SOURCE_FACTORY</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> location <span class="token operator">:</span> locations<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token class-name">String</span> resolvedLocation <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>environment<span class="token punctuation">.</span><span class="token function">resolveRequiredPlaceholders</span><span class="token punctuation">(</span>location<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Resource</span> resource <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>resourceLoader<span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span>resolvedLocation<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">addPropertySource</span><span class="token punctuation">(</span>factory<span class="token punctuation">.</span><span class="token function">createPropertySource</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">EncodedResource</span><span class="token punctuation">(</span>resource<span class="token punctuation">,</span> encoding<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IllegalArgumentException</span> <span class="token operator">|</span> <span class="token class-name">FileNotFoundException</span> <span class="token operator">|</span> <span class="token class-name">UnknownHostException</span> <span class="token operator">|</span> <span class="token class-name">SocketException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			<span class="token comment">//#########省略其他代码################</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>可以看到，在processPropertySource()方法中，会通过@PropertySource注解的属性值解析出配置文件的内容，并且通过factory对象的createPropertySource()方法来创建PropertySource对象。</p> <p>（5）解析DefaultPropertySourceFactory类的createPropertySource(String name, EncodedResource resource)方法</p> <p>源码详见：org.springframework.core.io.support.DefaultPropertySourceFactory#createPropertySource(String name, EncodedResource resource)。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">PropertySource</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">createPropertySource</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token class-name">EncodedResource</span> resource<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>name <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">ResourcePropertySource</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> resource<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">ResourcePropertySource</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>createPropertySource()方法的源码比较简单，不再赘述。</p> <p>（6）回到PropertySourceProcessor类的processPropertySource(PropertySourceDescriptor descriptor)方法</p> <p>在PropertySourceProcessor类的processPropertySource()方法中，创建完PropertySource对象后，会调用addPropertySource()方法将获取到的属性值添加到Spring的环境变量中。</p> <p>（7）解析PropertySourceProcessor类的addPropertySource(PropertySource&lt;?&gt; propertySource)方法</p> <p>源码详见：org.springframework.core.io.support.PropertySourceProcessor#addPropertySource(PropertySource&lt;?&gt; propertySource)。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">addPropertySource</span><span class="token punctuation">(</span><span class="token class-name"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>core<span class="token punctuation">.</span>env<span class="token punctuation">.</span></span>PropertySource</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> propertySource<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> name <span class="token operator">=</span> propertySource<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">MutablePropertySources</span> propertySources <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>environment<span class="token punctuation">.</span><span class="token function">getPropertySources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceNames<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>core<span class="token punctuation">.</span>env<span class="token punctuation">.</span></span>PropertySource</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> existing <span class="token operator">=</span> propertySources<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>existing <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">PropertySource</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> newSource <span class="token operator">=</span> <span class="token punctuation">(</span>propertySource <span class="token keyword">instanceof</span> <span class="token class-name">ResourcePropertySource</span> <span class="token operator">?</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ResourcePropertySource</span><span class="token punctuation">)</span> propertySource<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withResourceName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> propertySource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>existing <span class="token keyword">instanceof</span> <span class="token class-name">CompositePropertySource</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">CompositePropertySource</span><span class="token punctuation">)</span> existing<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addFirstPropertySource</span><span class="token punctuation">(</span>newSource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>existing <span class="token keyword">instanceof</span> <span class="token class-name">ResourcePropertySource</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    existing <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ResourcePropertySource</span><span class="token punctuation">)</span> existing<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">withResourceName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+                <span class="token class-name">CompositePropertySource</span> composite <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CompositePropertySource</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                composite<span class="token punctuation">.</span><span class="token function">addPropertySource</span><span class="token punctuation">(</span>newSource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                composite<span class="token punctuation">.</span><span class="token function">addPropertySource</span><span class="token punctuation">(</span>existing<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                propertySources<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> composite<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceNames<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        propertySources<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span>propertySource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span> firstProcessed <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceNames<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceNames<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        propertySources<span class="token punctuation">.</span><span class="token function">addBefore</span><span class="token punctuation">(</span>firstProcessed<span class="token punctuation">,</span> propertySource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>propertySourceNames<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br></div></div><p>可以看到，在PropertySourceProcessor类的addPropertySource()方法中，会将解析出的配置文件的内容添加到Spring的环境变量中。具体就是在PropertySourceProcessor类的addPropertySource()方法中，获取到ConfigurableEnvironment中的MutablePropertySources对象，用来存储解析出的配置文件中的配置项内容。如果有相同的配置项内容，将existing对象强转为CompositePropertySource类型，把新旧相同的配置项进行合并，再放到MutablePropertySources对象中。</p> <p>后续就可以通过Spring的环境变量，来获取到配置文件中的配置项内容。</p> <p>至此，@PropertySource注解在Spring源码中的执行流程分析完毕。</p> <h2 id="六、总结"><a href="#六、总结" class="header-anchor">#</a> 六、总结</h2> <p><code>@PropertySource注解讲完了，我们一起总结下吧！</code></p> <p>本章，首先介绍了@PropertySource注解的源码和使用场景，随后，简单给出了一个@PropertySource注解的使用案例。接下来，详细分析了@PropertySource注解的源码时序图和@PropertySource注解在Spring源码层面的执行流程。</p> <h2 id="七、思考"><a href="#七、思考" class="header-anchor">#</a> 七、思考</h2> <p><code>既然学完了，就开始思考几个问题吧？</code></p> <p>关于@PropertySource注解，通常会有如下几个经典面试题：</p> <ul><li>@PropertySource注解的执行流程？</li> <li>@PropertySource注解是如何将配置文件加载到环境变量的？</li> <li>@PropertySource注解有哪些使用场景？</li> <li>Spring中为何会设计一个@PropertySource注解来加载配置文件？</li> <li>从@PropertySource注解的设计中，你得到了哪些启发？</li></ul> <h2 id="八、vip服务"><a href="#八、vip服务" class="header-anchor">#</a> 八、VIP服务</h2> <p><strong>强烈推荐：《<a href="https://mp.weixin.qq.com/s/Zp0nI2RyFb_UCYpSsUt2OQ" target="_blank" rel="noopener noreferrer">原来大厂面试官也会在这里偷偷学习！<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》，如果文中优惠券过期，可长按或扫码下面优惠券二维码加入星球。</strong></p> <p><img alt="星球优惠券" data-src="https://binghe.gitcode.host/assets/images/microservices/springcloudalibaba/sa-2022-04-18-008.png" loading="lazy" class="lazy"></p> <p><strong>冰河技术</strong> 知识星球《SpringCloud Alibaba实战》从零搭建并开发微服务项目已完结，《RPC手撸专栏》已经更新120+篇文章，已提交120+项目工程，120+项目源码Tag分支，并将源码的获取方式放到了知识星球中，同时在微信上创建了专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习从零开始手撸可用于实际场景的高性能、可扩展的RPC框架项目</p> <p>2.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>3.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>4.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>5.提供站点 https://binghe.gitcode.host 所有学习内容的指导、帮助</p> <p>6.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>7.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>8.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>9.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="如何加入星球"><a href="#如何加入星球" class="header-anchor">#</a> 如何加入星球</h3> <ul><li><strong>链接</strong> ：打开链接 <a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/frame/spring/ioc/2023-02-25-《Spring核心技术》第6章-深度解析@PropertySource注解.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/2/25</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/frame/spring/ioc/2023-02-24-《Spring核心技术》第5章-深度解析@Import注解.html" class="prev">
+          第05章：深度解析@Import注解
+        </a></span> <span class="next"><a href="/md/frame/spring/springmvc/default.html">
+          关于我
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">第06章：深度解析@PropertySource注解</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#一、学习指引" class="toc-sidebar-link">一、学习指引</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#二、注解说明" class="toc-sidebar-link">二、注解说明</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#_2-1-注解源码" class="toc-sidebar-link">2.1 注解源码</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#_2-2-注解使用场景" class="toc-sidebar-link">2.2 注解使用场景</a></li></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#三、使用案例" class="toc-sidebar-link">三、使用案例</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#四、源码时序图" class="toc-sidebar-link">四、源码时序图</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#五、源码解析" class="toc-sidebar-link">五、源码解析</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#六、总结" class="toc-sidebar-link">六、总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#七、思考" class="toc-sidebar-link">七、思考</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#八、vip服务" class="toc-sidebar-link">八、VIP服务</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第06章：深度解析@PropertySource注解</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#一、学习指引" class="toc-sidebar-link">一、学习指引</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#二、注解说明" class="toc-sidebar-link">二、注解说明</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#_2-1-注解源码" class="toc-sidebar-link">2.1 注解源码</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#_2-2-注解使用场景" class="toc-sidebar-link">2.2 注解使用场景</a></li></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#三、使用案例" class="toc-sidebar-link">三、使用案例</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#四、源码时序图" class="toc-sidebar-link">四、源码时序图</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#五、源码解析" class="toc-sidebar-link">五、源码解析</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#六、总结" class="toc-sidebar-link">六、总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#七、思考" class="toc-sidebar-link">七、思考</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#八、vip服务" class="toc-sidebar-link">八、VIP服务</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/frame/spring/ioc/2023-02-25-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC6%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90@PropertySource%E6%B3%A8%E8%A7%A3.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="第05章：深度解析@Import注解" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/frame/spring/ioc/2023-02-24-《Spring核心技术》第5章-深度解析@Import注解.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="关于我" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/frame/spring/springmvc/default.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1677347365659" defer></script><script src="/assets/js/cg-3.js?v=1677347365659" defer></script><script src="/assets/js/cg-4.js?v=1677347365659" defer></script><script src="/assets/js/cg-159.js?v=1677347365659" defer></script><script src="/assets/js/cg-5.js?v=1677347365659" defer></script><script src="/assets/js/cg-6.js?v=1677347365659" defer></script><script src="/assets/js/cg-app.js?v=1677347365659" defer></script>
+  </body>
+</html>
