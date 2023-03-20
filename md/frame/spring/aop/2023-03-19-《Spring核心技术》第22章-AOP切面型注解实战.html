@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第22章：AOP切面型注解实战 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2023-03-20T15:44:23.000Z">
+    <meta property="og:title" content="第22章：AOP切面型注解实战">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html">
+    <meta name="twitter:title" content="第22章：AOP切面型注解实战">
+    <meta name="twitter:url" content="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.98b894ed.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1679327183151" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-152.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1679327183151" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1679327183151" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.98b894ed.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1679327183151">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  🔥《RPC手撸专栏》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  《字节码编程》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/threadpool/default.html" class="nav-link">
+  《手写线程池》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/limiter/default.html" class="nav-link">
+  《分布式限流》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/independent/default.html" class="nav-link">
+  《开源项目》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/starball/2023-01-01-2023星球新年规划.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/basics/2022-04-28-全网最全正则表达式总结.html" class="nav-link">
+  Java基础
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/advanced/default.html" class="nav-link">
+  Java进阶
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/senior/default.html" class="nav-link">
+  Java高级
+</a></li><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Spring核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/aop/default.html" class="nav-link">
+  AOP核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          JVM核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          MySQL核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="性能调优" class="dropdown-title"><span class="title">性能调优</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/performance/jvm/default.html" class="nav-link">
+  JVM性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/tomcat/default.html" class="nav-link">
+  Tomcat性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/mysql/default.html" class="nav-link">
+  MySQL性能调优
+</a></li><li class="dropdown-item"><!----> <a href="/md/performance/system/default.html" class="nav-link">
+  操作系统性能调优
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          缓存技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/cache/default.html" class="nav-link">
+  Redis
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务注册发现
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/zookeeper/default.html" class="nav-link">
+  Zookeeper
+</a></li></ul></li><li class="dropdown-item"><h4>
+          消息中间件
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mq/rabbitmq/default.html" class="nav-link">
+  RabbitMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/rocketmq/default.html" class="nav-link">
+  RocketMQ
+</a></li><li class="dropdown-subitem"><a href="/md/distributed/mq/kafka/default.html" class="nav-link">
+  Kafka
+</a></li></ul></li><li class="dropdown-item"><h4>
+          网络通信
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/netty/default.html" class="nav-link">
+  Netty
+</a></li></ul></li><li class="dropdown-item"><h4>
+          远程调用
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/dubbo/default.html" class="nav-link">
+  Dubbo
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/mongodb/default.html" class="nav-link">
+  MongoDB
+</a></li></ul></li><li class="dropdown-item"><h4>
+          搜索引擎
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/es/default.html" class="nav-link">
+  ElasticSearch
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  🔥《RPC手撸专栏》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/bytecode/2022-04-11-001-工作多年的你依然重复做着CRUD-是否接触过这种技术.html" class="nav-link">
+  《字节码编程》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/threadpool/default.html" class="nav-link">
+  《手写线程池》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/limiter/default.html" class="nav-link">
+  《分布式限流》
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/independent/default.html" class="nav-link">
+  《开源项目》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/starball/2023-01-01-2023星球新年规划.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>专栏介绍</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="sidebar-link">第00章：开篇：我要带你一步步调试Spring6.0源码啦！</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第一篇：IOC容器</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/ioc/2022-12-05-《Spring核心技术》第1章-@Configuration注解-你了解的还不够深入.html" class="sidebar-link">第01章：深度解析@Configuration注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-12-《Spring核心技术》第2章-深度解析@ComponentScans注解与@ComponentScan注解.html" class="sidebar-link">第02章：深度解析@ComponentScan注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-21-《Spring核心技术》第3章-深度解析@Bean注解.html" class="sidebar-link">第03章：深度解析@Bean注解</a></li><li><a href="/md/frame/spring/ioc/2022-12-22-《Spring核心技术》第4章-深度解析从IOC容器中获取Bean的过程.html" class="sidebar-link">第04章：深度解析从IOC容器中获取Bean的过程</a></li><li><a href="/md/frame/spring/ioc/2023-02-24-《Spring核心技术》第5章-深度解析@Import注解.html" class="sidebar-link">第05章：深度解析@Import注解</a></li><li><a href="/md/frame/spring/ioc/2023-02-25-《Spring核心技术》第6章-深度解析@PropertySource注解.html" class="sidebar-link">第06章：深度解析@PropertySource注解</a></li><li><a href="/md/frame/spring/ioc/2023-02-27-《Spring核心技术》第7章-深度解析@DependsOn注解.html" class="sidebar-link">第07章：深度解析@DependsOn注解</a></li><li><a href="/md/frame/spring/ioc/2023-02-28-《Spring核心技术》第8章-深度解析@Conditional注解.html" class="sidebar-link">第08章：深度解析@Conditional注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-01-《Spring核心技术》第9章-深度解析@Lazy注解.html" class="sidebar-link">第09章：深度解析@Lazy注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-02-《Spring核心技术》第10章-深度解析@Component注解.html" class="sidebar-link">第10章：深度解析@Component注解（含@Repository、@Service和@Controller）</a></li><li><a href="/md/frame/spring/ioc/2023-03-03-《Spring核心技术》第11章-深度解析@Value注解.html" class="sidebar-link">第11章：深度解析@Value注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-06-《Spring核心技术》第12章-深度解析@Autowired注解.html" class="sidebar-link">第12章：深度解析@Autowired注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-07-《Spring核心技术》第13章-深度解析@Qualifier注解.html" class="sidebar-link">第13章：深度解析@Qualifier注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-08-《Spring核心技术》第14章-深度解析@Resource注解.html" class="sidebar-link">第14章：深度解析@Resource注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-10-《Spring核心技术》第15章-深度解析@Inject注解.html" class="sidebar-link">第15章：深度解析@Inject注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-11-《Spring核心技术》第16章-深度解析@Primary注解.html" class="sidebar-link">第16章：深度解析@Primary注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-12-《Spring核心技术》第17章-深度解析@Scope注解.html" class="sidebar-link">第17章：深度解析@Scope注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-13-《Spring核心技术》第18章-深度解析@PostConstruct注解与@PreDestroy注解.html" class="sidebar-link">第18章：深度解析@PostConstruct注解与@PreDestroy注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-14-《Spring核心技术》第19章-深度解析@Profile注解.html" class="sidebar-link">第19章：深度解析@Profile注解</a></li><li><a href="/md/frame/spring/ioc/2023-03-15-《Spring核心技术》第20章-深度解析循环依赖.html" class="sidebar-link">【付费】第20章：深度解析循环依赖(史上最全)</a></li><li><a href="/md/frame/spring/ioc/2023-03-16-《Spring核心技术》第21章-深度解析事件监听机制.html" class="sidebar-link">【付费】第21章：深度解析事件监听机制</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>第二篇：AOP切面(付费)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/aop/2023-03-19-《Spring核心技术》第22章-AOP切面型注解实战.html" class="active sidebar-link">第22章：AOP切面型注解实战</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第三篇：声明式事务(待更新)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/springmvc/default.html" class="sidebar-link">我是冰河</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第四篇：AOT预编译(待更新)</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/frame/spring/springmvc/default.html" class="sidebar-link">我是冰河</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="《spring核心技术》第22章-aop切面型注解实战"><a href="#《spring核心技术》第22章-aop切面型注解实战" class="header-anchor">#</a> 《Spring核心技术》第22章：AOP切面型注解实战</h1> <p>作者：冰河
+<br>星球：<a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>博客：<a href="https://binghe.gitcode.host" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>文章汇总：<a href="https://binghe.gitcode.host/md/all/all.html" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host/md/all/all.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>源码地址：<a href="https://github.com/binghe001/spring-annotation-book/tree/master/spring-annotation-chapter-22" target="_blank" rel="noopener noreferrer">https://github.com/binghe001/spring-annotation-book/tree/master/spring-annotation-chapter-22<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <blockquote><p>沉淀，成长，突破，帮助他人，成就自我。</p></blockquote> <p><strong>大家好，我是冰河~~</strong></p> <hr> <ul><li><p><strong>本章难度</strong>：★★★☆☆</p></li> <li><p><strong>本章重点</strong>：进一步学习并掌握AOP切面型注解的实战案例，从源码级别彻底掌握切面型注解。</p></li></ul> <hr> <p>本章目录如下所示：</p> <ul><li>学习指引</li> <li>注解说明
+<ul><li>@EnableAspectJAutoProxy注解</li> <li>@Aspect注解</li> <li>@Pointcut注解</li> <li>@Before注解</li> <li>@After注解</li> <li>@AfterReturning注解</li> <li>@AfterThrowing注解</li> <li>@Around</li></ul></li> <li>使用案例</li> <li>总结</li> <li>思考</li> <li>VIP服务</li></ul> <h2 id="一、学习指引"><a href="#一、学习指引" class="header-anchor">#</a> 一、学习指引</h2> <p><code>Spring中的AOP切面型注解，你真的彻底了解过吗？</code></p> <p>AOP的全称是Aspect Oriented Programming，表示面向切面编程。AOP使用了设计模式中的代理模式，使用AOP可以实现业务逻辑的各个部分分离，降低业务逻辑的耦合性，提高程序的可重用性。在实际项目开发过程中，如果想在业务逻辑中不修改代码的前提下，增加输出的日志信息，此时就可以使用AOP切面实现。</p> <h2 id="二、注解说明"><a href="#二、注解说明" class="header-anchor">#</a> 二、注解说明</h2> <p><code>关于Spring中的AOP注解的一点点说明~~</code></p> <p>Spring中提供的切面型注解主要有：@EnableAspectJAutoProxy、@Aspect、@Pointcut、@Before、@After、@AfterReturning、@AfterThrowing和@Around。本章，就简单介绍下Spring中提供的切面型注解。</p> <h3 id="_2-1-enableaspectjautoproxy注解"><a href="#_2-1-enableaspectjautoproxy注解" class="header-anchor">#</a> 2.1 @EnableAspectJAutoProxy注解</h3> <p>@EnableAspectJAutoProxy注解表示开启Spring对基于注解的AOP的支持，如果基于Spring的注解开发程序时，需要使用AOP功能，就需要使用@EnableAspectJAutoProxy注解来开启AOP功能。</p> <p>@EnableAspectJAutoProxy注解的源码详见：org.springframework.context.annotation.EnableAspectJAutoProxy。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token comment">/**
+ * @author Chris Beams
+ * @author Juergen Hoeller
+ * @since 3.1
+ * @see org.aspectj.lang.annotation.Aspect
+ */</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span><span class="token class-name">AspectJAutoProxyRegistrar</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">EnableAspectJAutoProxy</span> <span class="token punctuation">{</span>
+	<span class="token keyword">boolean</span> <span class="token function">proxyTargetClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+	<span class="token comment">/**
+	 * @since 4.3.1
+	 */</span>
+	<span class="token keyword">boolean</span> <span class="token function">exposeProxy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><p>从源码可以看出，@EnableAspectJAutoProxy注解是从Spring3.1版本开始提供的注解，只能标注到类上，并且使用@Import注解导入了AspectJAutoProxyRegistrar类。在@EnableAspectJAutoProxy注解中只提供了proxyTargetClass和exposeProxy两个属性。</p> <ul><li>proxyTargetClass：表示是否基于CGLib进行代理。true：表示基于CGLib进行代理。false：表示基于JDK进行代理。默认值为false。</li> <li>exposeProxy：从Spring4.3.1版本开始提供的属性，表示是否对外暴露代理对象。true：对外暴露代理对象，可以通过AopContext进行访问。false：不对外暴露代理对象。默认值为false。</li></ul> <h3 id="_2-2-aspect注解"><a href="#_2-2-aspect注解" class="header-anchor">#</a> 2.2 @Aspect注解</h3> <p>@Aspect注解可以将当前类声明为切面类。如果基于Spring注解开发程序时，需要将某个类声明为切面类，就可以使用@Aspect注解。</p> <p>@Aspect注解的源码详见：org.aspectj.lang.annotation.Aspect。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Aspect</span> <span class="token punctuation">{</span>
+	<span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>从源码可以看出，@Aspect注解可以标注到类上，并且在@Aspect注解中提供了一个Spring类型的value属性。</p> <ul><li>value：指定预处理的切入点表达式。默认的切面类是单例的，如果切面类是一个多例类，则可以使用value属性指定预处理的切入点表达式。除了支持切入点表达式外，也支持使用@Pointcut修饰的方法的全名称。</li></ul> <h3 id="_2-3-pointcut注解"><a href="#_2-3-pointcut注解" class="header-anchor">#</a> 2.3 @Pointcut注解</h3> <p>@Pointcut注解可以指定切入点表达式，在使用Spring注解开发AOP程序时，如果需要执行多个通知，并且使用AOP增强的功能确定的情况下，就可以使用@Pointcut注解将切入点表达式通用化。</p> <p>@Pointcut注解的源码详见：org.aspectj.lang.annotation.Pointcut。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Pointcut</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>从源码可以看出，@Pointcut注解标注到方法上。并且在@Pointcut注解中提供了两个String类型的属性value和argNames。</p> <ul><li>value：表示指定的切入点表达式。</li> <li>argNames：表示指定的切入点表达式的参数，参数可以是execution中的，也可以是args中的，并且不使用这个属性也可以获得切入点的方法参数。</li></ul> <h3 id="_2-4-before注解"><a href="#_2-4-before注解" class="header-anchor">#</a> 2.4 @Before注解</h3> <p>@Before注解指定方法为前置通知，指定为前置通知的方法在切入点方法之前执行。在实际开发项目的过程中，如果需要在切入点方法之前执行一些业务逻辑处理，就可以使用@Before注解指定前置通知的方法，让前置通知的方法在切入点方法之前执行。如果在前置通知的方法中需要获取切入点方法中的参数进行处理时，就需要配合使用切入点表达式参数。</p> <p>@Before注解的源码详见：org.aspectj.lang.annotation.Before。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Before</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>从源码可以看出，@Before注解只能标注到方法上，并且在@Before注解中提供了两个Spring类型的属性，分别是value和argNames。</p> <ul><li>value：表示指定切入点表达式，可以是表达式，也可以是表达式的引用。</li> <li>argNames：表示指定切入点表达式参数的名称。要求和切入点表达式中的参数名称一致。如果不指定切入点表达式参数的名称，一般情况下也可以获取切入点方法的参数内容。</li></ul> <h3 id="_2-5-after注解"><a href="#_2-5-after注解" class="header-anchor">#</a> 2.5 @After注解</h3> <p>@After注解主要指定最终的通知，如果在实际项目的开发过程中，需要指定最终通知的执行时机，并且需要在切入点方法完成之后执行，无论切入点方法的执行是否抛出异常，都要执行最终的通知方法，就可以使用@After注解标注最终通知的方法。使用@After注解标注的方法也可以用来执行一些清理工作。</p> <p>@After注解的源码详见：org.aspectj.lang.annotation.After。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">After</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>从源码可以看出，@After注解只能标注到方法上，并且在方法中提供了两个String类型的属性，分别是value和argNames。</p> <ul><li>value：表示指定切入点表达式，可以是表达式，也可以是表达式的引用。</li> <li>argNames：表示指定切入点表达式参数的名称。要求和切入点表达式中的参数名称一致。如果不指定切入点表达式参数的名称，一般情况下也可以获取切入点方法的参数内容。</li></ul> <h3 id="_2-6-afterreturning注解"><a href="#_2-6-afterreturning注解" class="header-anchor">#</a> 2.6 @AfterReturning注解</h3> <p>@AfterReturning注解可以配置后置增强切入点方法。被@AfterReturning注解修饰的方法会在切入点方法正常执行之后执行。其实，在实际项目的开发过程中，比如提交事务、记录访问日志等等功能都可以使用@AfterReturning注解的后置通知实现。</p> <p>@AfterReturning注解的源码详见：org.aspectj.lang.annotation.AfterReturning。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">AfterReturning</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">pointcut</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">returning</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>从源码可以看出，@AfterReturning注解只能标注到方法上，并且在@AfterReturning注解中提供了四个String类型的属性，分别是value、pointcut、returning和argNames。</p> <ul><li>value：表示指定切入点表达式，可以是表达式，也可以是表达式的引用。</li> <li>pointcut：同value。</li> <li>returning：表示指定切入点方法返回值的变量名称，需要注意的是，指定的名称需要和切入点方法返回值名称一致。</li> <li>argNames：表示指定切入点表达式参数的名称。要求和切入点表达式中的参数名称一致。如果不指定切入点表达式参数的名称，一般情况下也可以获取切入点方法的参数内容。</li></ul> <h3 id="_2-7-afterthrowing注解"><a href="#_2-7-afterthrowing注解" class="header-anchor">#</a> 2.7 @AfterThrowing注解</h3> <p>@AfterThrowing注解主要是配置异常通知，如果需要在切入点方法执行异常时，执行某些逻辑处理，就可以使用@AfterThrowing注解指定异常通知。</p> <p>@AfterThrowing注解的源码详见：org.aspectj.lang.annotation.AfterThrowing。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">AfterThrowing</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">pointcut</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">throwing</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>从源码可以看出，@AfterThrowing注解只能标注到方法上，并且在@AfterThrowing注解中提供了四个String类型的属性，分别是：value、pointcut、throwing和argNames。</p> <ul><li>value：表示指定切入点表达式，可以是表达式，也可以是表达式的引用。</li> <li>pointcut：同value。</li> <li>throwing：表示指定切入点方法执行过程中抛出异常时的异常对象的变量名称，需要和异常变量名称保持一致。</li> <li>argNames：表示指定切入点表达式参数的名称。要求和切入点表达式中的参数名称一致。如果不指定切入点表达式参数的名称，一般情况下也可以获取切入点方法的参数内容。</li></ul> <h3 id="_2-8-around注解"><a href="#_2-8-around注解" class="header-anchor">#</a> 2.8 @Around注解</h3> <p>@Around注解用于指定环绕通知，如果在实际项目的开发过程中，需要手动控制增强方法执行的时机，就可以使用@Around注解来实现。</p> <p>@Around注解的源码详见：org.aspectj.lang.annotation.Around。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Around</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> <span class="token function">argNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>从源码可以看出，@Around注解只能标注到方法上，并且在@Around方法中提供了两个String类型的属性，分别是value和argNames。</p> <ul><li>value：表示指定切入点表达式，可以是表达式，也可以是表达式的引用。</li> <li>argNames：表示指定切入点表达式参数的名称。要求和切入点表达式中的参数名称一致。如果不指定切入点表达式参数的名称，一般情况下也可以获取切入点方法的参数内容。</li></ul> <h2 id="三、使用案例"><a href="#三、使用案例" class="header-anchor">#</a> 三、使用案例</h2> <p><code>一起实现AOP切面型注解的案例，怎么样?</code></p> <p>本节，就基于Spring AOP切面型注解实现在执行项目Service层的方法时，输出对应的日志信息。具体实现的步骤如下所示。</p> <p><strong>（1）新增AspectBean类</strong></p> <p>AspectBean类的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.bean.AspectBean。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectBean</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>可以看到，AspectBean类就是一个普通的Java类，类中并没有任何字段和方法。</p> <p><strong>（2）新增AspectService接口</strong></p> <p>AspectService接口的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.service.AspectService。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">AspectService</span> <span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">saveOrUpdateAspectBean</span><span class="token punctuation">(</span><span class="token class-name">AspectBean</span> aspectBean<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>可以看到，AspectService接口中提供了一个saveOrUpdateAspectBean()方法，模拟保存或者修改AspectBean对象的接口方法。</p> <p><strong>（3）新增AspectServiceImpl类</strong></p> <p>AspectServiceImpl类的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.service.impl.AspectServiceImpl。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">AspectService</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">saveOrUpdateAspectBean</span><span class="token punctuation">(</span><span class="token class-name">AspectBean</span> aspectBean<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;保存或者更新AspectBean对象...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p><strong>（4）新增AspectLog类</strong></p> <p>AspectLog类的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.aspect.AspectLog。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Aspect</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectLog</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Pointcut</span><span class="token punctuation">(</span><span class="token string">&quot;execution(* io.binghe.spring.annotation.chapter22.service.impl.*.*(..))&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">pointCut</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Before</span><span class="token punctuation">(</span><span class="token string">&quot;pointCut()&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">beforeLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;@Before注解在执行切入点方法之前记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@After</span><span class="token punctuation">(</span><span class="token string">&quot;pointCut()&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;@After注解无论切入点方法是否抛出异常都会记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@AfterReturning</span><span class="token punctuation">(</span><span class="token string">&quot;pointCut()&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterReturningLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;@AfterReturning注解在切入点方法正常执行后记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@AfterThrowing</span><span class="token punctuation">(</span><span class="token string">&quot;pointCut()&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterThrowingLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;@AfterThrowing注解在切入点方法抛出异常后记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Around</span><span class="token punctuation">(</span><span class="token string">&quot;pointCut()&quot;</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">aroundLog</span><span class="token punctuation">(</span><span class="token class-name">ProceedingJoinPoint</span> pjp<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment">//返回的结果数据</span>
+        <span class="token class-name">Object</span> resultValue <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span><span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;在执行切入点方法之前记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//获取执行方法的参数</span>
+            <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args <span class="token operator">=</span> pjp<span class="token punctuation">.</span><span class="token function">getArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//指定切入点的方法</span>
+            resultValue <span class="token operator">=</span> pjp<span class="token punctuation">.</span><span class="token function">proceed</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;在切入点方法正常执行后记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;在切入点方法抛出异常后记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span> <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;无论切入点方法是否抛出异常都会记录日志...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> resultValue<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br></div></div><p>可以看到，在AspectLog类上标注了@Aspect注解，说明AspectLog类是一个AOP切面类。在AspectLog类中提供了前置通知、后置通知和环绕通知等方法。并在方法中对应输出了日志信息。</p> <p><strong>（5）新增AspectConfig类</strong></p> <p>AspectConfig类的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.config.AspectConfig。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@EnableAspectJAutoProxy</span>
+<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">&quot;io.binghe.spring.annotation.chapter22&quot;</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectConfig</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>可以看到，在AspectConfig类上标注了@Configuration注解，说明AspectConfig类是案例程序的配置类。并且使用@ComponentScan注解指定了扫描的包名，同时，在在AspectConfig类上标注了@EnableAspectJAutoProxy注解，用以开启基于注解的AOP功能。</p> <p><strong>（6）新增AspectTest类</strong></p> <p>AspectTest类的源码详见：spring-annotation-chapter-22工程下的io.binghe.spring.annotation.chapter22.AspectTest。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectTest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">AnnotationConfigApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">AspectConfig</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">AspectService</span> aspectService <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">AspectService</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        aspectService<span class="token punctuation">.</span><span class="token function">saveOrUpdateAspectBean</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">AspectBean</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>可以看到，在AspectTest类的main()方法中，从IOC容器中获取AspectService对象后，直接调用了saveOrUpdateAspectBean()方法来模拟保存更新AspectBean对象。</p> <p><strong>（7）运行AspectTest类</strong></p> <p>运行AspectTest类的main()方法，输出的结果信息如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>在执行切入点方法之前记录日志<span class="token punctuation">..</span>.
+@Before注解在执行切入点方法之前记录日志<span class="token punctuation">..</span>.
+保存或者更新AspectBean对象<span class="token punctuation">..</span>.
+@AfterReturning注解在切入点方法正常执行后记录日志<span class="token punctuation">..</span>.
+@After注解无论切入点方法是否抛出异常都会记录日志<span class="token punctuation">..</span>.
+在切入点方法正常执行后记录日志<span class="token punctuation">..</span>.
+无论切入点方法是否抛出异常都会记录日志<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p>可以看到，运行AspectTest类的main()方法时，正常执行了AspectServiceImpl类的saveOrUpdateAspectBean()方法，在对应的切面类的方法中输出了日志信息。并且输出了使用@AfterReturning注解标注的方法中的日志信息。</p> <p><strong>（8）修改AspectServiceImpl类</strong></p> <p>在AspectServiceImpl类的saveOrUpdateAspectBean()方法中添加一行<code>int i = 1 / 0;</code>代码，使得saveOrUpdateAspectBean()方法抛出异常。</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AspectServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">AspectService</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">saveOrUpdateAspectBean</span><span class="token punctuation">(</span><span class="token class-name">AspectBean</span> aspectBean<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">&quot;保存或者更新AspectBean对象...&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p><strong>（9）再次运行AspectTest类</strong></p> <p>再次运行AspectTest类的main()方法，输出的结果信息如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>在执行切入点方法之前记录日志<span class="token punctuation">..</span>.
+@Before注解在执行切入点方法之前记录日志<span class="token punctuation">..</span>.
+@AfterThrowing注解在切入点方法抛出异常后记录日志<span class="token punctuation">..</span>.
+@After注解无论切入点方法是否抛出异常都会记录日志<span class="token punctuation">..</span>.
+在切入点方法抛出异常后记录日志<span class="token punctuation">..</span>.
+无论切入点方法是否抛出异常都会记录日志<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>可以看到，日志中输出了@AfterThrowing注解标注的方法中的日志信息。</p> <h2 id="四、总结"><a href="#四、总结" class="header-anchor">#</a> 四、总结</h2> <p><code>AOP切面型注解实战案例介绍完了，我们一起总结下吧！</code></p> <p>本章，主要对AOP切面型注解进行了简单的介绍，包含：@EnableAspectJAutoProxy、@Aspect、@Pointcut、@Before、@After、@AfterReturning、@AfterThrowing和@Around注解，对这些注解的源码和使用场景进行了简单的说明，并实现了简单的实战案例。</p> <h2 id="五、思考"><a href="#五、思考" class="header-anchor">#</a> 五、思考</h2> <p><code>既然学完了，就开始思考几个问题吧？</code></p> <p>关于AOP切面型注解，通常会有如下几个经典面试题：</p> <ul><li>AOP切面中注解提供了哪些注解，各自的作用是什么？</li> <li>AOP切面中环绕通知的注解是如何实现的？</li> <li>AOP切面型注解的执行顺序是什么？</li> <li>@After、@AfterReturning、@AfterThrowing的区别是什么？</li> <li>你在平时工作中，会在哪些场景下使用AOP切面型注解？</li> <li>你从AOP切面型注解的设计中得到了哪些启发？</li></ul> <h2 id="六、vip服务"><a href="#六、vip服务" class="header-anchor">#</a> 六、VIP服务</h2> <p><strong>强烈推荐阅读：《<a href="https://mp.weixin.qq.com/s/Zp0nI2RyFb_UCYpSsUt2OQ" target="_blank" rel="noopener noreferrer">原来大厂面试官也会在这里偷偷学习！<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>》，如果文中优惠券过期，可长按或扫码下面优惠券二维码加入星球。</strong></p> <p><img alt="星球优惠券" data-src="D:%5CWorkspaces%5Cmyself%5Cbinghe002%5CBingheGuide-Private%5CSpring%5Ccore%5Cimages%5C%E6%98%9F%E7%90%83%E4%BC%98%E6%83%A0%E5%88%B8.png" loading="lazy" class="lazy"></p> <p><strong>冰河技术</strong> 知识星球**《SpringCloud Alibaba实战》<strong>从零搭建并开发微服务项目已完结；</strong>《RPC手撸专栏》<strong>已经更新120+篇文章，已提交120+项目工程，120+项目源码Tag分支；</strong>《Spring核心技术》**专栏以Spring的核心注解为突破口，通过源码执行的时序图带你详细分析Spring底层源码，让你学习Spring底层源码不再枯燥。并这些专栏已经将源码的获取方式放到了知识星球中，同时在微信上创建了专门的知识星球群，冰河会在知识星球上和星球群里解答球友的提问。</p> <p>目前，星球群已形成良好的技术讨论氛围，后续也会像PRC项目一样全程手撸企业级中间件项目，<strong>涉及分布式、高并发、高性能、高可靠、高可扩展，让大家知其然，更知其所以然，从手写企业级中间件项目的过程中，充分掌握分布式、高并发、高性能、高可靠、高可扩展的编程技巧。</strong></p> <p><strong>更加值得一提的是：有超过30+的大厂面试官悄悄在这里提升核心竞争力！</strong></p> <h3 id="星球提供的服务"><a href="#星球提供的服务" class="header-anchor">#</a> 星球提供的服务</h3> <p>冰河整理了星球提供的一些服务，如下所示。</p> <p>加入星球，你将获得：</p> <p>1.学习从零开始手撸可用于实际场景的高性能、可扩展的RPC框架项目</p> <p>2.学习SpringCloud Alibaba实战项目—从零开发微服务项目</p> <p>3.学习高并发、大流量业务场景的解决方案，体验大厂真正的高并发、大流量的业务场景</p> <p>4.学习进大厂必备技能：性能调优、并发编程、分布式、微服务、框架源码、中间件开发、项目实战</p> <p>5.提供站点 https://binghe.gitcode.host 所有学习内容的指导、帮助</p> <p>6.GitHub：https://github.com/binghe001/BingheGuide - 非常有价值的技术资料仓库，包括冰河所有的博客开放案例代码</p> <p>7.提供技术问题、系统架构、学习成长、晋升答辩等各项内容的回答</p> <p>8.定期的整理和分享出各类专属星球的技术小册、电子书、编程视频、PDF文件</p> <p>9.定期组织技术直播分享，传道、授业、解惑，指导阶段瓶颈突破技巧</p> <h3 id="如何加入星球"><a href="#如何加入星球" class="header-anchor">#</a> 如何加入星球</h3> <ul><li><strong>链接</strong> ：打开链接 <a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <h2 id="加群交流"><a href="#加群交流" class="header-anchor">#</a> 加群交流</h2> <p>本群的宗旨是给大家提供一个良好的技术学习交流平台，所以杜绝一切广告！由于微信群人满 100 之后无法加入，请扫描下方二维码先添加作者 “冰河” 微信(hacker_binghe)，备注：<code>学习加群</code>。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/hacker_binghe.jpg?raw=true" width="180px"> <div style="font-size:18px;">冰河微信</div> <br></div> <h2 id="公众号"><a href="#公众号" class="header-anchor">#</a> 公众号</h2> <p>分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。内容在 <strong>冰河技术</strong> 微信公众号首发，强烈建议大家关注。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_wechat.jpg?raw=true" width="180px"> <div style="font-size:18px;">公众号：冰河技术</div> <br></div> <h2 id="视频号"><a href="#视频号" class="header-anchor">#</a> 视频号</h2> <p>定期分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_video.png?raw=true" width="180px"> <div style="font-size:18px;">视频号：冰河技术</div> <br></div> <h2 id="星球"><a href="#星球" class="header-anchor">#</a> 星球</h2> <p>加入星球 <strong><a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong>，可以获得本站点所有学习内容的指导与帮助。如果你遇到不能独立解决的问题，也可以添加冰河的微信：<strong>hacker_binghe</strong>， 我们一起沟通交流。另外，在星球中不只能学到实用的硬核技术，还能学习<strong>实战项目</strong>！</p> <p>关注 <a href="https://img-blog.csdnimg.cn/20210426115714643.jpg?raw=true" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>公众号，回复 <code>星球</code> 可以获取入场优惠券。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu.png?raw=true" width="180px"> <div style="font-size:18px;">知识星球：冰河技术</div> <br></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/frame/spring/aop/2023-03-19-《Spring核心技术》第22章-AOP切面型注解实战.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/3/20</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/frame/spring/ioc/2023-03-16-《Spring核心技术》第21章-深度解析事件监听机制.html" class="prev">
+          【付费】第21章：深度解析事件监听机制
+        </a></span> <span class="next"><a href="/md/frame/spring/springmvc/default.html">
+          我是冰河
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">第22章：AOP切面型注解实战</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#一、学习指引" class="toc-sidebar-link">一、学习指引</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#二、注解说明" class="toc-sidebar-link">二、注解说明</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-1-enableaspectjautoproxy注解" class="toc-sidebar-link">2.1 @EnableAspectJAutoProxy注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-2-aspect注解" class="toc-sidebar-link">2.2 @Aspect注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-3-pointcut注解" class="toc-sidebar-link">2.3 @Pointcut注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-4-before注解" class="toc-sidebar-link">2.4 @Before注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-5-after注解" class="toc-sidebar-link">2.5 @After注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-6-afterreturning注解" class="toc-sidebar-link">2.6 @AfterReturning注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-7-afterthrowing注解" class="toc-sidebar-link">2.7 @AfterThrowing注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-8-around注解" class="toc-sidebar-link">2.8 @Around注解</a></li></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#三、使用案例" class="toc-sidebar-link">三、使用案例</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#四、总结" class="toc-sidebar-link">四、总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#五、思考" class="toc-sidebar-link">五、思考</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#六、vip服务" class="toc-sidebar-link">六、VIP服务</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#加群交流" class="toc-sidebar-link">加群交流</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#公众号" class="toc-sidebar-link">公众号</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#视频号" class="toc-sidebar-link">视频号</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#星球" class="toc-sidebar-link">星球</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第22章：AOP切面型注解实战</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#一、学习指引" class="toc-sidebar-link">一、学习指引</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#二、注解说明" class="toc-sidebar-link">二、注解说明</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-1-enableaspectjautoproxy注解" class="toc-sidebar-link">2.1 @EnableAspectJAutoProxy注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-2-aspect注解" class="toc-sidebar-link">2.2 @Aspect注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-3-pointcut注解" class="toc-sidebar-link">2.3 @Pointcut注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-4-before注解" class="toc-sidebar-link">2.4 @Before注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-5-after注解" class="toc-sidebar-link">2.5 @After注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-6-afterreturning注解" class="toc-sidebar-link">2.6 @AfterReturning注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-7-afterthrowing注解" class="toc-sidebar-link">2.7 @AfterThrowing注解</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#_2-8-around注解" class="toc-sidebar-link">2.8 @Around注解</a></li></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#三、使用案例" class="toc-sidebar-link">三、使用案例</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#四、总结" class="toc-sidebar-link">四、总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#五、思考" class="toc-sidebar-link">五、思考</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#六、vip服务" class="toc-sidebar-link">六、VIP服务</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#星球提供的服务" class="toc-sidebar-link">星球提供的服务</a></li><li class="toc-sidebar-sub-header"><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#如何加入星球" class="toc-sidebar-link">如何加入星球</a></li></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#加群交流" class="toc-sidebar-link">加群交流</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#公众号" class="toc-sidebar-link">公众号</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#视频号" class="toc-sidebar-link">视频号</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html#星球" class="toc-sidebar-link">星球</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/frame/spring/aop/2023-03-19-%E3%80%8ASpring%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC22%E7%AB%A0-AOP%E5%88%87%E9%9D%A2%E5%9E%8B%E6%B3%A8%E8%A7%A3%E5%AE%9E%E6%88%98.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="【付费】第21章：深度解析事件监听机制" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/frame/spring/ioc/2023-03-16-《Spring核心技术》第21章-深度解析事件监听机制.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="我是冰河" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/frame/spring/springmvc/default.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1679327183151" defer></script><script src="/assets/js/cg-3.js?v=1679327183151" defer></script><script src="/assets/js/cg-4.js?v=1679327183151" defer></script><script src="/assets/js/cg-152.js?v=1679327183151" defer></script><script src="/assets/js/cg-5.js?v=1679327183151" defer></script><script src="/assets/js/cg-6.js?v=1679327183151" defer></script><script src="/assets/js/cg-app.js?v=1679327183151" defer></script>
+  </body>
+</html>
