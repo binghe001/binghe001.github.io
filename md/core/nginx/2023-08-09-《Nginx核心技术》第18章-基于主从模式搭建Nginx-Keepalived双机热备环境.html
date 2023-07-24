@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第18章：基于主从模式搭建Nginx+Keepalived双机热备环境 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2023-07-24T05:43:47.000Z">
+    <meta property="og:title" content="第18章：基于主从模式搭建Nginx+Keepalived双机热备环境">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html">
+    <meta name="twitter:title" content="第18章：基于主从模式搭建Nginx+Keepalived双机热备环境">
+    <meta name="twitter:url" content="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.98b894ed.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1690177515604" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-137.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1690177515604" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1690177515604" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.98b894ed.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1690177515604">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  💥连载视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="💥项目实战" class="dropdown-title"><span class="title">💥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  💥《Seckill秒杀系统》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  💥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  💥《RPC手撸专栏》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  💥连载视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="💥项目实战" class="dropdown-title"><span class="title">💥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  💥《Seckill秒杀系统》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  💥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  💥《RPC手撸专栏》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Nginx核心技术</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="sidebar-link">第01章：安装Nginx</a></li><li><a href="/md/core/nginx/2023-07-24-《Nginx核心技术》第02章-获取客户端真实信息.html" class="sidebar-link">第02章：获取客户端真实IP、域名、协议、端口</a></li><li><a href="/md/core/nginx/2023-07-25-《Nginx核心技术》第03章-实现负载均衡等.html" class="sidebar-link">第03章：实现负载均衡、限流、缓存、黑白名单和灰度发布</a></li><li><a href="/md/core/nginx/2023-07-26-《Nginx核心技术》第04章-生成缩略图.html" class="sidebar-link">第04章：生成缩略图</a></li><li><a href="/md/core/nginx/2023-07-27-《Nginx核心技术》第05章-封禁IP和IP段.html" class="sidebar-link">第05章：封禁IP和IP段</a></li><li><a href="/md/core/nginx/2023-07-28-《Nginx核心技术》第06章-按日期分割Nginx日志.html" class="sidebar-link">第06章：按日期分割Nginx日志</a></li><li><a href="/md/core/nginx/2023-07-29-《Nginx核心技术》第07章-配置Nginx日志.html" class="sidebar-link">第07章：配置Nginx日志</a></li><li><a href="/md/core/nginx/2023-07-30-《Nginx核心技术》第08章-为Nginx动态添加模块.html" class="sidebar-link">第08章：为Nginx动态添加模块</a></li><li><a href="/md/core/nginx/2023-07-31-《Nginx核心技术》第09章-格式化日志并推送到远程服务器.html" class="sidebar-link">第09章：格式化日志并推送到远程服务器</a></li><li><a href="/md/core/nginx/2023-08-01-《Nginx核心技术》第10章-Nginx配置WebSocket.html" class="sidebar-link">第10章：Nginx配置WebSocket</a></li><li><a href="/md/core/nginx/2023-08-02-《Nginx核心技术》第11章-实现MySQL数据库的负载均衡.html" class="sidebar-link">第11章：实现MySQL数据库的负载均衡</a></li><li><a href="/md/core/nginx/2023-08-03-《Nginx核心技术》第12章-使用Nginx解决跨域问题.html" class="sidebar-link">第12章：使用Nginx解决跨域问题</a></li><li><a href="/md/core/nginx/2023-08-04-《Nginx核心技术》第13章-解决文件与图片显示过慢问题.html" class="sidebar-link">第13章：解决文件与图片显示过慢问题</a></li><li><a href="/md/core/nginx/2023-08-05-《Nginx核心技术》第14章-使用Nginx搭建流媒体服务器实现直播.html" class="sidebar-link">第14章：使用Nginx搭建流媒体服务器实现直播</a></li><li><a href="/md/core/nginx/2023-08-06-《Nginx核心技术》第15章-使用Nginx抗高并发流量.html" class="sidebar-link">第15章：使用Nginx抗高并发流量</a></li><li><a href="/md/core/nginx/2023-08-07-《Nginx核心技术》第16章-实现Nginx的高可用负载均衡.html" class="sidebar-link">第16章：实现Nginx的高可用负载均衡</a></li><li><a href="/md/core/nginx/2023-08-08-《Nginx核心技术》第17章-使用自签CA配置HTTPS加密反向代理访问.html" class="sidebar-link">第17章：使用自签CA配置HTTPS加密反向代理访问</a></li><li><a href="/md/core/nginx/2023-08-09-《Nginx核心技术》第18章-基于主从模式搭建Nginx-Keepalived双机热备环境.html" class="active sidebar-link">第18章：基于主从模式搭建Nginx+Keepalived双机热备环境</a></li><li><a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html" class="sidebar-link">第19章：Nginx实现四层负载均衡</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="《nginx核心技术》第18章-基于主从模式搭建nginx-keepalived双机热备环境"><a href="#《nginx核心技术》第18章-基于主从模式搭建nginx-keepalived双机热备环境" class="header-anchor">#</a> 《Nginx核心技术》第18章：基于主从模式搭建Nginx+Keepalived双机热备环境</h1> <p>作者：冰河
+<br>星球：<a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>博客：<a href="https://binghe.gitcode.host" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>文章汇总：<a href="https://binghe.gitcode.host/md/all/all.html" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host/md/all/all.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>星球项目地址：<a href="https://binghe.gitcode.host/md/zsxq/introduce.html" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host/md/zsxq/introduce.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <blockquote><p>沉淀，成长，突破，帮助他人，成就自我。</p></blockquote> <ul><li>本章难度：★★☆☆☆</li> <li>本章重点：用最简短的篇幅介绍Nginx最核心的知识，掌握基于主从模式搭建Nginx+Keepalived双机热备环境，并能够灵活运用到实际项目中，维护高可用系统。</li></ul> <p><strong>大家好，我是冰河~~</strong></p> <p>今天给大家介绍《Nginx核心技术》的第18章：基于主从模式搭建Nginx+Keepalived双机热备环境，多一句没有，少一句不行，用最简短的篇幅讲述Nginx最核心的知识，好了，开始今天的内容。</p> <h2 id="_18-1-负载均衡技术"><a href="#_18-1-负载均衡技术" class="header-anchor">#</a> 18.1 负载均衡技术</h2> <p>负载均衡技术对于一个网站尤其是大型网站的web服务器集群来说是至关重要的！做好负载均衡架构，可以实现故障转移和高可用环境，避免单点故障，保证网站健康持续运行。</p> <p>由于业务扩展，网站的访问量不断加大，负载越来越高。现需要在web前端放置nginx负载均衡,同时结合keepalived对前端nginx实现HA高可用。</p> <p>1）nginx进程基于Master+Slave(worker)多进程模型，自身具有非常稳定的子进程管理功能。在Master进程分配模式下，Master进程永远不进行业务处理，只是进行任务分发，从而达到Master进程的存活高可靠性，Slave(worker)进程所有的业务信号都 由主进程发出，Slave(worker)进程所有的超时任务都会被Master中止，属于非阻塞式任务模型。</p> <p>2）Keepalived是Linux下面实现VRRP备份路由的高可靠性运行件。基于Keepalived设计的服务模式能够真正做到主服务器和备份服务器故障时IP瞬间无缝交接。二者结合，可以构架出比较稳定的软件LB方案。</p> <h2 id="_18-2-keepalived介绍"><a href="#_18-2-keepalived介绍" class="header-anchor">#</a> 18.2 Keepalived介绍</h2> <p>Keepalived是一个基于VRRP协议来实现的服务高可用方案，可以利用其来避免IP单点故障，类似的工具还有heartbeat、corosync、pacemaker。但是它一般不会单独出现，而是与其它负载均衡技术（如lvs、haproxy、nginx）一起工作来达到集群的高可用。</p> <h2 id="_18-3-vrrp协议"><a href="#_18-3-vrrp协议" class="header-anchor">#</a> 18.3 VRRP协议</h2> <p>VRRP全称 Virtual Router Redundancy Protocol，即  虚拟路由冗余协议。可以认为它是实现路由器高可用的容错协议，即将N台提供相同功能的路由器组成一个路由器组(Router  Group)，这个组里面有一个master和多个backup，但在外界看来就像一台一样，构成虚拟路由器，拥有一个虚拟IP（vip，也就是路由器所在局域网内其他机器的默认路由），占有这个IP的master实际负责ARP相应和转发IP数据包，组中的其它路由器作为备份的角色处于待命状态。master会发组播消息，当backup在超时时间内收不到vrrp包时就认为master宕掉了，这时就需要根据VRRP的优先级来选举一个backup当master，保证路由器的高可用。</p> <p>在VRRP协议实现里，虚拟路由器使用 00-00-5E-00-01-XX 作为虚拟MAC地址，XX就是唯一的 VRID （Virtual Router  IDentifier），这个地址同一时间只有一个物理路由器占用。在虚拟路由器里面的物理路由器组里面通过多播IP地址 224.0.0.18  来定时发送通告消息。每个Router都有一个 1-255 之间的优先级别，级别最高的（highest  priority）将成为主控（master）路由器。通过降低master的优先权可以让处于backup状态的路由器抢占（pro-empt）主路由器的状态，两个backup优先级相同的IP地址较大者为master，接管虚拟IP。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2023-08-09-001.png?raw=true" width="80%"> <br></div> <p><strong>keepalived与heartbeat/corosync等比较</strong></p> <p>Heartbeat、Corosync、Keepalived这三个集群组件我们到底选哪个好呢？</p> <p>首先要说明的是，Heartbeat、Corosync是属于同一类型，Keepalived与Heartbeat、Corosync，根本不是同一类型的。
+Keepalived使用的vrrp协议方式，虚拟路由冗余协议 (Virtual Router Redundancy Protocol，简称VRRP)；
+Heartbeat或Corosync是基于主机或网络服务的高可用方式；</p> <p>简单的说就是，Keepalived的目的是模拟路由器的高可用，Heartbeat或Corosync的目的是实现Service的高可用。
+所以一般Keepalived是实现前端高可用，常用的前端高可用的组合有，就是我们常见的LVS+Keepalived、Nginx+Keepalived、HAproxy+Keepalived。而Heartbeat或Corosync是实现服务的高可用，常见的组合有Heartbeat v3(Corosync)+Pacemaker+NFS+Httpd 实现Web服务器的高可用、Heartbeat  v3(Corosync)+Pacemaker+NFS+MySQL  实现MySQL服务器的高可用。</p> <p>总结一下，Keepalived中实现轻量级的高可用，一般用于前端高可用，且不需要共享存储，一般常用于两个节点的高可用。而Heartbeat(或Corosync)一般用于服务的高可用，且需要共享存储，一般用于多节点的高可用。这个问题我们说明白了。</p> <p><strong>那heartbaet与corosync又应该选择哪个好？</strong></p> <p>一般用corosync，因为corosync的运行机制更优于heartbeat，就连从heartbeat分离出来的pacemaker都说在以后的开发当中更倾向于corosync，所以现在corosync+pacemaker是最佳组合。</p> <p>双机高可用一般是通过虚拟IP（飘移IP）方法来实现的，基于Linux/Unix的IP别名技术。</p> <p><strong>双机高可用方法目前分为两种：</strong></p> <p>1）双机主从模式：即前端使用两台服务器，一台主服务器和一台热备服务器，正常情况下，主服务器绑定一个公网虚拟IP，提供负载均衡服务，热备服务器处于空闲状态；当主服务器发生故障时，热备服务器接管主服务器的公网虚拟IP，提供负载均衡服务；但是热备服务器在主机器不出现故障的时候，永远处于浪费状态，对于服务器不多的网站，该方案不经济实惠。</p> <p>2）双机主主模式：即前端使用两台负载均衡服务器，互为主备，且都处于活动状态，同时各自绑定一个公网虚拟IP，提供负载均衡服务；当其中一台发生故障时，另一台接管发生故障服务器的公网虚拟IP（这时由非故障机器一台负担所有的请求）。这种方案，经济实惠，非常适合于当前架构环境。</p> <p><strong>今天在此分享下Nginx+keepalived实现高可用负载均衡的主从模式的操作记录：</strong></p> <p>keepalived可以认为是VRRP协议在Linux上的实现，主要有三个模块，分别是core、check和vrrp。</p> <ul><li>core模块为keepalived的核心，负责主进程的启动、维护以及全局配置文件的加载和解析。</li> <li>check负责健康检查，包括常见的各种检查方式。</li> <li>vrrp模块是来实现VRRP协议的。</li></ul> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2023-08-09-002.png?raw=true" width="80%"> <br></div> <h2 id="_18-4-环境说明"><a href="#_18-4-环境说明" class="header-anchor">#</a> 18.4 环境说明</h2> <p>操作系统：centos6.8，64位
+master机器（master-node）：103.110.98.14/192.168.1.14
+slave机器（slave-node）：103.110.98.24/192.168.1.24
+公用的虚拟IP（VIP）：103.110.98.20    //负载均衡器上配置的域名都解析到这个VIP上</p> <h2 id="_18-5-应用环境"><a href="#_18-5-应用环境" class="header-anchor">#</a> 18.5 应用环境</h2> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2023-08-09-003.png?raw=true" width="80%"> <br></div> <h2 id="_18-6-环境安装"><a href="#_18-6-环境安装" class="header-anchor">#</a> 18.6 环境安装</h2> <p>安装nginx和keepalive服务（master-node和slave-node两台服务器上的安装操作完全一样）。</p> <p><strong>安装依赖</strong></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># yum -y install gcc pcre-devel zlib-devel openssl-devel</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>大家可以到链接：https://download.csdn.net/download/l1028386804/10376846下载nginx1.9.7+keepalive1.3.2，也可以将nginx.1.9.7更新为nginx1.19.2。nginx1.19.2与nginx1.9.7的安装方式相同，这里我以nginx1.9.7为例进行安装。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># cd /usr/local/src/</span>
+<span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># wget http://nginx.org/download/nginx-1.9.7.tar.gz</span>
+<span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># wget http://www.keepalived.org/software/keepalived-1.3.2.tar.gz</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p><strong>安装nginx</strong></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># tar -zvxf nginx-1.9.7.tar.gz</span>
+<span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># cd nginx-1.9.7</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>添加www用户，其中-M参数表示不添加用户家目录，-s参数表示指定shell类型</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node nginx-1.9.7<span class="token punctuation">]</span><span class="token comment"># useradd www -M -s /sbin/nologin</span>
+<span class="token punctuation">[</span>root@master-node nginx-1.9.7<span class="token punctuation">]</span><span class="token comment"># vim auto/cc/gcc</span>
+<span class="token comment">#将这句注释掉 取消Debug编译模式 大概在179行</span>
+<span class="token comment">#CFLAGS=&quot;$CFLAGS -g&quot;</span>
+<span class="token punctuation">[</span>root@master-node nginx-1.9.7<span class="token punctuation">]</span><span class="token comment"># ./configure --prefix=/usr/local/nginx --user=www --group=www --with-http_ssl_module --with-http_flv_module --with-http_stub_status_module --with-http_gzip_static_module --with-pcre</span>
+<span class="token punctuation">[</span>root@master-node nginx-1.9.7<span class="token punctuation">]</span><span class="token comment"># make &amp;&amp; make install</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p><strong>安装keepalived</strong></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># tar -zvxf keepalived-1.3.2.tar.gz</span>
+<span class="token punctuation">[</span>root@master-node src<span class="token punctuation">]</span><span class="token comment"># cd keepalived-1.3.2</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># ./configure</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># make &amp;&amp; make install</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># cp /usr/local/src/keepalived-1.3.2/keepalived/etc/init.d/keepalived /etc/rc.d/init.d/</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># cp /usr/local/etc/sysconfig/keepalived /etc/sysconfig/</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># mkdir /etc/keepalived</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># cp /usr/local/etc/keepalived/keepalived.conf /etc/keepalived/</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># cp /usr/local/sbin/keepalived /usr/sbin/</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><p><strong>将nginx和keepalive服务加入开机启动服务</strong></p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># echo &quot;/usr/local/nginx/sbin/nginx&quot; &gt;&gt; /etc/rc.local</span>
+<span class="token punctuation">[</span>root@master-node keepalived-1.3.2<span class="token punctuation">]</span><span class="token comment"># echo &quot;/etc/init.d/keepalived start&quot; &gt;&gt; /etc/rc.local</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><h2 id="_18-7-配置服务"><a href="#_18-7-配置服务" class="header-anchor">#</a> 18.7 配置服务</h2> <p>先关闭SElinux、配置防火墙 （master和slave两台负载均衡机都要做）</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /etc/sysconfig/selinux</span>
+<span class="token comment">#SELINUX=enforcing                      #注释掉</span>
+<span class="token comment">#SELINUXTYPE=targeted                #注释掉</span>
+<span class="token assign-left variable">SELINUX</span><span class="token operator">=</span>disabled                           <span class="token comment">#增加</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># setenforce 0                               #使配置立即生效</span>
+
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /etc/sysconfig/iptables</span>
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+<span class="token parameter variable">-A</span> INPUT <span class="token parameter variable">-s</span> <span class="token number">103.110</span>.98.0/24 <span class="token parameter variable">-d</span> <span class="token number">224.0</span>.0.18 <span class="token parameter variable">-j</span> ACCEPT                        <span class="token comment">#允许组播地址通信</span>
+<span class="token parameter variable">-A</span> INPUT <span class="token parameter variable">-s</span> <span class="token number">192.168</span>.1.0/24 <span class="token parameter variable">-d</span> <span class="token number">224.0</span>.0.18 <span class="token parameter variable">-j</span> ACCEPT
+<span class="token parameter variable">-A</span> INPUT <span class="token parameter variable">-s</span> <span class="token number">103.110</span>.98.0/24 <span class="token parameter variable">-p</span> vrrp <span class="token parameter variable">-j</span> ACCEPT                                  <span class="token comment">#允许 VRRP（虚拟路由器冗余协）通信</span>
+<span class="token parameter variable">-A</span> INPUT <span class="token parameter variable">-s</span> <span class="token number">192.168</span>.1.0/24 <span class="token parameter variable">-p</span> vrrp <span class="token parameter variable">-j</span> ACCEPT
+<span class="token parameter variable">-A</span> INPUT <span class="token parameter variable">-p</span> tcp <span class="token parameter variable">-m</span> state <span class="token parameter variable">--state</span> NEW <span class="token parameter variable">-m</span> tcp <span class="token parameter variable">--dport</span> <span class="token number">80</span> <span class="token parameter variable">-j</span> ACCEPT      <span class="token comment">#开通80端口访问</span>
+
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/iptables restart                               #重启防火墙使配置生效</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><h2 id="_18-8-配置nginx"><a href="#_18-8-配置nginx" class="header-anchor">#</a> 18.8 配置nginx</h2> <p>master-node和slave-node两台服务器的nginx的配置完全一样,主要是配置/usr/local/nginx/conf/nginx.conf的http，当然也可以配置vhost虚拟主机目录，然后配置vhost下的比如LB.conf文件。</p> <p>其中:
+多域名指向是通过虚拟主机（配置http下面的server）实现;
+同一域名的不同虚拟目录通过每个server下面的不同location实现;
+到后端的服务器在vhost/LB.conf下面配置upstream,然后在server或location中通过proxy_pass引用。</p> <p>要实现前面规划的接入方式，LB.conf的配置如下（添加proxy_cache_path和proxy_temp_path这两行，表示打开nginx的缓存功能）</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/nginx/conf/nginx.conf</span>
+user  www<span class="token punctuation">;</span>
+worker_processes  <span class="token number">8</span><span class="token punctuation">;</span>
+ 
+<span class="token comment">#error_log  logs/error.log;</span>
+<span class="token comment">#error_log  logs/error.log  notice;</span>
+<span class="token comment">#error_log  logs/error.log  info;</span>
+ 
+<span class="token comment">#pid        logs/nginx.pid;</span>
+ 
+ 
+events <span class="token punctuation">{</span>
+    worker_connections  <span class="token number">65535</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+ 
+ 
+http <span class="token punctuation">{</span>
+    include       mime.types<span class="token punctuation">;</span>
+    default_type  application/octet-stream<span class="token punctuation">;</span>
+    charset utf-8<span class="token punctuation">;</span>
+       
+    <span class="token comment">######</span>
+    <span class="token comment">## set access log format</span>
+    <span class="token comment">######</span>
+    log_format  main  <span class="token string">'$http_x_forwarded_for $remote_addr $remote_user [$time_local] &quot;$request&quot; '</span>
+                      <span class="token string">'$status $body_bytes_sent &quot;$http_referer&quot; '</span>
+                      <span class="token string">'&quot;$http_user_agent&quot; &quot;$http_cookie&quot; $host $request_time'</span><span class="token punctuation">;</span>
+ 
+    <span class="token comment">#######</span>
+    <span class="token comment">## http setting</span>
+    <span class="token comment">#######</span>
+    sendfile       on<span class="token punctuation">;</span>
+    tcp_nopush     on<span class="token punctuation">;</span>
+    tcp_nodelay    on<span class="token punctuation">;</span>
+    keepalive_timeout  <span class="token number">65</span><span class="token punctuation">;</span>
+    proxy_cache_path /var/www/cache <span class="token assign-left variable">levels</span><span class="token operator">=</span><span class="token number">1</span>:2 <span class="token assign-left variable">keys_zone</span><span class="token operator">=</span>mycache:20m <span class="token assign-left variable">max_size</span><span class="token operator">=</span>2048m <span class="token assign-left variable">inactive</span><span class="token operator">=</span>60m<span class="token punctuation">;</span>
+    proxy_temp_path /var/www/cache/tmp<span class="token punctuation">;</span>
+ 
+    fastcgi_connect_timeout <span class="token number">3000</span><span class="token punctuation">;</span>
+    fastcgi_send_timeout <span class="token number">3000</span><span class="token punctuation">;</span>
+    fastcgi_read_timeout <span class="token number">3000</span><span class="token punctuation">;</span>
+    fastcgi_buffer_size 256k<span class="token punctuation">;</span>
+    fastcgi_buffers <span class="token number">8</span> 256k<span class="token punctuation">;</span>
+    fastcgi_busy_buffers_size 256k<span class="token punctuation">;</span>
+    fastcgi_temp_file_write_size 256k<span class="token punctuation">;</span>
+    fastcgi_intercept_errors on<span class="token punctuation">;</span>
+ 
+    <span class="token comment">#</span>
+    client_header_timeout 600s<span class="token punctuation">;</span>
+    client_body_timeout 600s<span class="token punctuation">;</span>
+   <span class="token comment"># client_max_body_size 50m;</span>
+    client_max_body_size 100m<span class="token punctuation">;</span>               <span class="token comment">#允许客户端请求的最大单个文件字节数</span>
+    client_body_buffer_size 256k<span class="token punctuation">;</span>            <span class="token comment">#缓冲区代理缓冲请求的最大字节数，可以理解为先保存到本地再传给用户</span>
+ 
+    <span class="token function">gzip</span>  on<span class="token punctuation">;</span>
+    gzip_min_length  1k<span class="token punctuation">;</span>
+    gzip_buffers     <span class="token number">4</span> 16k<span class="token punctuation">;</span>
+    gzip_http_version <span class="token number">1.1</span><span class="token punctuation">;</span>
+    gzip_comp_level <span class="token number">9</span><span class="token punctuation">;</span>
+    gzip_types       text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php<span class="token punctuation">;</span>
+    gzip_vary on<span class="token punctuation">;</span>
+ 
+    <span class="token comment">## includes vhosts</span>
+    include vhosts/*.conf<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br></div></div><div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># mkdir /usr/local/nginx/conf/vhosts</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># mkdir /var/www/cache</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ulimit 65535</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/nginx/conf/vhosts/LB.conf</span>
+upstream LB-WWW <span class="token punctuation">{</span>
+      ip_hash<span class="token punctuation">;</span>
+      server <span class="token number">192.168</span>.1.101:80 <span class="token assign-left variable">max_fails</span><span class="token operator">=</span><span class="token number">3</span> <span class="token assign-left variable">fail_timeout</span><span class="token operator">=</span>30s<span class="token punctuation">;</span>     <span class="token comment">#max_fails = 3 为允许失败的次数，默认值为1</span>
+      server <span class="token number">192.168</span>.1.102:80 <span class="token assign-left variable">max_fails</span><span class="token operator">=</span><span class="token number">3</span> <span class="token assign-left variable">fail_timeout</span><span class="token operator">=</span>30s<span class="token punctuation">;</span>     <span class="token comment">#fail_timeout = 30s 当max_fails次失败后，暂停将请求分发到该后端服务器的时间</span>
+      server <span class="token number">192.168</span>.1.118:80 <span class="token assign-left variable">max_fails</span><span class="token operator">=</span><span class="token number">3</span> <span class="token assign-left variable">fail_timeout</span><span class="token operator">=</span>30s<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+upstream LB-OA <span class="token punctuation">{</span>
+      ip_hash<span class="token punctuation">;</span>
+      server <span class="token number">192.168</span>.1.101:8080 <span class="token assign-left variable">max_fails</span><span class="token operator">=</span><span class="token number">3</span> <span class="token assign-left variable">fail_timeout</span><span class="token operator">=</span>30s<span class="token punctuation">;</span>
+      server <span class="token number">192.168</span>.1.102:8080 <span class="token assign-left variable">max_fails</span><span class="token operator">=</span><span class="token number">3</span> <span class="token assign-left variable">fail_timeout</span><span class="token operator">=</span>30s<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+          
+  server <span class="token punctuation">{</span>
+      listen      <span class="token number">80</span><span class="token punctuation">;</span>
+      server_name dev.wangshibo.com<span class="token punctuation">;</span>
+    
+      access_log  /usr/local/nginx/logs/dev-access.log main<span class="token punctuation">;</span>
+      error_log  /usr/local/nginx/logs/dev-error.log<span class="token punctuation">;</span>
+    
+      location /svn <span class="token punctuation">{</span>
+         proxy_pass http://192.168.1.108/svn/<span class="token punctuation">;</span>
+         proxy_redirect off <span class="token punctuation">;</span>
+         proxy_set_header Host <span class="token variable">$host</span><span class="token punctuation">;</span>
+         proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header REMOTE-HOST <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+         proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>             <span class="token comment">#跟后端服务器连接超时时间，发起握手等候响应时间</span>
+         proxy_send_timeout <span class="token number">300</span><span class="token punctuation">;</span>                <span class="token comment">#后端服务器回传时间，就是在规定时间内后端服务器必须传完所有数据</span>
+         proxy_read_timeout <span class="token number">600</span><span class="token punctuation">;</span>                <span class="token comment">#连接成功后等待后端服务器的响应时间，已经进入后端的排队之中等候处理</span>
+         proxy_buffer_size 256k<span class="token punctuation">;</span>                <span class="token comment">#代理请求缓冲区,会保存用户的头信息以供nginx进行处理</span>
+         proxy_buffers <span class="token number">4</span> 256k<span class="token punctuation">;</span>                  <span class="token comment">#同上，告诉nginx保存单个用几个buffer最大用多少空间</span>
+         proxy_busy_buffers_size 256k<span class="token punctuation">;</span>          <span class="token comment">#如果系统很忙时候可以申请最大的proxy_buffers</span>
+         proxy_temp_file_write_size 256k<span class="token punctuation">;</span>       <span class="token comment">#proxy缓存临时文件的大小</span>
+         proxy_next_upstream error <span class="token function">timeout</span> invalid_header http_500 http_503 http_404<span class="token punctuation">;</span>
+         proxy_max_temp_file_size 128m<span class="token punctuation">;</span>
+         proxy_cache mycache<span class="token punctuation">;</span>                                
+         proxy_cache_valid <span class="token number">200</span> <span class="token number">302</span> 60m<span class="token punctuation">;</span>                      
+         proxy_cache_valid <span class="token number">404</span> 1m<span class="token punctuation">;</span>
+       <span class="token punctuation">}</span>
+    
+      location /submin <span class="token punctuation">{</span>
+         proxy_pass http://192.168.1.108/submin/<span class="token punctuation">;</span>
+         proxy_redirect off <span class="token punctuation">;</span>
+         proxy_set_header Host <span class="token variable">$host</span><span class="token punctuation">;</span>
+         proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header REMOTE-HOST <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+         proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_send_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_read_timeout <span class="token number">600</span><span class="token punctuation">;</span>
+         proxy_buffer_size 256k<span class="token punctuation">;</span>
+         proxy_buffers <span class="token number">4</span> 256k<span class="token punctuation">;</span>
+         proxy_busy_buffers_size 256k<span class="token punctuation">;</span>
+         proxy_temp_file_write_size 256k<span class="token punctuation">;</span>
+         proxy_next_upstream error <span class="token function">timeout</span> invalid_header http_500 http_503 http_404<span class="token punctuation">;</span>
+         proxy_max_temp_file_size 128m<span class="token punctuation">;</span>
+         proxy_cache mycache<span class="token punctuation">;</span>        
+         proxy_cache_valid <span class="token number">200</span> <span class="token number">302</span> 60m<span class="token punctuation">;</span>
+         proxy_cache_valid <span class="token number">404</span> 1m<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    
+server <span class="token punctuation">{</span>
+     listen       <span class="token number">80</span><span class="token punctuation">;</span>
+     server_name  www.wangshibo.com<span class="token punctuation">;</span>
+  
+      access_log  /usr/local/nginx/logs/www-access.log main<span class="token punctuation">;</span>
+      error_log  /usr/local/nginx/logs/www-error.log<span class="token punctuation">;</span>
+  
+     location / <span class="token punctuation">{</span>
+         proxy_pass http://LB-WWW<span class="token punctuation">;</span>
+         proxy_redirect off <span class="token punctuation">;</span>
+         proxy_set_header Host <span class="token variable">$host</span><span class="token punctuation">;</span>
+         proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header REMOTE-HOST <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+         proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_send_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_read_timeout <span class="token number">600</span><span class="token punctuation">;</span>
+         proxy_buffer_size 256k<span class="token punctuation">;</span>
+         proxy_buffers <span class="token number">4</span> 256k<span class="token punctuation">;</span>
+         proxy_busy_buffers_size 256k<span class="token punctuation">;</span>
+         proxy_temp_file_write_size 256k<span class="token punctuation">;</span>
+         proxy_next_upstream error <span class="token function">timeout</span> invalid_header http_500 http_503 http_404<span class="token punctuation">;</span>
+         proxy_max_temp_file_size 128m<span class="token punctuation">;</span>
+         proxy_cache mycache<span class="token punctuation">;</span>                                
+         proxy_cache_valid <span class="token number">200</span> <span class="token number">302</span> 60m<span class="token punctuation">;</span>                      
+         proxy_cache_valid <span class="token number">404</span> 1m<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+   
+ server <span class="token punctuation">{</span>
+       listen       <span class="token number">80</span><span class="token punctuation">;</span>
+       server_name  oa.wangshibo.com<span class="token punctuation">;</span>
+  
+      access_log  /usr/local/nginx/logs/oa-access.log main<span class="token punctuation">;</span>
+      error_log  /usr/local/nginx/logs/oa-error.log<span class="token punctuation">;</span>
+  
+       location / <span class="token punctuation">{</span>
+         proxy_pass http://LB-OA<span class="token punctuation">;</span>
+         proxy_redirect off <span class="token punctuation">;</span>
+         proxy_set_header Host <span class="token variable">$host</span><span class="token punctuation">;</span>
+         proxy_set_header X-Real-IP <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header REMOTE-HOST <span class="token variable">$remote_addr</span><span class="token punctuation">;</span>
+         proxy_set_header X-Forwarded-For <span class="token variable">$proxy_add_x_forwarded_for</span><span class="token punctuation">;</span>
+         proxy_connect_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_send_timeout <span class="token number">300</span><span class="token punctuation">;</span>
+         proxy_read_timeout <span class="token number">600</span><span class="token punctuation">;</span>
+         proxy_buffer_size 256k<span class="token punctuation">;</span>
+         proxy_buffers <span class="token number">4</span> 256k<span class="token punctuation">;</span>
+         proxy_busy_buffers_size 256k<span class="token punctuation">;</span>
+         proxy_temp_file_write_size 256k<span class="token punctuation">;</span>
+         proxy_next_upstream error <span class="token function">timeout</span> invalid_header http_500 http_503 http_404<span class="token punctuation">;</span>
+         proxy_max_temp_file_size 128m<span class="token punctuation">;</span>
+         proxy_cache mycache<span class="token punctuation">;</span>                                
+         proxy_cache_valid <span class="token number">200</span> <span class="token number">302</span> 60m<span class="token punctuation">;</span>                      
+         proxy_cache_valid <span class="token number">404</span> 1m<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br></div></div><h2 id="_18-9-验证nginx配置"><a href="#_18-9-验证nginx配置" class="header-anchor">#</a> 18.9 验证Nginx配置</h2> <p>验证方法（保证从负载均衡器本机到后端真实服务器之间能正常通信）：
+1）首先在本机用IP访问上面LB.cong中配置的各个后端真实服务器的url
+2）然后在本机用域名和路径访问上面LB.cong中配置的各个后端真实服务器的域名/虚拟路径</p> <p>后端应用服务器的nginx配置，这里选择192.168.1.108作为例子进行说明。</p> <p>由于这里的192.168.1.108机器是openstack的虚拟机，没有外网ip，不能解析域名。所以在server_name处也将ip加上，使得用ip也可以访问。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># cat /usr/local/nginx/conf/vhosts/svn.conf</span>
+server <span class="token punctuation">{</span>
+listen <span class="token number">80</span><span class="token punctuation">;</span>
+<span class="token comment">#server_name dev.wangshibo.com;</span>
+server_name dev.wangshibo.com <span class="token number">192.168</span>.1.108<span class="token punctuation">;</span>
+
+access_log /usr/local/nginx/logs/dev.wangshibo-access.log main<span class="token punctuation">;</span>
+error_log /usr/local/nginx/logs/dev.wangshibo-error.log<span class="token punctuation">;</span>
+
+location / <span class="token punctuation">{</span>
+root /var/www/html<span class="token punctuation">;</span>
+index index.html index.php index.htm<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># ll /var/www/html/</span>
+drwxr-xr-x. <span class="token number">2</span> www www <span class="token number">4096</span> Dec <span class="token number">7</span> 01:46 submin
+drwxr-xr-x. <span class="token number">2</span> www www <span class="token number">4096</span> Dec <span class="token number">7</span> 01:45 svn
+<span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># cat /var/www/html/svn/index.html</span>
+this is the page of svn/192.168.1.108
+<span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># cat /var/www/html/submin/index.html</span>
+this is the page of submin/192.168.1.108
+
+<span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># cat /etc/hosts</span>
+<span class="token number">127.0</span>.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+<span class="token number">192.168</span>.1.108 dev.wangshibo.com
+
+<span class="token punctuation">[</span>root@108-server ~<span class="token punctuation">]</span><span class="token comment"># curl http://dev.wangshibo.com       //由于是内网机器不能联网，亦不能解析域名。所以用域名访问没有反应。只能用ip访问</span>
+<span class="token punctuation">[</span>root@ops-server4 vhosts<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.1.108</span>
+this is <span class="token number">192.168</span>.1.108 page<span class="token operator">!</span><span class="token operator">!</span><span class="token operator">!</span>
+<span class="token punctuation">[</span>root@ops-server4 vhosts<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.1.108/svn/           //最后一个/符号要加上，否则访问不了。</span>
+this is the page of svn/192.168.1.108
+<span class="token punctuation">[</span>root@ops-server4 vhosts<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.1.108/submin/</span>
+this is the page of submin/192.168.1.108
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br></div></div><p>然后在master-node和slave-node两台负载机器上进行测试（iptables防火墙要开通80端口）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.1.108/svn/</span>
+this is the page of svn/192.168.1.108
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># curl http://192.168.1.108/submin/</span>
+this is the page of submin/192.168.1.108
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>浏览器访问：
+在本机host绑定dev.wangshibo.com，如下，即绑定到master和slave机器的公网ip上测试是否能正常访问（nginx+keepalive环境正式完成后，域名解析到的真正地址是VIP地址）
+103.110.98.14 dev.wangshibo.com
+103.110.98.24 dev.wangshibo.com</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2023-08-09-004.png?raw=true" width="80%"> <br></div> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2023-08-09-005.png?raw=true" width="80%"> <br></div> <h2 id="_18-10-keepalived配置"><a href="#_18-10-keepalived配置" class="header-anchor">#</a> 18.10 keepalived配置</h2> <p>1）master-node负载机上的keepalived配置</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># cp /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /etc/keepalived/keepalived.conf</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token operator">!</span> Configuration File <span class="token keyword">for</span> keepalived     <span class="token comment">#全局定义</span>
+  
+global_defs <span class="token punctuation">{</span>
+notification_email <span class="token punctuation">{</span>     <span class="token comment">#指定keepalived在发生事件时(比如切换)发送通知邮件的邮箱</span>
+ops@wangshibo.cn   <span class="token comment">#设置报警邮件地址，可以设置多个，每行一个。 需开启本机的sendmail服务</span>
+tech@wangshibo.cn
+<span class="token punctuation">}</span>
+  
+notification_email_from ops@wangshibo.cn   <span class="token comment">#keepalived在发生诸如切换操作时需要发送email通知地址</span>
+smtp_server <span class="token number">127.0</span>.0.1      <span class="token comment">#指定发送email的smtp服务器</span>
+smtp_connect_timeout <span class="token number">30</span>    <span class="token comment">#设置连接smtp server的超时时间</span>
+router_id master-node     <span class="token comment">#运行keepalived的机器的一个标识，通常可设为hostname。故障发生时，发邮件时显示在邮件主题中的信息。</span>
+<span class="token punctuation">}</span>
+  
+vrrp_script chk_http_port <span class="token punctuation">{</span>      <span class="token comment">#检测nginx服务是否在运行。有很多方式，比如进程，用脚本检测等等</span>
+    script <span class="token string">&quot;/opt/chk_nginx.sh&quot;</span>   <span class="token comment">#这里通过脚本监测</span>
+    interval <span class="token number">2</span>                   <span class="token comment">#脚本执行间隔，每2s检测一次</span>
+    weight <span class="token parameter variable">-5</span>                    <span class="token comment">#脚本结果导致的优先级变更，检测失败（脚本返回非0）则优先级 -5</span>
+    fall <span class="token number">2</span>                    <span class="token comment">#检测连续2次失败才算确定是真失败。会用weight减少优先级（1-255之间）</span>
+    rise <span class="token number">1</span>                    <span class="token comment">#检测1次成功就算成功。但不修改优先级</span>
+<span class="token punctuation">}</span>
+  
+vrrp_instance VI_1 <span class="token punctuation">{</span>    <span class="token comment">#keepalived在同一virtual_router_id中priority（0-255）最大的会成为master，也就是接管VIP，当priority最大的主机发生故障后次priority将会接管</span>
+    state MASTER    <span class="token comment">#指定keepalived的角色，MASTER表示此主机是主服务器，BACKUP表示此主机是备用服务器。注意这里的state指定instance(Initial)的初始状态，就是说在配置好后，这台服务器的初始状态就是这里指定的，但这里指定的不算，还是得要通过竞选通过优先级来确定。如果这里设置为MASTER，但如若他的优先级不及另外一台，那么这台在发送通告时，会发送自己的优先级，另外一台发现优先级不如自己的高，那么他会就回抢占为MASTER</span>
+    interface em1          <span class="token comment">#指定HA监测网络的接口。实例绑定的网卡，因为在配置虚拟IP的时候必须是在已有的网卡上添加的</span>
+    mcast_src_ip <span class="token number">103.110</span>.98.14  <span class="token comment"># 发送多播数据包时的源IP地址，这里注意了，这里实际上就是在哪个地址上发送VRRP通告，这个非常重要，一定要选择稳定的网卡端口来发送，这里相当于heartbeat的心跳端口，如果没有设置那么就用默认的绑定的网卡的IP，也就是interface指定的IP地址</span>
+    virtual_router_id <span class="token number">51</span>         <span class="token comment">#虚拟路由标识，这个标识是一个数字，同一个vrrp实例使用唯一的标识。即同一vrrp_instance下，MASTER和BACKUP必须是一致的</span>
+    priority <span class="token number">101</span>                 <span class="token comment">#定义优先级，数字越大，优先级越高，在同一个vrrp_instance下，MASTER的优先级必须大于BACKUP的优先级</span>
+    advert_int <span class="token number">1</span>                 <span class="token comment">#设定MASTER与BACKUP负载均衡器之间同步检查的时间间隔，单位是秒</span>
+    authentication <span class="token punctuation">{</span>             <span class="token comment">#设置验证类型和密码。主从必须一样</span>
+        auth_type PASS           <span class="token comment">#设置vrrp验证类型，主要有PASS和AH两种</span>
+        auth_pass <span class="token number">1111</span>           <span class="token comment">#设置vrrp验证密码，在同一个vrrp_instance下，MASTER与BACKUP必须使用相同的密码才能正常通信</span>
+    <span class="token punctuation">}</span>
+    virtual_ipaddress <span class="token punctuation">{</span>          <span class="token comment">#VRRP HA 虚拟地址 如果有多个VIP，继续换行填写</span>
+        <span class="token number">103.110</span>.98.20
+    <span class="token punctuation">}</span>
+ 
+    track_script <span class="token punctuation">{</span>                      <span class="token comment">#执行监控的服务。注意这个设置不能紧挨着写在vrrp_script配置块的后面（实验中碰过的坑），否则nginx监控失效！！</span>
+       chk_http_port                    <span class="token comment">#引用VRRP脚本，即在 vrrp_script 部分指定的名字。定期运行它们来改变优先级，并最终引发主备切换。</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>	
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br></div></div><h2 id="_18-11-slave-node负载机上的keepalived配置"><a href="#_18-11-slave-node负载机上的keepalived配置" class="header-anchor">#</a> 18.11 slave-node负载机上的keepalived配置</h2> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># cp /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak</span>
+<span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># vim /etc/keepalived/keepalived.conf</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token operator">!</span> Configuration File <span class="token keyword">for</span> keepalived    
+  
+global_defs <span class="token punctuation">{</span>
+notification_email <span class="token punctuation">{</span>                
+ops@wangshibo.cn                     
+tech@wangshibo.cn
+<span class="token punctuation">}</span>
+  
+notification_email_from ops@wangshibo.cn  
+smtp_server <span class="token number">127.0</span>.0.1                    
+smtp_connect_timeout <span class="token number">30</span>                 
+router_id slave-node                    
+<span class="token punctuation">}</span>
+  
+vrrp_script chk_http_port <span class="token punctuation">{</span>         
+    script <span class="token string">&quot;/opt/chk_nginx.sh&quot;</span>   
+    interval <span class="token number">2</span>                      
+    weight <span class="token parameter variable">-5</span>                       
+    fall <span class="token number">2</span>                   
+    rise <span class="token number">1</span>                  
+<span class="token punctuation">}</span>
+  
+vrrp_instance VI_1 <span class="token punctuation">{</span>            
+    state BACKUP           
+    interface em1            
+    mcast_src_ip <span class="token number">103.110</span>.98.24  
+    virtual_router_id <span class="token number">51</span>        
+    priority <span class="token number">99</span>               
+    advert_int <span class="token number">1</span>               
+    authentication <span class="token punctuation">{</span>            
+        auth_type PASS         
+        auth_pass <span class="token number">1111</span>          
+    <span class="token punctuation">}</span>
+    virtual_ipaddress <span class="token punctuation">{</span>        
+        <span class="token number">103.110</span>.98.20
+    <span class="token punctuation">}</span>
+ 
+    track_script <span class="token punctuation">{</span>                     
+       chk_http_port                 
+    <span class="token punctuation">}</span>
+ 
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div></div><p><strong>让keepalived监控NginX的状态：</strong></p> <p>1）经过前面的配置，如果master主服务器的keepalived停止服务，slave从服务器会自动接管VIP对外服务；
+一旦主服务器的keepalived恢复，会重新接管VIP。 但这并不是我们需要的，我们需要的是当NginX停止服务的时候能够自动切换。
+2）keepalived支持配置监控脚本，我们可以通过脚本监控NginX的状态，如果状态不正常则进行一系列的操作，最终仍不能恢复NginX则杀掉keepalived，使得从服务器能够接管服务。</p> <p><strong>如何监控NginX的状态</strong>
+最简单的做法是监控NginX进程，更靠谱的做法是检查NginX端口，最靠谱的做法是检查多个url能否获取到页面。</p> <p>注意：这里要提示一下keepalived.conf中vrrp_script配置区的script一般有2种写法：</p> <p>1）通过脚本执行的返回结果，改变优先级，keepalived继续发送通告消息，backup比较优先级再决定。这是直接监控Nginx进程的方式。
+2）脚本里面检测到异常，直接关闭keepalived进程，backup机器接收不到advertisement会抢占IP。这是检查NginX端口的方式。</p> <p>上文script配置部分，&quot;killall -0 nginx&quot;属于第1种情况，&quot;/opt/chk_nginx.sh&quot; 属于第2种情况。个人更倾向于通过shell脚本判断，但有异常时exit 1，正常退出exit 0，然后keepalived根据动态调整的 vrrp_instance 优先级选举决定是否抢占VIP：</p> <ul><li>如果脚本执行结果为0，并且weight配置的值大于0，则优先级相应的增加</li> <li>如果脚本执行结果非0，并且weight配置的值小于0，则优先级相应的减少</li> <li>其他情况，原本配置的优先级不变，即配置文件中priority对应的值。</li></ul> <p><strong>提示：</strong>
+优先级不会不断的提高或者降低</p> <p>可以编写多个检测脚本并为每个检测脚本设置不同的weight（在配置中列出就行）</p> <p>不管提高优先级还是降低优先级，最终优先级的范围是在[1,254]，不会出现优先级小于等于0或者优先级大于等于255的情况
+在MASTER节点的 vrrp_instance 中 配置 nopreempt ，当它异常恢复后，即使它 prio 更高也不会抢占，这样可以避免正常情况下做无谓的切换</p> <p>以上可以做到利用脚本检测业务进程的状态，并动态调整优先级从而实现主备切换。</p> <p>另外：在默认的keepalive.conf里面还有 virtual_server,real_server 这样的配置，我们这用不到，它是为lvs准备的。</p> <p><strong>如何尝试恢复服务</strong>
+由于keepalived只检测本机和他机keepalived是否正常并实现VIP的漂移，而如果本机nginx出现故障不会则不会漂移VIP。
+所以编写脚本来判断本机nginx是否正常，如果发现NginX不正常，重启之。等待3秒再次校验，仍然失败则不再尝试，关闭keepalived，其他主机此时会接管VIP；</p> <p>根据上述策略很容易写出监控脚本。此脚本必须在keepalived服务运行的前提下才有效！如果在keepalived服务先关闭的情况下，那么nginx服务关闭后就不能实现自启动了。</p> <p>该脚本检测ngnix的运行状态，并在nginx进程不存在时尝试重新启动ngnix，如果启动失败则停止keepalived，准备让其它机器接管。
+监控脚本如下（master和slave都要有这个监控脚本）：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># vim /opt/chk_nginx.sh</span>
+
+<span class="token comment">#!/bin/bash</span>
+<span class="token assign-left variable">counter</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">ps</span> <span class="token parameter variable">-C</span> nginx --no-heading<span class="token operator">|</span><span class="token function">wc</span> <span class="token parameter variable">-l</span><span class="token variable">)</span></span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">${counter}</span>&quot;</span> <span class="token operator">=</span> <span class="token string">&quot;0&quot;</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    /usr/local/nginx/sbin/nginx
+    <span class="token function">sleep</span> <span class="token number">2</span>
+    <span class="token assign-left variable">counter</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">ps</span> <span class="token parameter variable">-C</span> nginx --no-heading<span class="token operator">|</span><span class="token function">wc</span> <span class="token parameter variable">-l</span><span class="token variable">)</span></span>
+    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token string">&quot;<span class="token variable">${counter}</span>&quot;</span> <span class="token operator">=</span> <span class="token string">&quot;0&quot;</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+        /etc/init.d/keepalived stop
+    <span class="token keyword">fi</span>
+<span class="token keyword">fi</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># chmod 755 /opt/chk_nginx.sh</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># sh /opt/chk_nginx.sh</span>
+<span class="token number">80</span>/tcp <span class="token function">open</span> http
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>此架构需考虑的问题
+1）master没挂，则master占有vip且nginx运行在master上
+2）master挂了，则slave抢占vip且在slave上运行nginx服务
+3）如果master上的nginx服务挂了，则nginx会自动重启，重启失败后会自动关闭keepalived，这样vip资源也会转移到slave上。
+4）检测后端服务器的健康状态
+5）master和slave两边都开启nginx服务，无论master还是slave，当其中的一个keepalived服务停止后，vip都会漂移到keepalived服务还在的节点上；
+如果要想使nginx服务挂了，vip也漂移到另一个节点，则必须用脚本或者在配置文件里面用shell命令来控制。（nginx服务宕停后会自动启动，启动失败后会强制关闭keepalived，从而致使vip资源漂移到另一台机器上）</p> <p>最后验证（将配置的后端应用域名都解析到VIP地址上）：关闭主服务器上的keepalived或nginx，vip都会自动飘到从服务器上。</p> <p><strong>验证keepalived服务故障情况：</strong>
+1）先后在master、slave服务器上启动nginx和keepalived，保证这两个服务都正常开启:</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /usr/local/nginx/sbin/nginx</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/keepalived start</span>
+<span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># /usr/local/nginx/sbin/nginx</span>
+<span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/keepalived start</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>2）在主服务器上查看是否已经绑定了虚拟IP</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ip addr</span>
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+<span class="token number">2</span>: em1: <span class="token operator">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="token operator">&gt;</span> mtu <span class="token number">1500</span> qdisc mq state UP qlen <span class="token number">1000</span>
+link/ether <span class="token number">44</span>:a8:42:17:3d:dd brd ff:ff:ff:ff:ff:ff
+inet <span class="token number">103.110</span>.98.14/26 brd <span class="token number">103.10</span>.86.63 scope global em1
+valid_lft forever preferred_lft forever
+inet <span class="token number">103.110</span>.98.20/32 scope global em1
+valid_lft forever preferred_lft forever
+inet <span class="token number">103.110</span>.98.20/26 brd <span class="token number">103.10</span>.86.63 scope global secondary em1:0
+valid_lft forever preferred_lft forever
+inet6 fe80::46a8:42ff:fe17:3ddd/64 scope <span class="token function">link</span>
+valid_lft forever preferred_lft forever
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>3）停止主服务器上的keepalived:</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/keepalived stop</span>
+Stopping keepalived <span class="token punctuation">(</span>via systemctl<span class="token punctuation">)</span>: <span class="token punctuation">[</span> OK <span class="token punctuation">]</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/keepalived status</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ps -ef|grep keepalived</span>
+root <span class="token number">26952</span> <span class="token number">24348</span> <span class="token number">0</span> <span class="token number">17</span>:49 pts/0 00:00:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto keepalived
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># </span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>4）然后在从服务器上查看，发现已经接管了VIP：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># ip addr</span>
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+<span class="token number">2</span>: em1: <span class="token operator">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="token operator">&gt;</span> mtu <span class="token number">1500</span> qdisc mq state UP qlen <span class="token number">1000</span>
+link/ether <span class="token number">44</span>:a8:42:17:3c:a5 brd ff:ff:ff:ff:ff:ff
+inet <span class="token number">103.110</span>.98.24/26 brd <span class="token number">103.10</span>.86.63 scope global em1
+inet <span class="token number">103.110</span>.98.20/32 scope global em1
+inet6 fe80::46a8:42ff:fe17:3ca5/64 scope <span class="token function">link</span>
+valid_lft forever preferred_lft forever
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><p>发现master的keepalived服务挂了后，vip资源自动漂移到slave上，并且网站正常访问，丝毫没有受到影响！</p> <p>5）重新启动主服务器上的keepalived，发现主服务器又重新接管了VIP，此时slave机器上的VIP已经不在了</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /etc/init.d/keepalived start</span>
+Starting keepalived <span class="token punctuation">(</span>via systemctl<span class="token punctuation">)</span>: <span class="token punctuation">[</span> OK <span class="token punctuation">]</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ip addr</span>
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+<span class="token number">2</span>: em1: <span class="token operator">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="token operator">&gt;</span> mtu <span class="token number">1500</span> qdisc mq state UP qlen <span class="token number">1000</span>
+link/ether <span class="token number">44</span>:a8:42:17:3d:dd brd ff:ff:ff:ff:ff:ff
+inet <span class="token number">103.110</span>.98.14/26 brd <span class="token number">103.10</span>.86.63 scope global em1
+valid_lft forever preferred_lft forever
+inet <span class="token number">103.110</span>.98.20/32 scope global em1
+valid_lft forever preferred_lft forever
+inet <span class="token number">103.110</span>.98.20/26 brd <span class="token number">103.10</span>.86.63 scope global secondary em1:0
+valid_lft forever preferred_lft forever
+inet6 fe80::46a8:42ff:fe17:3ddd/64 scope <span class="token function">link</span>
+valid_lft forever preferred_lft forever
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
+
+<span class="token punctuation">[</span>root@slave-node ~<span class="token punctuation">]</span><span class="token comment"># ip addr</span>
+<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.
+<span class="token number">2</span>: em1: <span class="token operator">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="token operator">&gt;</span> mtu <span class="token number">1500</span> qdisc mq state UP qlen <span class="token number">1000</span>
+link/ether <span class="token number">44</span>:a8:42:17:3c:a5 brd ff:ff:ff:ff:ff:ff
+inet <span class="token number">103.110</span>.98.24/26 brd <span class="token number">103.10</span>.86.63 scope global em1
+inet6 fe80::46a8:42ff:fe17:3ca5/64 scope <span class="token function">link</span>
+valid_lft forever preferred_lft forever
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p><strong>接着验证下nginx服务故障，看看keepalived监控nginx状态的脚本是否正常？</strong>
+如下：手动关闭master机器上的nginx服务，最多2秒钟后就会自动起来（因为keepalive监控nginx状态的脚本执行间隔时间为2秒）。域名访问几乎不受影响！</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># /usr/local/nginx/sbin/nginx -s stop</span>
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ps -ef|grep nginx</span>
+root <span class="token number">28401</span> <span class="token number">24826</span> <span class="token number">0</span> <span class="token number">19</span>:43 pts/1 00:00:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto nginx
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ps -ef|grep nginx</span>
+root <span class="token number">28871</span> <span class="token number">28870</span> <span class="token number">0</span> <span class="token number">19</span>:47 ? 00:00:00 /bin/sh /opt/chk_nginx.sh
+root <span class="token number">28875</span> <span class="token number">24826</span> <span class="token number">0</span> <span class="token number">19</span>:47 pts/1 00:00:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto nginx
+<span class="token punctuation">[</span>root@master-node ~<span class="token punctuation">]</span><span class="token comment"># ps -ef|grep nginx</span>
+root <span class="token number">28408</span> <span class="token number">1</span> <span class="token number">0</span> <span class="token number">19</span>:43 ? 00:00:00 nginx: master process /usr/local/nginx/sbin/nginx
+www <span class="token number">28410</span> <span class="token number">28408</span> <span class="token number">0</span> <span class="token number">19</span>:43 ? 00:00:00 nginx: worker process
+www <span class="token number">28411</span> <span class="token number">28408</span> <span class="token number">0</span> <span class="token number">19</span>:43 ? 00:00:00 nginx: worker process
+www <span class="token number">28412</span> <span class="token number">28408</span> <span class="token number">0</span> <span class="token number">19</span>:43 ? 00:00:00 nginx: worker process
+www <span class="token number">28413</span> <span class="token number">28408</span> <span class="token number">0</span> <span class="token number">19</span>:43 ? 00:00:00 nginx: worker process
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>最后可以查看两台服务器上的/var/log/messages，观察VRRP日志信息的vip漂移情况~~~~</p> <h2 id="_18-12-可能出现的问题"><a href="#_18-12-可能出现的问题" class="header-anchor">#</a> 18.12 可能出现的问题</h2> <p><strong>1）VIP绑定失败</strong>
+原因可能有：
+-&gt; iptables开启后，没有开放允许VRRP协议通信的策略（也有可能导致脑裂）；可以选择关闭iptables
+-&gt; keepalived.conf文件配置有误导致，比如interface绑定的设备错误</p> <p><strong>2）VIP绑定后，外部ping不通</strong>
+可能的原因是：
+-&gt; 网络故障，可以检查下网关是否正常；
+-&gt; 网关的arp缓存导致，可以进行arp更新，命令是&quot;arping -I 网卡名 -c 5 -s VIP 网关&quot;</p> <p><strong>好了，相信各位小伙伴们对基于主从模式搭建Nginx+Keepalived双机热备环境，有了进一步的了解，我是冰河，我们下期见~~</strong></p> <h2 id="星球服务"><a href="#星球服务" class="header-anchor">#</a> 星球服务</h2> <p>加入星球，你将获得：</p> <p>1.项目学习：微服务入门必备的SpringCloud  Alibaba实战项目、手写RPC项目—所有大厂都需要的项目【含上百个经典面试题】、深度解析Spring6核心技术—只要学习Java就必须深度掌握的框架【含数十个经典思考题】、Seckill秒杀系统项目—进大厂必备高并发、高性能和高可用技能。</p> <p>2.框架源码：手写RPC项目—所有大厂都需要的项目【含上百个经典面试题】、深度解析Spring6核心技术—只要学习Java就必须深度掌握的框架【含数十个经典思考题】。</p> <p>3.硬核技术：深入理解高并发系列（全册）、深入理解JVM系列（全册）、深入浅出Java设计模式（全册）、MySQL核心知识（全册）。</p> <p>4.技术小册：深入理解高并发编程（第1版）、深入理解高并发编程（第2版）、从零开始手写RPC框架、SpringCloud  Alibaba实战、冰河的渗透实战笔记、MySQL核心知识手册、Spring IOC核心技术、Nginx核心技术、面经手册等。</p> <p>5.技术与就业指导：提供相关就业辅导和未来发展指引，冰河从初级程序员不断沉淀，成长，突破，一路成长为互联网资深技术专家，相信我的经历和经验对你有所帮助。</p> <p>冰河的知识星球是一个简单、干净、纯粹交流技术的星球，不吹水，目前加入享5折优惠，价值远超门票。加入星球的用户，记得添加冰河微信：hacker_binghe，冰河拉你进星球专属VIP交流群。</p> <h2 id="星球重磅福利"><a href="#星球重磅福利" class="header-anchor">#</a> 星球重磅福利</h2> <p>跟冰河一起从根本上提升自己的技术能力，架构思维和设计思路，以及突破自身职场瓶颈，冰河特推出重大优惠活动，扫码领券进行星球，<strong>直接立减149元，相当于5折，</strong> 这已经是星球最大优惠力度！</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu_149.png?raw=true" width="80%"> <br></div> <p>领券加入星球，跟冰河一起学习《SpringCloud Alibaba实战》、《手撸RPC专栏》和《Spring6核心技术》，更有已经上新的《大规模分布式Seckill秒杀系统》，从零开始介绍原理、设计架构、手撸代码。后续更有硬核中间件项目和业务项目，而这些都是你升职加薪必备的基础技能。</p> <p><strong>100多元就能学这么多硬核技术、中间件项目和大厂秒杀系统，如果是我，我会买他个终身会员！</strong></p> <h2 id="其他方式加入星球"><a href="#其他方式加入星球" class="header-anchor">#</a> 其他方式加入星球</h2> <ul><li><strong>链接</strong> ：打开链接 <a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <h2 id="星球规划"><a href="#星球规划" class="header-anchor">#</a> 星球规划</h2> <p>后续冰河还会在星球更新大规模中间件项目和深度剖析核心技术的专栏，目前已经规划的专栏如下所示。</p> <h3 id="中间件项目"><a href="#中间件项目" class="header-anchor">#</a> 中间件项目</h3> <ul><li>《大规模分布式定时调度中间件项目实战（非Demo）》：全程手撸代码。</li> <li>《大规模分布式IM（即时通讯）项目实战（非Demo）》：全程手撸代码。</li> <li>《大规模分布式网关项目实战（非Demo）》：全程手撸代码。</li> <li>《手写Redis》：全程手撸代码。</li> <li>《手写JVM》全程手撸代码。</li></ul> <h3 id="超硬核项目"><a href="#超硬核项目" class="header-anchor">#</a> 超硬核项目</h3> <ul><li>《从零落地秒杀系统项目》：全程手撸代码，在阿里云实现压测（<strong>已上新</strong>）。</li> <li>《大规模电商系统商品详情页项目》：全程手撸代码，在阿里云实现压测。</li> <li>其他待规划的实战项目，小伙伴们也可以提一些自己想学的，想一起手撸的实战项目。。。</li></ul> <p>既然星球规划了这么多内容，那么肯定就会有小伙伴们提出疑问：这么多内容，能更新完吗？我的回答就是：一个个攻破呗，咱这星球干就干真实中间件项目，剖析硬核技术和项目，不做Demo。初衷就是能够让小伙伴们学到真正的核心技术，不再只是简单的做CRUD开发。所以，每个专栏都会是硬核内容，像《SpringCloud Alibaba实战》、《手撸RPC专栏》和《Spring6核心技术》就是很好的示例。后续的专栏只会比这些更加硬核，杜绝Demo开发。</p> <p>小伙伴们跟着冰河认真学习，多动手，多思考，多分析，多总结，有问题及时在星球提问，相信在技术层面，都会有所提高。将学到的知识和技术及时运用到实际的工作当中，学以致用。星球中不少小伙伴都成为了公司的核心技术骨干，实现了升职加薪的目标。</p> <h2 id="联系冰河"><a href="#联系冰河" class="header-anchor">#</a> 联系冰河</h2> <h3 id="加群交流"><a href="#加群交流" class="header-anchor">#</a> 加群交流</h3> <p>本群的宗旨是给大家提供一个良好的技术学习交流平台，所以杜绝一切广告！由于微信群人满 100 之后无法加入，请扫描下方二维码先添加作者 “冰河” 微信(hacker_binghe)，备注：<code>星球编号</code>。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/hacker_binghe.jpg?raw=true" width="180px"> <div style="font-size:18px;">冰河微信</div> <br></div> <h3 id="公众号"><a href="#公众号" class="header-anchor">#</a> 公众号</h3> <p>分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。内容在 <strong>冰河技术</strong> 微信公众号首发，强烈建议大家关注。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_wechat.jpg?raw=true" width="180px"> <div style="font-size:18px;">公众号：冰河技术</div> <br></div> <h3 id="视频号"><a href="#视频号" class="header-anchor">#</a> 视频号</h3> <p>定期分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_video.png?raw=true" width="180px"> <div style="font-size:18px;">视频号：冰河技术</div> <br></div> <h3 id="星球"><a href="#星球" class="header-anchor">#</a> 星球</h3> <p>加入星球 <strong><a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong>，可以获得本站点所有学习内容的指导与帮助。如果你遇到不能独立解决的问题，也可以添加冰河的微信：<strong>hacker_binghe</strong>， 我们一起沟通交流。另外，在星球中不只能学到实用的硬核技术，还能学习<strong>实战项目</strong>！</p> <p>关注 <a href="https://img-blog.csdnimg.cn/20210426115714643.jpg?raw=true" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>公众号，回复 <code>星球</code> 可以获取入场优惠券。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu.png?raw=true" width="180px"> <div style="font-size:18px;">知识星球：冰河技术</div> <br></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/core/nginx/2023-08-09-《Nginx核心技术》第18章-基于主从模式搭建Nginx-Keepalived双机热备环境.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/7/24</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/core/nginx/2023-08-08-《Nginx核心技术》第17章-使用自签CA配置HTTPS加密反向代理访问.html" class="prev">
+          第17章：使用自签CA配置HTTPS加密反向代理访问
+        </a></span> <span class="next"><a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html">
+          第19章：Nginx实现四层负载均衡
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">第18章：基于主从模式搭建Nginx+Keepalived双机热备环境</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-1-负载均衡技术" class="toc-sidebar-link">18.1 负载均衡技术</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-2-keepalived介绍" class="toc-sidebar-link">18.2 Keepalived介绍</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-3-vrrp协议" class="toc-sidebar-link">18.3 VRRP协议</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-4-环境说明" class="toc-sidebar-link">18.4 环境说明</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-5-应用环境" class="toc-sidebar-link">18.5 应用环境</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-6-环境安装" class="toc-sidebar-link">18.6 环境安装</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-7-配置服务" class="toc-sidebar-link">18.7 配置服务</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-8-配置nginx" class="toc-sidebar-link">18.8 配置nginx</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-9-验证nginx配置" class="toc-sidebar-link">18.9 验证Nginx配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-10-keepalived配置" class="toc-sidebar-link">18.10 keepalived配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-11-slave-node负载机上的keepalived配置" class="toc-sidebar-link">18.11 slave-node负载机上的keepalived配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-12-可能出现的问题" class="toc-sidebar-link">18.12 可能出现的问题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球服务" class="toc-sidebar-link">星球服务</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球重磅福利" class="toc-sidebar-link">星球重磅福利</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#其他方式加入星球" class="toc-sidebar-link">其他方式加入星球</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球规划" class="toc-sidebar-link">星球规划</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#中间件项目" class="toc-sidebar-link">中间件项目</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#超硬核项目" class="toc-sidebar-link">超硬核项目</a></li></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#联系冰河" class="toc-sidebar-link">联系冰河</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#加群交流" class="toc-sidebar-link">加群交流</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#公众号" class="toc-sidebar-link">公众号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#视频号" class="toc-sidebar-link">视频号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球" class="toc-sidebar-link">星球</a></li></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第18章：基于主从模式搭建Nginx+Keepalived双机热备环境</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-1-负载均衡技术" class="toc-sidebar-link">18.1 负载均衡技术</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-2-keepalived介绍" class="toc-sidebar-link">18.2 Keepalived介绍</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-3-vrrp协议" class="toc-sidebar-link">18.3 VRRP协议</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-4-环境说明" class="toc-sidebar-link">18.4 环境说明</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-5-应用环境" class="toc-sidebar-link">18.5 应用环境</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-6-环境安装" class="toc-sidebar-link">18.6 环境安装</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-7-配置服务" class="toc-sidebar-link">18.7 配置服务</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-8-配置nginx" class="toc-sidebar-link">18.8 配置nginx</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-9-验证nginx配置" class="toc-sidebar-link">18.9 验证Nginx配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-10-keepalived配置" class="toc-sidebar-link">18.10 keepalived配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-11-slave-node负载机上的keepalived配置" class="toc-sidebar-link">18.11 slave-node负载机上的keepalived配置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#_18-12-可能出现的问题" class="toc-sidebar-link">18.12 可能出现的问题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球服务" class="toc-sidebar-link">星球服务</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球重磅福利" class="toc-sidebar-link">星球重磅福利</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#其他方式加入星球" class="toc-sidebar-link">其他方式加入星球</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球规划" class="toc-sidebar-link">星球规划</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#中间件项目" class="toc-sidebar-link">中间件项目</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#超硬核项目" class="toc-sidebar-link">超硬核项目</a></li></ul></li><li><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#联系冰河" class="toc-sidebar-link">联系冰河</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#加群交流" class="toc-sidebar-link">加群交流</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#公众号" class="toc-sidebar-link">公众号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#视频号" class="toc-sidebar-link">视频号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html#星球" class="toc-sidebar-link">星球</a></li></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/core/nginx/2023-08-09-%E3%80%8ANginx%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%8B%E7%AC%AC18%E7%AB%A0-%E5%9F%BA%E4%BA%8E%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BANginx-Keepalived%E5%8F%8C%E6%9C%BA%E7%83%AD%E5%A4%87%E7%8E%AF%E5%A2%83.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="第17章：使用自签CA配置HTTPS加密反向代理访问" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/core/nginx/2023-08-08-《Nginx核心技术》第17章-使用自签CA配置HTTPS加密反向代理访问.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="第19章：Nginx实现四层负载均衡" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">星球会员</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1690177515604" defer></script><script src="/assets/js/cg-3.js?v=1690177515604" defer></script><script src="/assets/js/cg-4.js?v=1690177515604" defer></script><script src="/assets/js/cg-137.js?v=1690177515604" defer></script><script src="/assets/js/cg-5.js?v=1690177515604" defer></script><script src="/assets/js/cg-6.js?v=1690177515604" defer></script><script src="/assets/js/cg-app.js?v=1690177515604" defer></script>
+  </body>
+</html>
