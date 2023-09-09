@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第01章：制作Java基础docker镜像 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2023-09-09T16:30:26.000Z">
+    <meta property="og:title" content="第01章：制作Java基础docker镜像">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html">
+    <meta name="twitter:title" content="第01章：制作Java基础docker镜像">
+    <meta name="twitter:url" content="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.a4b6eddc.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1694277128664" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-90.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-1.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-23.js?v=1694277128664" as="script"><link rel="preload" href="/assets/js/cg-24.js?v=1694277128664" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.a4b6eddc.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1694277128664">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  💥连载视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="💥项目实战" class="dropdown-title"><span class="title">💥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  💥《Seckill秒杀系统》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  💥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  💥《RPC手撸专栏》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥框架源码" class="dropdown-title"><span class="title">🔥框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  🔥Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  💥连载视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥微服务" class="dropdown-title"><span class="title">🔥微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  🔥SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="💥项目实战" class="dropdown-title"><span class="title">💥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  💥《Seckill秒杀系统》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  💥SpringCloud Alibaba实战
+</a></li></ul></li><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  💥《RPC手撸专栏》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>第一篇：基础与疑难杂症</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="active sidebar-link">第01章：制作Java基础docker镜像</a></li></ul></section></li></ul> </aside> <div><main class="withouttoc page"> <div class="theme-default-content content__default"><h1 id="《容器化核心技术》第01章-制作java基础docker镜像"><a href="#《容器化核心技术》第01章-制作java基础docker镜像" class="header-anchor">#</a> 《容器化核心技术》第01章：制作Java基础docker镜像</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>今天，给大家分享的是《容器化核心技术》的第01章，如何制作Java基础Docker镜像，好了，开始今天的正题。</p> <h2 id="选择底层操作系统"><a href="#选择底层操作系统" class="header-anchor">#</a> 选择底层操作系统</h2> <p>通常是从一个底层的操作系统来开始构建一个Docker镜像的，也就是Dockerfile的FROM指令提及的。在某些情况下，你也许会从一个已有的基础镜像开始，这时你已经选择了底层操作系统镜像。但是如果你需要选择一个底层操作系统镜像，那么常用的镜像和对应的大小如下所示：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ubuntu              <span class="token number">19.04</span>               9b17fc7d6848        <span class="token number">5</span> days ago          <span class="token number">75</span>.4MB
+alpine              <span class="token number">3.9</span>                 055936d39205        <span class="token number">10</span> days ago         <span class="token number">5</span>.53MB
+busybox             latest              64f5d945efcc        <span class="token number">11</span> days ago         <span class="token number">1</span>.2MB
+centos              <span class="token number">7.6</span>.1810            f1cb7c7d58b7        <span class="token number">2</span> months ago        202MB
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h2 id="制作基础系统镜像"><a href="#制作基础系统镜像" class="header-anchor">#</a> 制作基础系统镜像</h2> <p>制作基础系统镜像alpine、centos、ubuntu</p> <p><strong>注意：所有基础镜像及部署软件都要指定好具体版本，禁用last tag</strong></p> <ul><li>下载alpine基础镜像</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker pull alpine:v3.9</span>
+Error response from daemon: manifest <span class="token keyword">for</span> alpine:v3.9 not found
+<span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker pull alpine:3.9</span>
+<span class="token number">3.9</span>: Pulling from library/alpine
+Digest: sha256:769fddc7cc2f0a1c35abb2f91432e8beecf83916c421420e6a6da9f8975464b6
+Status: Downloaded newer image <span class="token keyword">for</span> alpine:3.9
+<span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker images</span>
+REPOSITORY                    TAG                 IMAGE ID            CREATED             SIZE
+alpine                        <span class="token number">3.9</span>                 055936d39205        <span class="token number">10</span> days ago         <span class="token number">5</span>.53MB
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><ul><li>登录私有镜像库</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker login core-harbor.minminmsn.com</span>
+Username: admin
+Password: 
+WARNING<span class="token operator">!</span> Your password will be stored unencrypted <span class="token keyword">in</span> /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/<span class="token comment">#credentials-store</span>
+
+Login Succeeded
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><ul><li>打标签上传到私有镜像库</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker tag library/alpine:3.9  core-harbor.minminmsn.com/public/alpine:3.9</span>
+<span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker push core-harbor.minminmsn.com/public/alpine:3.9</span>
+The push refers to repository <span class="token punctuation">[</span>core-harbor.minminmsn.com/public/alpine<span class="token punctuation">]</span>
+f1b5933fe4b5: Pushed 
+<span class="token number">3.9</span>: digest: sha256:bf1684a6e3676389ec861c602e97f27b03f14178e5bc3f70dce198f9f160cce9 size: <span class="token number">528</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><ul><li>同样方法制作centos、ubuntu系统基础镜像</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos ~<span class="token punctuation">]</span><span class="token comment"># docker images</span>
+REPOSITORY                                 TAG                 IMAGE ID            CREATED             SIZE
+core-harbor.minminmsn.com/public/ubuntu   <span class="token number">19.04</span>               9b17fc7d6848        <span class="token number">5</span> days ago          <span class="token number">75</span>.4MB
+ubuntu                                     <span class="token number">19.04</span>               9b17fc7d6848        <span class="token number">5</span> days ago          <span class="token number">75</span>.4MB
+core-harbor.minminmsn.com/public/alpine   <span class="token number">3.9</span>                 055936d39205        <span class="token number">10</span> days ago         <span class="token number">5</span>.53MB
+alpine                                     <span class="token number">3.9</span>                 055936d39205        <span class="token number">10</span> days ago         <span class="token number">5</span>.53MB
+core-harbor.minminmsn.com/public/centos   <span class="token number">7.6</span>.1810            f1cb7c7d58b7        <span class="token number">2</span> months ago        202MB
+centos                                     <span class="token number">7.6</span>.1810            f1cb7c7d58b7        <span class="token number">2</span> months ago        202MB
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h2 id="制作jre镜像"><a href="#制作jre镜像" class="header-anchor">#</a> 制作jre镜像</h2> <p>在centos基础镜像上制作jre镜像</p> <ul><li>下载jre包</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>work@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># wget https://github.com/frekele/oracle-java/releases/download/8u212-b10/jre-8u212-linux-x64.tar.gz</span>
+<span class="token punctuation">[</span>work@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># ls</span>
+jre-8u212-linux-x64.tar.gz
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><ul><li>编辑Dockerfile</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>work@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># cat Dockerfile </span>
+<span class="token comment"># 基础镜像</span>
+FROM core-harbor.minminmsn.com/public/centos:7.6.1810
+
+<span class="token comment"># 维护信息</span>
+MAINTAINER minyt <span class="token operator">&lt;</span>minyongtao@minminmsn.com<span class="token operator">&gt;</span>
+
+<span class="token comment"># 文件复制到镜像</span>
+ADD jre-8u212-linux-x64.tar.gz /usr/local/
+
+<span class="token comment"># 设置环境变量</span>
+ENV JAVA_HOME /usr/local/jre1.8.0_212
+ENV <span class="token environment constant">PATH</span> <span class="token variable">${<span class="token environment constant">PATH</span>}</span><span class="token builtin class-name">:</span><span class="token variable">${JAVA_HOME}</span>/bin
+
+<span class="token comment"># 容器启动时运行的命令</span>
+CMD <span class="token punctuation">[</span><span class="token string">&quot;java&quot;</span>, <span class="token string">&quot;-version&quot;</span><span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><ul><li>制作镜像</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos data<span class="token punctuation">]</span><span class="token comment"># cd jre-centos/</span>
+<span class="token punctuation">[</span>root@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># ls</span>
+Dockerfile  jre-8u212-linux-x64.tar.gz
+<span class="token punctuation">[</span>root@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># docker build -t core-harbor.minminmsn.com/public/jre-centos:1.8.0_212 .</span>
+Sending build context to Docker daemon  <span class="token number">87</span>.89MB
+Step <span class="token number">1</span>/6 <span class="token builtin class-name">:</span> FROM core-harbor.minminmsn.com/public/centos:7.6.1810
+ ---<span class="token operator">&gt;</span> f1cb7c7d58b7
+Step <span class="token number">2</span>/6 <span class="token builtin class-name">:</span> MAINTAINER minyt <span class="token operator">&lt;</span>minyongtao@minminmsn.com<span class="token operator">&gt;</span>
+ ---<span class="token operator">&gt;</span> Using cache
+ ---<span class="token operator">&gt;</span> d0fb7c193008
+Step <span class="token number">3</span>/6 <span class="token builtin class-name">:</span> ADD jre-8u212-linux-x64.tar.gz /usr/local/
+ ---<span class="token operator">&gt;</span> 674cf9135825
+Step <span class="token number">4</span>/6 <span class="token builtin class-name">:</span> ENV JAVA_HOME /usr/local/jre1.8.0_212
+ ---<span class="token operator">&gt;</span> Running <span class="token keyword">in</span> 1c4a7c7a19ad
+Removing intermediate container 1c4a7c7a19ad
+ ---<span class="token operator">&gt;</span> ab2fc886e944
+Step <span class="token number">5</span>/6 <span class="token builtin class-name">:</span> ENV <span class="token environment constant">PATH</span> <span class="token variable">${<span class="token environment constant">PATH</span>}</span><span class="token builtin class-name">:</span><span class="token variable">${JAVA_HOME}</span>/bin
+ ---<span class="token operator">&gt;</span> Running <span class="token keyword">in</span> 3107ba5ae7b9
+Removing intermediate container 3107ba5ae7b9
+ ---<span class="token operator">&gt;</span> f14d2948c92d
+Step <span class="token number">6</span>/6 <span class="token builtin class-name">:</span> CMD <span class="token punctuation">[</span><span class="token string">&quot;java&quot;</span>, <span class="token string">&quot;-version&quot;</span><span class="token punctuation">]</span>
+ ---<span class="token operator">&gt;</span> Running <span class="token keyword">in</span> 99374bccaa27
+Removing intermediate container 99374bccaa27
+ ---<span class="token operator">&gt;</span> f27d47159f1e
+Successfully built f27d47159f1e
+Successfully tagged core-harbor.minminmsn.com/public/jre-centos:1.8.0_212
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br></div></div><ul><li>查看镜像</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># docker images </span>
+REPOSITORY                                     TAG           IMAGE ID            CREATED             SIZE
+core-harbor.minminmsn.com/public/jre-centos   <span class="token number">1.8</span>.0_212     f27d47159f1e        <span class="token number">17</span> seconds ago       441MB
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><ul><li>上传镜像到私有镜像库</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># docker push core-harbor.minminmsn.com/public/jre-centos:1.8.0_212</span>
+The push refers to repository <span class="token punctuation">[</span>core-harbor.minminmsn.com/public/jre-centos<span class="token punctuation">]</span>
+b9049811dc7d: Pushed 
+89169d87dbe2: Mounted from public/jdk-centos 
+<span class="token number">1.8</span>.0_212: digest: sha256:5c909a0c33aaa13b3a3ce48fd0f60356a32c5a697d99f39f08e92f1c6ba7bd57 size: <span class="token number">741</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><ul><li>运行验证jre镜像</li></ul> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@VM_8_24_centos jre-centos<span class="token punctuation">]</span><span class="token comment"># docker run core-harbor.minminmsn.com/public/jre-centos:1.8.0_212</span>
+<span class="token function">java</span> version <span class="token string">&quot;1.8.0_212&quot;</span>
+Java<span class="token punctuation">(</span>TM<span class="token punctuation">)</span> SE Runtime Environment <span class="token punctuation">(</span>build <span class="token number">1.8</span>.0_212-b10<span class="token punctuation">)</span>
+Java HotSpot<span class="token punctuation">(</span>TM<span class="token punctuation">)</span> <span class="token number">64</span>-Bit Server VM <span class="token punctuation">(</span>build <span class="token number">25.212</span>-b10, mixed mode<span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p> <p align="right"><font size="1">转自：blog.51cto.com/jerrymin/2399018</font></p> <h2 id="星球服务"><a href="#星球服务" class="header-anchor">#</a> 星球服务</h2> <p>加入星球，你将获得：</p> <p>1.项目学习：微服务入门必备的SpringCloud  Alibaba实战项目、手写RPC项目—所有大厂都需要的项目【含上百个经典面试题】、深度解析Spring6核心技术—只要学习Java就必须深度掌握的框架【含数十个经典思考题】、Seckill秒杀系统项目—进大厂必备高并发、高性能和高可用技能。</p> <p>2.框架源码：手写RPC项目—所有大厂都需要的项目【含上百个经典面试题】、深度解析Spring6核心技术—只要学习Java就必须深度掌握的框架【含数十个经典思考题】。</p> <p>3.硬核技术：深入理解高并发系列（全册）、深入理解JVM系列（全册）、深入浅出Java设计模式（全册）、MySQL核心知识（全册）。</p> <p>4.技术小册：深入理解高并发编程（第1版）、深入理解高并发编程（第2版）、从零开始手写RPC框架、SpringCloud  Alibaba实战、冰河的渗透实战笔记、MySQL核心知识手册、Spring IOC核心技术、Nginx核心技术、面经手册等。</p> <p>5.技术与就业指导：提供相关就业辅导和未来发展指引，冰河从初级程序员不断沉淀，成长，突破，一路成长为互联网资深技术专家，相信我的经历和经验对你有所帮助。</p> <p>冰河的知识星球是一个简单、干净、纯粹交流技术的星球，不吹水，目前加入享5折优惠，价值远超门票。加入星球的用户，记得添加冰河微信：hacker_binghe，冰河拉你进星球专属VIP交流群。</p> <h2 id="星球重磅福利"><a href="#星球重磅福利" class="header-anchor">#</a> 星球重磅福利</h2> <p>跟冰河一起从根本上提升自己的技术能力，架构思维和设计思路，以及突破自身职场瓶颈，冰河特推出重大优惠活动，扫码领券进行星球，<strong>直接立减149元，相当于5折，</strong> 这已经是星球最大优惠力度！</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu_149.png?raw=true" width="80%"> <br></div> <p>领券加入星球，跟冰河一起学习《SpringCloud Alibaba实战》、《手撸RPC专栏》和《Spring6核心技术》，更有已经上新的《大规模分布式Seckill秒杀系统》，从零开始介绍原理、设计架构、手撸代码。后续更有硬核中间件项目和业务项目，而这些都是你升职加薪必备的基础技能。</p> <p><strong>100多元就能学这么多硬核技术、中间件项目和大厂秒杀系统，如果是我，我会买他个终身会员！</strong></p> <h2 id="其他方式加入星球"><a href="#其他方式加入星球" class="header-anchor">#</a> 其他方式加入星球</h2> <ul><li><strong>链接</strong> ：打开链接 <a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <h2 id="星球规划"><a href="#星球规划" class="header-anchor">#</a> 星球规划</h2> <p>后续冰河还会在星球更新大规模中间件项目和深度剖析核心技术的专栏，目前已经规划的专栏如下所示。</p> <h3 id="中间件项目"><a href="#中间件项目" class="header-anchor">#</a> 中间件项目</h3> <ul><li>《大规模分布式定时调度中间件项目实战（非Demo）》：全程手撸代码。</li> <li>《大规模分布式IM（即时通讯）项目实战（非Demo）》：全程手撸代码。</li> <li>《大规模分布式网关项目实战（非Demo）》：全程手撸代码。</li> <li>《手写Redis》：全程手撸代码。</li> <li>《手写JVM》全程手撸代码。</li></ul> <h3 id="超硬核项目"><a href="#超硬核项目" class="header-anchor">#</a> 超硬核项目</h3> <ul><li>《从零落地秒杀系统项目》：全程手撸代码，在阿里云实现压测（<strong>已上新</strong>）。</li> <li>《大规模电商系统商品详情页项目》：全程手撸代码，在阿里云实现压测。</li> <li>其他待规划的实战项目，小伙伴们也可以提一些自己想学的，想一起手撸的实战项目。。。</li></ul> <p>既然星球规划了这么多内容，那么肯定就会有小伙伴们提出疑问：这么多内容，能更新完吗？我的回答就是：一个个攻破呗，咱这星球干就干真实中间件项目，剖析硬核技术和项目，不做Demo。初衷就是能够让小伙伴们学到真正的核心技术，不再只是简单的做CRUD开发。所以，每个专栏都会是硬核内容，像《SpringCloud Alibaba实战》、《手撸RPC专栏》和《Spring6核心技术》就是很好的示例。后续的专栏只会比这些更加硬核，杜绝Demo开发。</p> <p>小伙伴们跟着冰河认真学习，多动手，多思考，多分析，多总结，有问题及时在星球提问，相信在技术层面，都会有所提高。将学到的知识和技术及时运用到实际的工作当中，学以致用。星球中不少小伙伴都成为了公司的核心技术骨干，实现了升职加薪的目标。</p> <h2 id="联系冰河"><a href="#联系冰河" class="header-anchor">#</a> 联系冰河</h2> <h3 id="加群交流"><a href="#加群交流" class="header-anchor">#</a> 加群交流</h3> <p>本群的宗旨是给大家提供一个良好的技术学习交流平台，所以杜绝一切广告！由于微信群人满 100 之后无法加入，请扫描下方二维码先添加作者 “冰河” 微信(hacker_binghe)，备注：<code>星球编号</code>。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/hacker_binghe.jpg?raw=true" width="180px"> <div style="font-size:18px;">冰河微信</div> <br></div> <h3 id="公众号"><a href="#公众号" class="header-anchor">#</a> 公众号</h3> <p>分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。内容在 <strong>冰河技术</strong> 微信公众号首发，强烈建议大家关注。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_wechat.jpg?raw=true" width="180px"> <div style="font-size:18px;">公众号：冰河技术</div> <br></div> <h3 id="视频号"><a href="#视频号" class="header-anchor">#</a> 视频号</h3> <p>定期分享各种编程语言、开发技术、分布式与微服务架构、分布式数据库、分布式事务、云原生、大数据与云计算技术和渗透技术。另外，还会分享各种面试题和面试技巧。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/ice_video.png?raw=true" width="180px"> <div style="font-size:18px;">视频号：冰河技术</div> <br></div> <h3 id="星球"><a href="#星球" class="header-anchor">#</a> 星球</h3> <p>加入星球 <strong><a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></strong>，可以获得本站点所有学习内容的指导与帮助。如果你遇到不能独立解决的问题，也可以添加冰河的微信：<strong>hacker_binghe</strong>， 我们一起沟通交流。另外，在星球中不只能学到实用的硬核技术，还能学习<strong>实战项目</strong>！</p> <p>关注 <a href="https://img-blog.csdnimg.cn/20210426115714643.jpg?raw=true" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>公众号，回复 <code>星球</code> 可以获取入场优惠券。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu.png?raw=true" width="180px"> <div style="font-size:18px;">知识星球：冰河技术</div> <br></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/9/9</span></div></footer> <!----> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><!----> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第01章：制作Java基础docker镜像</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#选择底层操作系统" class="toc-sidebar-link">选择底层操作系统</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#制作基础系统镜像" class="toc-sidebar-link">制作基础系统镜像</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#制作jre镜像" class="toc-sidebar-link">制作jre镜像</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#星球服务" class="toc-sidebar-link">星球服务</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#星球重磅福利" class="toc-sidebar-link">星球重磅福利</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#其他方式加入星球" class="toc-sidebar-link">其他方式加入星球</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#星球规划" class="toc-sidebar-link">星球规划</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#中间件项目" class="toc-sidebar-link">中间件项目</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#超硬核项目" class="toc-sidebar-link">超硬核项目</a></li></ul></li><li><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#联系冰河" class="toc-sidebar-link">联系冰河</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#加群交流" class="toc-sidebar-link">加群交流</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#公众号" class="toc-sidebar-link">公众号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#视频号" class="toc-sidebar-link">视频号</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html#星球" class="toc-sidebar-link">星球</a></li></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/core/docker/2023-09-10-%E3%80%8A%E5%AE%B9%E5%99%A8%E5%8C%96%E6%A0%B8%E5%BF%83%E8%AE%BE%E8%AE%A1%E3%80%8B%E7%AC%AC01%E7%AB%A0-%E5%88%B6%E4%BD%9CJava%E5%9F%BA%E7%A1%80docker%E9%95%9C%E5%83%8F.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <!----> <!----></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">星球会员</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1694277128664" defer></script><script src="/assets/js/cg-3.js?v=1694277128664" defer></script><script src="/assets/js/cg-90.js?v=1694277128664" defer></script><script src="/assets/js/cg-1.js?v=1694277128664" defer></script><script src="/assets/js/cg-23.js?v=1694277128664" defer></script><script src="/assets/js/cg-24.js?v=1694277128664" defer></script><script src="/assets/js/cg-app.js?v=1694277128664" defer></script>
+  </body>
+</html>
