@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2024-07-28T16:29:07.000Z">
+    <meta property="og:title" content="第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/core/nginx/2024-07-28-nginx.html">
+    <meta name="twitter:title" content="第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP">
+    <meta name="twitter:url" content="/md/core/nginx/2024-07-28-nginx.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.040c0af9.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1722184248257" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-246.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-1.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-23.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-24.js?v=1722184248257" as="script"><link rel="preload" href="/assets/js/cg-25.js?v=1722184248257" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.040c0af9.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1722184248257">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Nginx核心技术</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="sidebar-link">第01章：安装Nginx</a></li><li><a href="/md/core/nginx/2023-07-24-《Nginx核心技术》第02章-获取客户端真实信息.html" class="sidebar-link">第02章：获取客户端真实IP、域名、协议、端口</a></li><li><a href="/md/core/nginx/2023-07-25-《Nginx核心技术》第03章-实现负载均衡等.html" class="sidebar-link">第03章：实现负载均衡、限流、缓存、黑白名单和灰度发布</a></li><li><a href="/md/core/nginx/2023-07-26-《Nginx核心技术》第04章-生成缩略图.html" class="sidebar-link">第04章：生成缩略图</a></li><li><a href="/md/core/nginx/2023-07-27-《Nginx核心技术》第05章-封禁IP和IP段.html" class="sidebar-link">第05章：封禁IP和IP段</a></li><li><a href="/md/core/nginx/2023-07-28-《Nginx核心技术》第06章-按日期分割Nginx日志.html" class="sidebar-link">第06章：按日期分割Nginx日志</a></li><li><a href="/md/core/nginx/2023-07-29-《Nginx核心技术》第07章-配置Nginx日志.html" class="sidebar-link">第07章：配置Nginx日志</a></li><li><a href="/md/core/nginx/2023-07-30-《Nginx核心技术》第08章-为Nginx动态添加模块.html" class="sidebar-link">第08章：为Nginx动态添加模块</a></li><li><a href="/md/core/nginx/2023-07-31-《Nginx核心技术》第09章-格式化日志并推送到远程服务器.html" class="sidebar-link">第09章：格式化日志并推送到远程服务器</a></li><li><a href="/md/core/nginx/2023-08-01-《Nginx核心技术》第10章-Nginx配置WebSocket.html" class="sidebar-link">第10章：Nginx配置WebSocket</a></li><li><a href="/md/core/nginx/2023-08-02-《Nginx核心技术》第11章-实现MySQL数据库的负载均衡.html" class="sidebar-link">第11章：实现MySQL数据库的负载均衡</a></li><li><a href="/md/core/nginx/2023-08-03-《Nginx核心技术》第12章-使用Nginx解决跨域问题.html" class="sidebar-link">第12章：使用Nginx解决跨域问题</a></li><li><a href="/md/core/nginx/2023-08-04-《Nginx核心技术》第13章-解决文件与图片显示过慢问题.html" class="sidebar-link">第13章：解决文件与图片显示过慢问题</a></li><li><a href="/md/core/nginx/2023-08-05-《Nginx核心技术》第14章-使用Nginx搭建流媒体服务器实现直播.html" class="sidebar-link">第14章：使用Nginx搭建流媒体服务器实现直播</a></li><li><a href="/md/core/nginx/2023-08-06-《Nginx核心技术》第15章-使用Nginx抗高并发流量.html" class="sidebar-link">第15章：使用Nginx抗高并发流量</a></li><li><a href="/md/core/nginx/2023-08-07-《Nginx核心技术》第16章-实现Nginx的高可用负载均衡.html" class="sidebar-link">第16章：实现Nginx的高可用负载均衡</a></li><li><a href="/md/core/nginx/2023-08-08-《Nginx核心技术》第17章-使用自签CA配置HTTPS加密反向代理访问.html" class="sidebar-link">第17章：使用自签CA配置HTTPS加密反向代理访问</a></li><li><a href="/md/core/nginx/2023-08-09-《Nginx核心技术》第18章-基于主从模式搭建Nginx-Keepalived双机热备环境.html" class="sidebar-link">第18章：基于主从模式搭建Nginx+Keepalived双机热备环境</a></li><li><a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html" class="sidebar-link">第19章：Nginx实现四层负载均衡</a></li><li><a href="/md/core/nginx/2024-07-28-nginx.html" aria-current="page" class="active sidebar-link">第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="第20章-nginx-lua脚本-redis实现自动封禁访问频率过高ip"><a href="#第20章-nginx-lua脚本-redis实现自动封禁访问频率过高ip" class="header-anchor">#</a> 第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>自己搭建的网站刚上线，短信接口就被一直攻击，并且攻击者不停变换IP，导致阿里云短信平台上的短信被恶意刷取了几千条，加上最近工作比较忙，就直接在OpenResty上对短信接口做了一些限制，采用OpenResty+Lua的方案成功动态封禁了频繁刷短信接口的IP。</p> <h2 id="一、临时解决方案"><a href="#一、临时解决方案" class="header-anchor">#</a> 一、临时解决方案</h2> <p>由于事情比较紧急，所以，当发现这个问题时，就先采用快速的临时方案解决。</p> <p>（1）查看Nginx日志发现被攻击的IP 和接口</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@binghe ~<span class="token punctuation">]</span><span class="token comment"># tail -f /var/log/nginx/access.log</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>发现攻击者一直在用POST请求 /fhtowers/user/getVerificationCode这个接口</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-001.png?raw=true" width="80%"> <br></div> <p>（2）用awk和grep脚本过滤nginx日志，提取攻击短信接口的ip（一般这个接口是用来发注册验证码的，一分钟如果大于10次请求的话就不是正常的访问请求了，大家根据自己的实际情况更改脚本）并放到一个txt文件中去，然后重启nginx</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@binghe ~<span class="token punctuation">]</span><span class="token comment"># cat denyip.sh</span>
+<span class="token comment">#!/bin/bash</span>
+<span class="token assign-left variable">nginx_home</span><span class="token operator">=</span>/usr/local/openresty/nginx
+<span class="token assign-left variable">log_path</span><span class="token operator">=</span>/var/log/nginx/access.log
+<span class="token function">tail</span> <span class="token parameter variable">-n5000</span> <span class="token variable">$log_path</span> <span class="token operator">|</span> <span class="token function">grep</span>  getVerification <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'{print $1}'</span> <span class="token operator">|</span><span class="token function">sort</span> <span class="token operator">|</span> <span class="token function">uniq</span> <span class="token parameter variable">-c</span> <span class="token operator">|</span> <span class="token function">sort</span> <span class="token parameter variable">-nr</span> <span class="token parameter variable">-k1</span> <span class="token operator">|</span> <span class="token function">head</span> <span class="token parameter variable">-n</span> <span class="token number">100</span> <span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'{if($1&gt;10)print &quot;&quot;$2&quot;&quot;}'</span> <span class="token operator">&gt;</span><span class="token variable">$nginx_home</span>/denyip/blocksip.txt
+/usr/bin/nginx <span class="token parameter variable">-s</span> reload
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>（3）设置Nginx去读取用脚本过滤出来的blocksip.txt（注意一下，我这里的Nginx是用的openresty，自带识别lua语法的，下面会有讲openresty的用法）</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>location <span class="token operator">=</span>  /fhtowers/user/getVerificationCode <span class="token punctuation">{</span>  <span class="token comment">#短信接口</span>
+access_by_lua <span class="token string">'
+   local f = io.open(&quot;/usr/local/openresty/nginx/denyip/blocksip.txt&quot;)   #黑名单列表
+   for line in f:lines() do
+		  if ngx.var.http_x_forwarded_for == line then   #如果ip在黑名单列表里直接返回403
+				 ngx.exit(ngx.HTTP_FORBIDDEN)
+		  end
+  end
+ '</span><span class="token punctuation">;</span>
+ proxy_pass http://appservers<span class="token punctuation">;</span>   <span class="token comment">#不在名单里就转发给后台的tomcat服务器</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>（4）把过滤脚本放进crontab任务里，一分钟执行一次</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@binghe ~<span class="token punctuation">]</span><span class="token comment"># crontab -e</span>
+*/1 * * * * <span class="token function">sh</span> /root/denyip.sh
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>（5）查看一下效果，发现攻击者的请求都被返回403并拒绝了</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-002.png?raw=true" width="80%"> <br></div> <h2 id="二、openresty-lua方案"><a href="#二、openresty-lua方案" class="header-anchor">#</a> 二、OpenResty+Lua方案</h2> <p>临时方案有效果后，再将其调整成使用OpenResty+Lua脚本的方案，来一张草图。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-003.png?raw=true" width="80%"> <br></div> <p>接下来，就是基于OpenResty和Redis实现自动封禁访问频率过高的IP。</p> <h3 id="_2-1-安装openresty"><a href="#_2-1-安装openresty" class="header-anchor">#</a> 2.1 安装OpenResty</h3> <p>安装使用 OpenResty，这是一个集成了各种 Lua 模块的 Nginx 服务器，是一个以Nginx为核心同时包含很多第三方模块的Web应用服务器，使用Nginx的同时又能使用lua等模块实现复杂的控制。</p> <p>（1）安装编译工具、依赖库</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># yum -y install readline-devel pcre-devel openssl-devel gcc</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（2）下载openresty-1.13.6.1.tar.gz 源码包，并解压；下载ngx_cache_purge模块，该模块用于清理nginx缓存；下载nginx_upstream_check_module模块，该模块用于ustream健康检查。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># cd /usr/local/</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># wget https://openresty.org/download/openresty-1.13.6.1.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># tar -zxvf openresty-1.13.6.1.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># cd openresty-1.13.6.1/bundle</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># wget http://labs.frickle.com/files/ngx_cache_purge-2.3.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># tar -zxvf ngx_cache_purge-2.3.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># tar -zxvf v0.3.0.tar.gz</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>（3）配置需安装的模块</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># ./configure --help可查询需要安装的模块并编译安装</span>
+<span class="token punctuation">[</span>root@test1 openresty-1.13.6.1<span class="token punctuation">]</span><span class="token comment"># ./configure --prefix=/usr/local/openresty --with-luajit --with-http_ssl_module --user=root --group=root --with-http_realip_module --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ --with-http_stub_status_module </span>
+<span class="token punctuation">[</span>root@test1 openresty-1.13.6.1<span class="token punctuation">]</span><span class="token comment"># make &amp;&amp; make install</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>（4）创建一个软链接方便启动停止</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># ln -s /usr/local/openresty/nginx/sbin/nginx   /bin/nginx</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（5）启动nginx</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># nginx  #启动</span>
+<span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># nginx  -s reload   #reload配置</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>如果启动时候报错找不到PID的话就用以下命令解决（如果没有更改过目录的话，让它去读nginx的配置文件就好了）</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># /usr/local/openresty/nginx/sbin/nginx  -c /usr/local/openresty/nginx/conf/nginx.conf </span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-004.png?raw=true" width="80%"> <br></div> <p>随后，打开浏览器访问页面。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-005.png?raw=true" width="80%"> <br></div> <p>（6）在Nginx上测试一下能否使用Lua脚本</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/openresty/nginx/conf/nginx.conf</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>在server里面加一个</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>location /lua <span class="token punctuation">{</span>
+	default_type text/plain<span class="token punctuation">;</span>
+	content_by_lua ‘ngx.say<span class="token punctuation">(</span>“hello,lua<span class="token operator">!</span>”<span class="token punctuation">)</span>’<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-006.png?raw=true" width="80%"> <br></div> <p>加完后重新reload配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># nginx  -s reload</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>在浏览器里输入 ip地址/lua，出现下面的字就表示Nginx能够成功使用lua了</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-007.png?raw=true" width="80%"> <br></div> <h3 id="_2-2-安装redis"><a href="#_2-2-安装redis" class="header-anchor">#</a> 2.2 安装Redis</h3> <p>（1）下载、解压、编译安装</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># cd /usr/local/</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># wget http://download.redis.io/releases/redis-6.0.1.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># tar -zxvf redis-6.0.1.tar.gz</span>
+<span class="token punctuation">[</span>root@test1 local<span class="token punctuation">]</span><span class="token comment"># cd redis-6.0.1</span>
+<span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># make</span>
+<span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># make install</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>（2）查看是否安装成功</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># ls -lh /usr/local/bin/</span>
+<span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># redis-server -v</span>
+Redis server <span class="token assign-left variable">v</span><span class="token operator">=</span><span class="token number">3.2</span>.5 <span class="token assign-left variable">sha</span><span class="token operator">=</span>00000000:0 <span class="token assign-left variable">malloc</span><span class="token operator">=</span>jemalloc-4.0.3 <span class="token assign-left variable">bits</span><span class="token operator">=</span><span class="token number">64</span> <span class="token assign-left variable">build</span><span class="token operator">=</span>dae2abf3793b309d
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>（3）配置redis 创建dump file、进程pid、log目录</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># cd /etc/</span>
+<span class="token punctuation">[</span>root@test1 etc<span class="token punctuation">]</span><span class="token comment"># mkdir redis</span>
+<span class="token punctuation">[</span>root@test1 etc<span class="token punctuation">]</span><span class="token comment"># cd /var/</span>
+<span class="token punctuation">[</span>root@test1 var<span class="token punctuation">]</span><span class="token comment"># mkdir redis</span>
+<span class="token punctuation">[</span>root@test1 var<span class="token punctuation">]</span><span class="token comment"># cd redis/</span>
+<span class="token punctuation">[</span>root@test1 redis<span class="token punctuation">]</span><span class="token comment"># mkdir  data log  run</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p>（4）修改配置文件</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 redis<span class="token punctuation">]</span><span class="token comment"># cd /usr/local/redis-6.0.1/</span>
+<span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># cp redis.conf /etc/redis/6379.conf</span>
+<span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># vim /etc/redis/6379.conf</span>
+<span class="token comment">#绑定的主机地址</span>
+<span class="token builtin class-name">bind</span> <span class="token number">192.168</span>.1.222
+<span class="token comment">#端口</span>
+port <span class="token number">6379</span>
+<span class="token comment">#认证密码（方便测试不设密码，注释掉）</span>
+<span class="token comment">#requirepass </span>
+<span class="token comment">#pid目录</span>
+pidfile /var/redis/run/redis_6379.pid
+<span class="token comment">#log存储目录</span>
+logfile /var/redis/log/redis.log
+<span class="token comment">#dump目录</span>
+<span class="token function">dir</span> /var/redis/data
+<span class="token comment">#Redis默认不是以守护进程的方式运行，可以通过该配置项修改，使用yes启用守护进程</span>
+daemonize <span class="token function">yes</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br></div></div><p>（5）设置启动方式</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 redis-6.0.1<span class="token punctuation">]</span><span class="token comment"># cd /usr/local/redis-6.0.1/utils/</span>
+<span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># cp redis_init_script /etc/init.d/redis</span>
+<span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># vim /etc/init.d/redis   #根据自己实际情况修改</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>/etc/init.d/redis文件的内容如下。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token shebang important">#!/bin/sh</span>
+<span class="token comment">#</span>
+<span class="token comment"># Simple Redis init.d script conceived to work on Linux systems</span>
+<span class="token comment"># as it does use of the /proc filesystem.</span>
+
+<span class="token assign-left variable">REDISPORT</span><span class="token operator">=</span><span class="token number">6379</span>
+<span class="token assign-left variable">EXEC</span><span class="token operator">=</span>/usr/local/bin/redis-server
+<span class="token assign-left variable">CLIEXEC</span><span class="token operator">=</span>/usr/local/bin/redis-cli
+
+<span class="token assign-left variable">PIDFILE</span><span class="token operator">=</span>/var/run/redis_<span class="token variable">${REDISPORT}</span>.pid
+<span class="token assign-left variable">CONF</span><span class="token operator">=</span><span class="token string">&quot;/etc/redis/<span class="token variable">${REDISPORT}</span>.conf&quot;</span>
+
+<span class="token keyword">case</span> <span class="token string">&quot;<span class="token variable">$1</span>&quot;</span> <span class="token keyword">in</span>
+    start<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-f</span> <span class="token variable">$PIDFILE</span> <span class="token punctuation">]</span>
+        <span class="token keyword">then</span>
+                <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$PIDFILE</span> exists, process is already running or crashed&quot;</span>
+        <span class="token keyword">else</span>
+                <span class="token builtin class-name">echo</span> <span class="token string">&quot;Starting Redis server...&quot;</span>
+                <span class="token variable">$EXEC</span> <span class="token variable">$CONF</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    stop<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-f</span> <span class="token variable">$PIDFILE</span> <span class="token punctuation">]</span>
+        <span class="token keyword">then</span>
+                <span class="token builtin class-name">echo</span> <span class="token string">&quot;<span class="token variable">$PIDFILE</span> does not exist, process is not running&quot;</span>
+        <span class="token keyword">else</span>
+                <span class="token assign-left variable">PID</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">cat</span> $PIDFILE<span class="token variable">)</span></span>
+                <span class="token builtin class-name">echo</span> <span class="token string">&quot;Stopping ...&quot;</span>
+                <span class="token variable">$CLIEXEC</span> <span class="token parameter variable">-p</span> <span class="token variable">$REDISPORT</span> <span class="token function">shutdown</span>
+                <span class="token keyword">while</span> <span class="token punctuation">[</span> <span class="token parameter variable">-x</span> /proc/<span class="token variable">${PID}</span> <span class="token punctuation">]</span>
+                <span class="token keyword">do</span>
+                    <span class="token builtin class-name">echo</span> <span class="token string">&quot;Waiting for Redis to shutdown ...&quot;</span>
+                    <span class="token function">sleep</span> <span class="token number">1</span>
+                <span class="token keyword">done</span>
+                <span class="token builtin class-name">echo</span> <span class="token string">&quot;Redis stopped&quot;</span>
+        <span class="token keyword">fi</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    *<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">&quot;Please use start or stop as first argument&quot;</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+<span class="token keyword">esac</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br></div></div><p>增加执行权限，并启动Redis。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># chmod a+x /etc/init.d/redis   #增加执行权限</span>
+<span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># service redis start     #启动redis</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>（6）查看redis是否启动</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-008.png?raw=true" width="80%"> <br></div> <h3 id="_2-3-lua访问redis"><a href="#_2-3-lua访问redis" class="header-anchor">#</a> 2.3 Lua访问Redis</h3> <p>（1）连接redis，然后添加一些测试参数</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># redis-cli -h 192.168.1.222 -p 6379</span>
+<span class="token number">192.168</span>.1.222:637<span class="token operator"><span class="token file-descriptor important">9</span>&gt;</span> <span class="token builtin class-name">set</span> <span class="token string">&quot;123&quot;</span> <span class="token string">&quot;456&quot;</span>
+OK
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>（2）编写连接Redis的Lua脚本</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/openresty/nginx/conf/lua/redis.lua</span>
+<span class="token builtin class-name">local</span> redis <span class="token operator">=</span> require <span class="token string">&quot;resty.redis&quot;</span>
+<span class="token builtin class-name">local</span> conn <span class="token operator">=</span> redis.new<span class="token punctuation">(</span><span class="token punctuation">)</span>
+conn.connect<span class="token punctuation">(</span>conn, <span class="token string">'192.168.1.222'</span>, <span class="token string">'6379'</span><span class="token punctuation">)</span>     <span class="token comment">#根据自己情况写ip和端口号 </span>
+<span class="token builtin class-name">local</span> res <span class="token operator">=</span> conn:get<span class="token punctuation">(</span><span class="token string">&quot;123&quot;</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> <span class="token assign-left variable">res</span><span class="token operator">==</span>ngx.null <span class="token keyword">then</span>
+    ngx.say<span class="token punctuation">(</span><span class="token string">&quot;redis集群中不存在KEY——'123'&quot;</span><span class="token punctuation">)</span>
+    <span class="token builtin class-name">return</span>
+end
+ngx.say<span class="token punctuation">(</span>res<span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p>（3）在nginx.conf配置文件中的server下添加以下location</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/openresty/nginx/conf/nginx.conf</span>
+location /lua_redis <span class="token punctuation">{</span>
+	default_type text/plain<span class="token punctuation">;</span>
+	content_by_lua_file /usr/local/openresty/nginx/conf/lua/redis.lua<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>随后重新reload配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 utils<span class="token punctuation">]</span><span class="token comment"># nginx  -s reload   #重启一下Nginx</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（4）验证Lua访问Redis的正确性</p> <p>在浏览器输入ip/lua_redis， 如果能看到下图的内容表示Lua可以访问Redis。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-009.png?raw=true" width="80%"> <br></div> <p>准备工作已经完成，现在要实现OpenResty+Lua+Redis自动封禁并解封IP了。</p> <h3 id="_2-4-openresty-lua实现"><a href="#_2-4-openresty-lua实现" class="header-anchor">#</a> 2.4 OpenResty+Lua实现</h3> <p>（1）添加访问控制的Lua脚本（只需要修改Lua脚本中连接Redis的IP和端口即可）</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>ok, err <span class="token operator">=</span> conn:connect<span class="token punctuation">(</span>“192.168.1.222”, <span class="token number">6379</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>注意：如果在Nginx或者OpenResty的上层有用到阿里云的SLB负载均衡的话，需要修改一下脚本里的所有…ngx.var.remote_addr，把remote_addr替换成从SLB获取真实IP的字段即可，不然获取到的IP全都是阿里云SLB发过来的并且是处理过的IP，同时，这些IP全都是一个网段的，根本没有办法起到封禁的效果）。</strong></p> <p>完整的Lua脚本如下所示。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 lua<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/openresty/nginx/conf/lua/access.lua</span>
+<span class="token builtin class-name">local</span> <span class="token assign-left variable">ip_block_time</span><span class="token operator">=</span><span class="token number">300</span> --封禁IP时间（秒）
+<span class="token builtin class-name">local</span> <span class="token assign-left variable">ip_time_out</span><span class="token operator">=</span><span class="token number">30</span>    --指定ip访问频率时间段（秒）
+<span class="token builtin class-name">local</span> <span class="token assign-left variable">ip_max_count</span><span class="token operator">=</span><span class="token number">20</span> --指定ip访问频率计数最大值（秒）
+<span class="token builtin class-name">local</span> BUSINESS <span class="token operator">=</span> ngx.var.business --nginx的location中定义的业务标识符，也可以不加，不过加了后方便区分
+
+--连接redis
+<span class="token builtin class-name">local</span> redis <span class="token operator">=</span> require <span class="token string">&quot;resty.redis&quot;</span>  
+<span class="token builtin class-name">local</span> conn <span class="token operator">=</span> redis:new<span class="token punctuation">(</span><span class="token punctuation">)</span>  
+ok, err <span class="token operator">=</span> conn:connect<span class="token punctuation">(</span><span class="token string">&quot;192.168.1.222&quot;</span>, <span class="token number">6379</span><span class="token punctuation">)</span>  
+conn:set_timeout<span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span> --超时时间2秒
+
+--如果连接失败，跳转到脚本结尾
+<span class="token keyword">if</span> not ok <span class="token keyword">then</span>
+    goto FLAG
+end
+
+--查询ip是否被禁止访问，如果存在则返回403错误代码
+is_block, err <span class="token operator">=</span> conn:get<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-BLOCK-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr<span class="token punctuation">)</span>  
+<span class="token keyword">if</span> is_block <span class="token operator">==</span> <span class="token string">'1'</span> <span class="token keyword">then</span>
+    ngx.exit<span class="token punctuation">(</span><span class="token number">403</span><span class="token punctuation">)</span>
+    goto FLAG
+end
+
+--查询redis中保存的ip的计数器
+ip_count, err <span class="token operator">=</span> conn:get<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-COUNT-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> ip_count <span class="token operator">==</span> ngx.null <span class="token keyword">then</span> --如果不存在，则将该IP存入redis，并将计数器设置为1、该KEY的超时时间为ip_time_out
+    res, err <span class="token operator">=</span> conn:set<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-COUNT-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr, <span class="token number">1</span><span class="token punctuation">)</span>
+	res, err <span class="token operator">=</span> conn:expire<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-COUNT-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr, ip_time_out<span class="token punctuation">)</span>
+<span class="token keyword">else</span>
+    ip_count <span class="token operator">=</span> ip_count + <span class="token number">1</span> --存在则将单位时间内的访问次数加1
+  
+    <span class="token keyword">if</span> ip_count <span class="token operator">&gt;=</span> ip_max_count <span class="token keyword">then</span> --如果超过单位时间限制的访问次数，则添加限制访问标识，限制时间为ip_block_time
+        res, err <span class="token operator">=</span> conn:set<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-BLOCK-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr, <span class="token number">1</span><span class="token punctuation">)</span>
+        res, err <span class="token operator">=</span> conn:expire<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-BLOCK-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr, ip_block_time<span class="token punctuation">)</span>
+	<span class="token keyword">else</span>
+        res, err <span class="token operator">=</span> conn:set<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-COUNT-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr,ip_count<span class="token punctuation">)</span>
+		res, err <span class="token operator">=</span> conn:expire<span class="token punctuation">(</span>BUSINESS<span class="token punctuation">..</span><span class="token string">&quot;-COUNT-&quot;</span><span class="token punctuation">..</span>ngx.var.remote_addr, ip_time_out<span class="token punctuation">)</span>
+    end
+end
+
+-- 结束标记
+::FLAG::
+<span class="token builtin class-name">local</span> ok, err <span class="token operator">=</span> conn:close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br></div></div><p>（2）在需要做访问限制的location里加两段代码即可，这里用刚才的/lua做演示</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 lua<span class="token punctuation">]</span><span class="token comment"># vim /usr/local/openresty/nginx/conf/nginx.conf</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-010.png?raw=true" width="80%"> <br></div> <p>主要是添加如下配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code>access_by_lua_file /usr/local/openresty/nginx/conf/lua/access.lua<span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>其中，<code>set $business “lua”</code> 是为了把IP放进Redis的时候标明是哪个location的，可以不加这个配置。</p> <p>随后，重新reload配置。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 lua<span class="token punctuation">]</span><span class="token comment"># nginx -s reload #修改完后重启nginx</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>（3）打开浏览器访问192.168.1.222/lua 并一直按F5刷新。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-011.png?raw=true" width="80%"> <br></div> <p>随后，连接Redis，查看IP的访问计数。</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token punctuation">[</span>root@test1 ~<span class="token punctuation">]</span><span class="token comment"># redis-cli -h 192.168.1.222 -p 6379</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>发现redis已经在统计访问lua这个网页ip的访问次数了</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-012.png?raw=true" width="80%"> <br></div> <p>这个key的过期时间是30秒，如果30秒没有重复访问20次这个key就会消失，所以说正常用户一般不会触发这个封禁的脚本。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-013.png?raw=true" width="80%"> <br></div> <p>当30秒内访问超过了20次，发现触发脚本了，变成了403</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-014.png?raw=true" width="80%"> <br></div> <p>再次查看Redis的key，发现多了一个lua-block-192.168.1.158，过期时间是300秒,就是说在300秒内这个ip无法继续访问192.168.1.222/lua这个页面了。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-015.png?raw=true" width="80%"> <br></div> <p>过五分钟后再去访问这个页面，又可以访问了。</p> <div align="center"><img src="https://binghe.gitcode.host/assets/images/core/nginx/2024-07-28-016.png?raw=true" width="80%"> <br></div> <p>这个脚本的目的很简单：一个IP如果在30秒内其访问次数达到20次则表明该IP访问频率太快了，因此将该IP封禁5分钟。同时由于计数的KEY在Redis中的超时时间设置成了30秒，所以如果两次访问间隔时间大于30秒将会重新开始计数。</p> <p>大家也可以将这个脚本优化成，第一次封禁5分钟，第二次封禁半小时，第三次封禁半天，第四次封禁三天，第五次永久封禁等等。</p> <h2 id="三、写在最后"><a href="#三、写在最后" class="header-anchor">#</a> 三、写在最后</h2> <p>在冰河的知识星球除了目前正在热更的高性能网关外，还有其他6个项目，像分布式IM即时通讯系统、Sekill分布式秒杀系统、手写RPC、简易商城系统等等。这些项目的需求、方案、架构、落地等均来自互联网真实业务场景，让你真正学到互联网大厂的业务与技术落地方案，并将其有效转化为自己的知识储备。</p> <p><strong>值得一提的是：冰河自研的Polaris高性能网关比某些开源网关项目性能更高</strong>，你还在等啥？不少小伙伴经过星球硬核技术和项目的历练，早已成功跳槽加薪，实现薪资翻倍，而你，还在原地踏步，抱怨大环境不好。2024年抛弃焦虑和抱怨，我们一起塌下心来沉淀硬核技术和项目，让自己的薪资更上一层楼。</p> <div align="center"><img src="https://binghe.gitcode.host/images/personal/xingqiu_149.png?raw=true" width="80%"> <br></div> <p>领券加入星球，就可以跟冰河一起学习《简易商城脚手架项目》、《手撸RPC专栏》和《Spring6核心技术与源码解析》、《实战高并发设计模式》、《分布式Seckill秒杀系统》、《分布式IM即时通讯系统》和《高性能Polaris网关》，从零开始介绍原理、设计架构、手撸代码。</p> <p><strong>花很少的钱就能学这么多硬核技术、中间件项目和大厂秒杀系统与分布式IM即时通讯系统，比其他培训机构不知便宜多少倍，硬核多少倍，如果是我，我会买他个十年！</strong></p> <p>加入要趁早，后续还会随着项目和加入的人数涨价，而且只会涨，不会降，先加入的小伙伴就是赚到。</p> <p>另外，还有一个限时福利，邀请一个小伙伴加入，冰河就会给一笔 <strong>分享有奖</strong> ，有些小伙伴都邀请了50+人，早就回本了！</p> <p><strong>其他方式加入星球：</strong></p> <ul><li><strong>链接</strong> ：打开链接 http://m6z.cn/6aeFbs 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <p><strong>好了，今天就到这儿吧，我是冰河，我们下期见~~</strong></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/core/nginx/2024-07-28-nginx.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2024/7/28</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html" class="prev">
+          第19章：Nginx实现四层负载均衡
+        </a></span> <!----></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/nginx/2024-07-28-nginx.html#一、临时解决方案" class="toc-sidebar-link">一、临时解决方案</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2024-07-28-nginx.html#二、openresty-lua方案" class="toc-sidebar-link">二、OpenResty+Lua方案</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-1-安装openresty" class="toc-sidebar-link">2.1 安装OpenResty</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-2-安装redis" class="toc-sidebar-link">2.2 安装Redis</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-3-lua访问redis" class="toc-sidebar-link">2.3 Lua访问Redis</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-4-openresty-lua实现" class="toc-sidebar-link">2.4 OpenResty+Lua实现</a></li></ul></li><li><a href="/md/core/nginx/2024-07-28-nginx.html#三、写在最后" class="toc-sidebar-link">三、写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第20章：Nginx+Lua脚本+Redis实现自动封禁访问频率过高IP</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/nginx/2024-07-28-nginx.html#一、临时解决方案" class="toc-sidebar-link">一、临时解决方案</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/nginx/2024-07-28-nginx.html#二、openresty-lua方案" class="toc-sidebar-link">二、OpenResty+Lua方案</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-1-安装openresty" class="toc-sidebar-link">2.1 安装OpenResty</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-2-安装redis" class="toc-sidebar-link">2.2 安装Redis</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-3-lua访问redis" class="toc-sidebar-link">2.3 Lua访问Redis</a></li><li class="toc-sidebar-sub-header"><a href="/md/core/nginx/2024-07-28-nginx.html#_2-4-openresty-lua实现" class="toc-sidebar-link">2.4 OpenResty+Lua实现</a></li></ul></li><li><a href="/md/core/nginx/2024-07-28-nginx.html#三、写在最后" class="toc-sidebar-link">三、写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/core/nginx/2024-07-28-nginx.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="第19章：Nginx实现四层负载均衡" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/core/nginx/2023-08-10-《Nginx核心技术》第19章-Nginx实现四层负载均衡.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <!----></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">星球会员</a></div><div class="redirect-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="redirect-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="redirect-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">跳转链接</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1722184248257" defer></script><script src="/assets/js/cg-3.js?v=1722184248257" defer></script><script src="/assets/js/cg-246.js?v=1722184248257" defer></script><script src="/assets/js/cg-1.js?v=1722184248257" defer></script><script src="/assets/js/cg-23.js?v=1722184248257" defer></script><script src="/assets/js/cg-24.js?v=1722184248257" defer></script><script src="/assets/js/cg-25.js?v=1722184248257" defer></script><script src="/assets/js/cg-app.js?v=1722184248257" defer></script>
+  </body>
+</html>
