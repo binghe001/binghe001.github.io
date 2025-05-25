@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>一次线上服务GC耗时长的排查经历 | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2025-05-25T05:26:47.000Z">
+    <meta property="og:title" content="一次线上服务GC耗时长的排查经历">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/core/jvm/2025-05-25-chapter002.html">
+    <meta name="twitter:title" content="一次线上服务GC耗时长的排查经历">
+    <meta name="twitter:url" content="/md/core/jvm/2025-05-25-chapter002.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.040c0af9.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1748150894527" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-188.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-1.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-23.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-24.js?v=1748150894527" as="script"><link rel="preload" href="/assets/js/cg-25.js?v=1748150894527" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.040c0af9.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1748150894527">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2025-05-18-chapter00.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关（新）
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2025-05-18-chapter00.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="项目实战" class="dropdown-title"><span class="title">项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关（新）
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="渗透技术" class="dropdown-title"><span class="title">渗透技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/hack/log4j/2022-05-30-冰河连夜复现了Log4j最新重大漏洞.html" class="nav-link">
+  log4j重大漏洞
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  基础环境篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/tools/2022-04-17-001-使用Easy-Creds工具攻击无线网络.html" class="nav-link">
+  渗透工具篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/horse/2022-05-02-001-各种一句话木马大全.html" class="nav-link">
+  木马篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sql/2022-05-02-001-sqli-labs-master下载与安装.html" class="nav-link">
+  SQL注入篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/shell/2022-05-02-001-各种解析漏洞拿shell.html" class="nav-link">
+  漏洞拿Shell篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/crack/2022-05-02-001-使用rarcrack暴力破解RAR-ZIP-7Z压缩包.html" class="nav-link">
+  暴力破解篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/bash/2022-05-02-001-3389脚本开启代码(vbs版).html" class="nav-link">
+  渗透脚本篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/raising/2022-05-02-001-数据库提权.html" class="nav-link">
+  数据与系统提权篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/client/2022-05-02-001-浏览器渗透.html" class="nav-link">
+  客户端渗透篇
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/sociology/2022-05-02-001-Metasploit之社会工程学工具包.html" class="nav-link">
+  社会工程学
+</a></li><li class="dropdown-item"><!----> <a href="/md/hack/question/2022-05-02-001-HTTP错误4031禁止访问-执行访问被拒绝.html" class="nav-link">
+  问题记录篇
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>JVM核心技术</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/jvm/2025-05-18-chapter00.html" class="sidebar-link">【置顶】冰河的第一本深入理解JVM书籍免费送</a></li><li><a href="/md/core/jvm/2022-04-18-001-JVM调优的几种场景.html" class="sidebar-link">第01章：JVM调优的几种场景</a></li><li><a href="/md/core/jvm/2022-04-18-002-类的编译.html" class="sidebar-link">第02章：类的编译、编译优化、常量这地、泛型擦除、条件编译</a></li><li><a href="/md/core/jvm/2022-04-18-003-类的加载过程.html" class="sidebar-link">第03章：类的加载过程</a></li><li><a href="/md/core/jvm/2022-04-18-004-JVM内存空间.html" class="sidebar-link">第04章：JVM内存空间</a></li><li><a href="/md/core/jvm/2022-04-18-005-JVM堆内存分配.html" class="sidebar-link">第05章：JVM堆内存分配机制</a></li><li><a href="/md/core/jvm/2022-04-18-006-JVM垃圾回收机制.html" class="sidebar-link">第06章：JVM垃圾回收机制</a></li><li><a href="/md/core/jvm/2022-04-18-007-JVM垃圾回收算法.html" class="sidebar-link">第07章：JVM垃圾回收算法</a></li><li><a href="/md/core/jvm/2022-04-18-008-JVM-CMS垃圾收集器.html" class="sidebar-link">第08章：CMS垃圾收集器</a></li><li><a href="/md/core/jvm/2022-04-18-009-JVM -G1收集器-Region-停顿时间模型-垃圾回收.html" class="sidebar-link">第09章：G1垃圾收集器</a></li><li><a href="/md/core/jvm/2022-04-18-010-JVM内存布局.html" class="sidebar-link">第10章：JVM 内存布局</a></li><li><a href="/md/core/jvm/2023-09-07-JVM各种参数配置.html" class="sidebar-link">第11章：JVM各种参数配置</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>JVM生产实践</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/core/jvm/2025-05-25-chapter001.html" class="sidebar-link">第01章：6款JVM神级工具</a></li></ul></section></li></ul> </aside> <div><main class="withouttoc page"> <div class="theme-default-content content__default"><h1 id="一次线上服务gc耗时长的排查经历"><a href="#一次线上服务gc耗时长的排查经历" class="header-anchor">#</a> 一次线上服务GC耗时长的排查经历</h1> <p><strong>大家好，我是冰河~~</strong></p> <p>今天给大家分享一篇生产环境服务触发GC耗时长问题的排查经历，希望大家能够从中获取实质性的帮助。</p> <blockquote><p>又一个可直接应用于生产环境的监控组件项目完结并上线，点击链接：<a href="https://t.zsxq.com/LjMTj" target="_blank" rel="noopener noreferrer">https://t.zsxq.com/LjMTj<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 快速学习，并可直接应用于你的生产环境项目。</p></blockquote> <h2 id="简介"><a href="#简介" class="header-anchor">#</a> 简介</h2> <p>最近，我们系统配置了GC耗时的监控，但配置上之后，系统会偶尔出现GC耗时大于1s的报警，排查花了一些力气，故在这里分享下。</p> <h2 id="发现问题"><a href="#发现问题" class="header-anchor">#</a> 发现问题</h2> <p>我们系统分多个环境部署，出现GC长耗时的是俄罗斯环境，其它环境没有这个问题，这里比较奇怪的是，俄罗斯环境是流量最低的一个环境，而且大多数GC长耗时发生在深夜。</p> <p>发现报警后，我立马查看了GC日志，如下：</p> <p><img alt="2024-11-09-001" data-src="images/2024-11-09-001.png" loading="lazy" class="lazy"></p> <p>日志中出现了to-space exhausted，经过一番了解，出现这个是由于g1在做gc时，都是先复制存活对象，再回收原region，当没有空闲空间复制存活对象时，就会出现to-space exhausted，而这种GC场景代价是非常大的。</p> <p>同时，在这个gc发生之前，还发现了一些如下的日志。</p> <p><img alt="2024-11-09-002" data-src="images/2024-11-09-002.png" loading="lazy" class="lazy">
+这里可以看到，系统在分配约30M+的大对象，难道是有代码频繁分配大对象导致的gc问题。</p> <h2 id="定位大对象产生位置"><a href="#定位大对象产生位置" class="header-anchor">#</a> 定位大对象产生位置</h2> <p>jdk在分配大对象时，会调用<code>G1CollectedHeap::humongous_obj_allocate</code>方法，而使用async-profiler可以很容易知道哪里调用了这个方法，如下：</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 开启收集</span>
+./profiler.sh start --all-user <span class="token parameter variable">-e</span> G1CollectedHeap::humongous_obj_allocate <span class="token parameter variable">-f</span> ./humongous.jfr jps
+
+<span class="token comment"># 停止收集</span>
+./profiler.sh stop <span class="token parameter variable">-f</span> ./humongous.jfr jps
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>将humongous.jfr文件用jmc打开，如下：</p> <p><img alt="2024-11-09-003" data-src="images/2024-11-09-003.png" loading="lazy" class="lazy"></p> <p>根据调用栈我发现，这是我们的一个定时任务，它会定时调用一个接口获取配置信息并缓存它，而这个接口返回的数据量达14M之多。</p> <p>难道是这个接口导致的gc问题？但这个定时任务调用也不频繁呀，5分钟才调用一次，不至于让gc忙不过来吧！
+另一个疑问是，这个定时任务在其它环境也会运行，而且其它环境的业务流量大得多，为什么其它环境没有问题？</p> <p>至此，我也不确定是这个定时任务导致的问题，还是系统自身特点导致偶尔的高gc耗时。</p> <p>由于我们有固定的上线日，于是我打算先优化产生大对象的代码，然后在上线前的期间试着优化一下jvm gc参数。</p> <h2 id="优化产生大对象的代码"><a href="#优化产生大对象的代码" class="header-anchor">#</a> 优化产生大对象的代码</h2> <p>我们使用的是httpclient调用接口，调用接口时，代码会先将接口返回数据读取成String，然后再使用jackson把String转成map对象，简化如下：</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code>rsp <span class="token operator">=</span> httpClient<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> result <span class="token operator">=</span> <span class="token class-name">IOUtils</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>rsp<span class="token punctuation">.</span><span class="token function">getEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Map</span> resultMap <span class="token operator">=</span> <span class="token class-name">JSONUtil</span><span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">readValue</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>要优化它也很简单，使用jackson的readValue有一个传入InputStream的重载方法，用它来读取json数据，而不是将其加载成一个大的String对象再读，如下：</p> <div class="language-java line-numbers-mode"><pre class="language-java"><code>rsp <span class="token operator">=</span> httpClient<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">InputStream</span> is <span class="token operator">=</span> rsp<span class="token punctuation">.</span><span class="token function">getEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Map</span> resultMap <span class="token operator">=</span> <span class="token class-name">JSONUtil</span><span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">readValue</span><span class="token punctuation">(</span>is<span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><blockquote><p>注：这里面map从逻辑上来说是一个大对象，但对jvm来说，它只是很多个小对象然后用指针连接起来而已，大对象一般由大数组造成，大String之所以是大对象，是因为它里面有一个很大的char[]数组。</p></blockquote> <h2 id="优化gc参数"><a href="#优化gc参数" class="header-anchor">#</a> 优化GC参数</h2> <p>优化完代码后，我开始研究优化jvm gc参数了，我们使用的是jdk8，垃圾收集器是g1。</p> <ol><li>g1是分region收集的，但region也分年轻代与老年代。</li> <li>g1的gc分<code>young gc</code>与<code>mixed gc</code>，young gc用于收集年轻代region，mixed gc会收集年轻代与老年代region。</li> <li>在<code>mixed gc</code>回收之前，需要先经历一个并发周期(Concurrent Cycles)，用来标记各region的对象存活情况，让<code>mixed gc</code>可以判断出需要回收哪些region。</li> <li>并发周期分为如下4个子阶段：
+a. 初始标记(initial marking)
+b. 并发标记(concurrent marking)
+c. 重新标记(remarking)
+d. 清理(clean up)
+需要注意的是，初始标记(initial marking)这一步是借助young gc完成的。</li></ol> <p>在g1中，young gc几乎没有什么可调参数，而mixed gc有一些，常见如下：</p> <table><thead><tr><th>参数</th> <th>作用</th></tr></thead> <tbody><tr><td>-XX:InitiatingHeapOccupancyPercent</td> <td>开始mixed gc并发周期的堆占用阈值，当大于此比例，启动并发周期，默认45%</td></tr> <tr><td>-XX:ConcGCThreads</td> <td>在并发标记时，使用多少个并发线程。</td></tr> <tr><td>-XX:G1HeapRegionSize</td> <td>每个region大小，当分配对象尺寸大于region一半时，才认为这是一个大对象。</td></tr> <tr><td>-XX:G1MixedGCLiveThresholdPercent</td> <td>region存活比例，默认85%，当并发标记后发现region中存活对象比例小于这个值，mixed gc才会回收这个region，毕竟一个region如果都是存活的对象，那还有什么回收的必要呢。</td></tr> <tr><td>-XX:G1HeapWastePercent</td> <td>允许浪费的堆比例，默认5%，当可回收的内存比例大于此值时，mixed gc才会去执行回收，毕竟没什么可回收的对象时，还有什么回收的必要呢。</td></tr> <tr><td>-XX:G1MixedGCCountTarget</td> <td>mixed gc执行的次数，一旦并发标记周期确认了回收哪些region后，mixed gc就进行回收，但mixed gc会分少量多次来回收这些region，默认8次。</td></tr> <tr><td>-XX:G1OldCSetRegionThresholdPercent</td> <td>每次mixed gc回收old region的比例，默认10%，如果G1MixedGCCountTarget是8的话，mixed gc整体能回收80%。</td></tr> <tr><td>-XX:G1ReservePercent</td> <td>堆保留空间比例，默认10%，这部分空间g1会保留下来，用来在gc时复制存活对象。</td></tr></tbody></table> <p>出现to-space exhausted会不会是mixed gc太慢了呢？于是我调整了如下参数：</p> <ol><li>让并发标记周期启动更早，运行得更快，将<code>-XX：InitiatingHeapOccupancyPercent</code>从默认值45%调整到35%，<code>-XX:ConcGCThreads</code>从1调整为3。</li> <li><code>-XX:G1MixedGCLiveThresholdPercent</code>与<code>-XX:G1HeapWastePercent</code>确定回收哪些region，有多少比例垃圾才执行回收，我觉得它们的值本来就蛮激进，就没有调整。</li> <li><code>-XX:G1MixedGCCountTarget</code>与<code>-XX:G1OldCSetRegionThresholdPercent</code>控制mixed gc执行多少次，每次回收多少region，我将<code>-XX:G1OldCSetRegionThresholdPercent</code>从10%调整到了15%，让它一次多回收些old region。</li> <li>增加保留空间，避免复制存活对象失败，将<code>-XX:G1ReservePercent</code>从10%调整到20%。</li> <li>尽量避免产生大对象，将<code>-XX:G1HeapRegionSize</code>增加到16m。</li></ol> <p>于是我按照上面调整了jvm参数，可是第二天我发现还是有GC长耗时，次数也没有减少，看来问题根因和我调整的参数没有关系。</p> <h2 id="问题根因"><a href="#问题根因" class="header-anchor">#</a> 问题根因</h2> <p>就这样，到了上线日，于是我上线了前面优化大对象的代码，一天后，我发现偶尔的GC长耗时竟然没有了！</p> <p>问题就这样解决了！！！</p> <p>然而我心里还是有一个大大的问号，其它环境同样有这个定时任务，一样的运行频率，jvm配置也全是一样的，为啥其它环境没有问题呢？其它环境业务流量还大一些！</p> <p>为此，我搜索了大量关于g1大对象的文章，我发现大对象的分配与回收过程有点特殊，如下：</p> <ol><li>大于region size一半的对象是大对象，会直接分配在old region，且gc时大对象不会被复制或移动，而是直接回收。</li> <li>大对象回收发生在2个地方，一个是并发周期的clean up子阶段，另一个是young gc(这个特性在jdk8u60才加入)。</li></ol> <p>我忽然想到，莫非是俄罗斯环境流量太低，触发不了young gc，且并发周期又因为什么原因没执行，但定时任务又慢慢生成大对象将old region占满，导致了to-space exhausted？</p> <p>于是，我打算写段代码试验一下，慢慢的只生成大对象，看g1会不会回收，如下：</p> <p><img alt="2024-11-09-004" data-src="images/2024-11-09-004.png" loading="lazy" class="lazy"></p> <p>这个一个命令行交互程序，使用如下jvm参数启动它</p> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 1600m的堆，16m的region size</span>
+<span class="token comment"># rlwrap作用是使得这个命令行程序更好用</span>
+rlwrap <span class="token function">java</span> <span class="token parameter variable">-server</span> <span class="token parameter variable">-Xms1600m</span> <span class="token parameter variable">-Xmx1600m</span> <span class="token parameter variable">-Xss1m</span> <span class="token parameter variable">-XX:MetaspaceSize</span><span class="token operator">=</span>512m <span class="token parameter variable">-XX:MaxMetaspaceSize</span><span class="token operator">=</span>1g -Xloggc:/home/work/logs/applogs/gc-%t.log <span class="token parameter variable">-XX:+HeapDumpOnOutOfMemoryError</span> <span class="token parameter variable">-XX:HeapDumpPath</span><span class="token operator">=</span>/home/work/logs/applogs/ <span class="token parameter variable">-XX:+PrintClassHistogram</span> <span class="token parameter variable">-XX:+PrintGCDetails</span> <span class="token parameter variable">-XX:+PrintGCTimeStamps</span> <span class="token parameter variable">-XX:+PrintHeapAtGC</span> <span class="token parameter variable">-XX:+PrintGCDateStamps</span> <span class="token parameter variable">-XX:+PrintGCApplicationStoppedTime</span> <span class="token parameter variable">-XX:+PrintAdaptiveSizePolicy</span> <span class="token parameter variable">-XX:+UseG1GC</span> <span class="token parameter variable">-XX:G1LogLevel</span><span class="token operator">=</span>finest <span class="token parameter variable">-XX:G1HeapRegionSize</span><span class="token operator">=</span>16m <span class="token parameter variable">-XX:MaxGCPauseMillis</span><span class="token operator">=</span><span class="token number">200</span> <span class="token parameter variable">-jar</span> command-cli.jar
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>用了1600M的堆，16M的region size，所以总共有100个region，jdk版本是<code>1.8.0_222</code>。
+通过在这个交互程序中输入<code>gc 9437184 20 0</code>，可以生成20个9M的大对象。</p> <p>当我输入3次<code>gc 9437184 20 0</code>后，如下：
+我从gc日志中发现了一次由initial marking触发的young gc，说明g1启动了并发周期，之所以发生young gc，是因为initial marking是借助ygc执行的。</p> <p><img alt="2024-11-09-005" data-src="images%5C2024-11-09-005.png" loading="lazy" class="lazy"></p> <p>紧接着，我发现了并发标记、重新标记与清理阶段的日志。</p> <p><img alt="2024-11-09-006" data-src="images%5C2024-11-09-006.png" loading="lazy" class="lazy"></p> <p>然后我在jstat中发现老年代使用率降低了，因为young gc会回收大对象，所以老年代使用率降低也是正常的</p> <p><img alt="2024-11-09-008" data-src="images%5C2024-11-09-008.png" loading="lazy" class="lazy"></p> <p>当我又执行了2次<code>gc 9437184 20 0</code>后，使得堆占用率再次大于45%，我发现gc日志中出现如下内容</p> <p>看字面意思是，由于mixed gc正在执行，没有再次启动并发周期。</p> <p>可是，我在这种状态下等了好久，也没有看到mixed gc的日志出来，不是说mixed gc正在执行嚒，它一定是有什么问题！</p> <p>于是，我又执行了好几次<code>gc 9437184 20 0</code>，我在gc日志中发现了to-space exhausted！</p> <p><img alt="2024-11-09-009" data-src="images/2024-11-09-009.png" loading="lazy" class="lazy"></p> <p><img alt="2024-11-09-010" data-src="images/2024-11-09-010.png" loading="lazy" class="lazy"></p> <ol><li>从上面do not start mixed GCs, reason: candidate old regions not  available的日志中看到，mixed gc日志之所以长时间没出来，是因为没有可回收的region导致mixed  gc没有执行，因为我们只创建了大对象，但mixed gc不回收大对象分区，所以确实是没有可回收的region的。</li> <li>从<code>Humongous Reclaimed: 98</code>可以发现，这次young gc，回收了98个大对象分区，而我们总共只有100个分区，说明在inital marking之后创建的大对象，确实一直都没有回收。</li></ol> <blockquote><p>注：添加<code>-XX:G1LogLevel=finest</code>参数，才能输出Humongous Reclaimed这一项。</p></blockquote> <p>但是，大对象分区占了98个，堆占用率肯定超过了45%，为何一直没有再次启动并发周期呢？</p> <p>感觉这可能是jdk的bug，于是我分别下了最新的jdk8u与jdk11u验证，发现问题在最新的jdk8u中依然存在，而jdk11u中则不存在，这应该就是JDK的Bug！</p> <p>于是我通过二分搜索法多次编译了不同版本的JDK，最终确定问题fix在jdk9_b93与jdk9_b94之间。</p> <p><img alt="2024-11-09-011" data-src="images/2024-11-09-011.png" loading="lazy" class="lazy"></p> <p>并在jdk的bug库中，搜索到了相同描述的bug反馈，如下：</p> <p><img alt="2024-11-09-012" data-src="images/2024-11-09-012.png" loading="lazy" class="lazy"></p> <p>Bug链接：<a href="https://bugs.openjdk.org/browse/JDK-8140689" target="_blank" rel="noopener noreferrer">https://bugs.openjdk.org/browse/JDK-8140689<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>Bug改动代码如下</p> <p><img alt="2024-11-09-013" data-src="images/2024-11-09-013.png" loading="lazy" class="lazy"></p> <p>大致瞄了下代码，大体改动逻辑如下：</p> <ol><li>G1再次启动并发周期之前，至少需要执行过一次<code>mixed gc</code>或<code>young gc</code>，类似于<code>Concurrent Cycles</code> -&gt; <code>mixed gc|young gc</code> -&gt; <code>Concurrent Cycles</code> -&gt; <code>mixed gc|young gc</code>。</li> <li>我们的场景是，在并发周期结束之后，由于没有需要回收的分区，导致mixed gc实际没有执行，可是我们只分配了大对象，且大对象又只分配在old region，所以young gc也不可能被触发，而由于上面的条件，<code>Concurrent Cycles</code>也不会被触发，因此最终大对象将堆占满触发了to-space exhausted。</li> <li>修复逻辑是，当并发周期结束后，没有需要回收的分区时，should_continue_with_reclaim=false，进而使得允许不执行纯young gc而直接启动并发周期，类似于<code>Concurrent Cycles</code> -&gt; <code>Concurrent Cycles</code>。</li></ol> <p>所以在使用JDK8时，像那种系统流量很小，新生代较大，又有定时任务不断产生大对象的场景，堆几乎必然会被慢慢占满，要解决这个问题，可参考如下处理：</p> <ol><li>优化代码，避免分配大对象。</li> <li>代码无法优化时，可考虑升级jdk11。</li> <li>无法升级jdk11时，可考虑减小<code>-XX:G1MaxNewSizePercent</code>让新生代小一点，让young gc能执行得更频繁些，同时老年代更大，能缓冲更多大对象分配。</li></ol> <p>考虑到我们负责的其它系统中，时不时就有一波大响应体的请求，也没法快速修改代码，于是我统一将<code>-XX:G1MaxNewSizePercent</code>减小到30%，经过观察，修改后GC频率有所增加，但暂停时间有所下降，这是符合期望的。</p> <h2 id="问题总结"><a href="#问题总结" class="header-anchor">#</a> 问题总结</h2> <p>当我在jdk的bug库中搜索问题时，发现不少和G1大对象相关的优化，早期JDK(如JDK8)的G1实现可能在大对象回收上不太完善，所以写代码时要注意尽量少创建大对象，以回避这些隐性问题。</p> <h2 id="写在最后"><a href="#写在最后" class="header-anchor">#</a> 写在最后</h2> <p>在冰河的知识星球除了目前正在热更的高性能网关外，还有其他8个项目，像高性能熔断组件、通用指标上报组件、分布式IM即时通讯系统、Sekill分布式秒杀系统、手写RPC、简易商城系统等等，这些项目的需求、方案、架构、落地等均来自互联网真实业务场景，让你真正学到互联网大厂的业务与技术落地方案，并将其有效转化为自己的知识储备。</p> <p><strong>值得一提的是：冰河自研的Polaris高性能网关比某些开源网关项目性能更高</strong>，你还在等啥？不少小伙伴经过星球硬核技术和项目的历练，早已成功跳槽加薪，实现薪资翻倍，而你，还在原地踏步，抱怨大环境不好。抛弃焦虑和抱怨，我们一起塌下心来沉淀硬核技术和项目，让自己的薪资更上一层楼。</p> <p><img alt="" data-src="https://mmbiz.qpic.cn/mmbiz_png/2hHcUic5FEwGWj0dsqLVUt7mibQYh1KYlVql8yf4IrklXJ2MSbvwiagfs8FOaJxL00r1ge4FXXPIbnXTLopjFXdWQ/640?wx_fmt=png&amp;from=appmsg&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1&amp;tp=wxpic" loading="lazy" class="lazy"></p> <p>目前，领券5折，就可以跟冰河一起学习《手写高性能Polaris网关》、《手写高性能通用熔断组件项目》、《手写高性能通用监控指标上报组件项目》、《简易商城脚手架项目》、《手写高性能RPC项目》和《Spring6核心技术与源码解析》、《实战高并发设计模式》、《分布式Seckill秒杀系统》和《分布式IM即时通讯系统》，从零开始介绍原理、设计架构、手撸代码。</p> <p><strong>花很少的钱就能学这么多硬核技术、中间件项目和大厂秒杀系统与分布式IM即时通讯系统，比其他培训机构不知便宜多少倍，硬核多少倍，如果是我，我会买他个十年！</strong></p> <p>加入要趁早，后续还会随着项目和加入的人数涨价，而且只会涨，不会降，先加入的小伙伴就是赚到。</p> <p>另外，还有一个限时福利，邀请一个小伙伴加入，冰河就会给一笔 <strong>分享有奖</strong> ，有些小伙伴都邀请了50+人，早就回本了！</p> <p><strong>其他方式加入星球：</strong></p> <ul><li><strong>链接</strong> ：打开链接 http://m6z.cn/6aeFbs 加入星球。</li> <li><strong>回复</strong> ：在公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 领取优惠券加入星球。</li></ul> <p><strong>特别提醒：</strong> 苹果用户进圈或续费，请加微信 <strong>hacker_binghe</strong> 扫二维码，或者去公众号 <strong>冰河技术</strong> 回复 <strong>星球</strong> 扫二维码加入星球。</p> <p><strong>好了，希望今天的内容能够为大家带来实质性的帮助，我是冰河，我们下期见~~</strong></p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/core/jvm/2025-05-25-chapter002.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2025/5/25</span></div></footer> <!----> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><!----> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">一次线上服务GC耗时长的排查经历</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/core/jvm/2025-05-25-chapter002.html#简介" class="toc-sidebar-link">简介</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#发现问题" class="toc-sidebar-link">发现问题</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#定位大对象产生位置" class="toc-sidebar-link">定位大对象产生位置</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#优化产生大对象的代码" class="toc-sidebar-link">优化产生大对象的代码</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#优化gc参数" class="toc-sidebar-link">优化GC参数</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#问题根因" class="toc-sidebar-link">问题根因</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#问题总结" class="toc-sidebar-link">问题总结</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/core/jvm/2025-05-25-chapter002.html#写在最后" class="toc-sidebar-link">写在最后</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/core/jvm/2025-05-25-chapter002.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <!----> <!----></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">星球会员</a></div><div class="redirect-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="redirect-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="redirect-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">跳转链接</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1748150894527" defer></script><script src="/assets/js/cg-3.js?v=1748150894527" defer></script><script src="/assets/js/cg-188.js?v=1748150894527" defer></script><script src="/assets/js/cg-1.js?v=1748150894527" defer></script><script src="/assets/js/cg-23.js?v=1748150894527" defer></script><script src="/assets/js/cg-24.js?v=1748150894527" defer></script><script src="/assets/js/cg-25.js?v=1748150894527" defer></script><script src="/assets/js/cg-app.js?v=1748150894527" defer></script>
+  </body>
+</html>
