@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>第04节：基于多个大模型改写数字人应用（代码版） | 冰河技术</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script charset="utf-8" async="async" src="https://v1.cnzz.com/z_stat.php?id=1281063564&amp;web_id=1281063564"></script>
+    <script charset="utf-8" async="async" src="https://s9.cnzz.com/z_stat.php?id=1281064551&amp;web_id=1281064551"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?d091d2fd0231588b1d0f9231e24e3f5e";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="包含：编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧...">
+    <meta property="article:modified_time" content="2025-12-28T10:15:23.000Z">
+    <meta property="og:title" content="第04节：基于多个大模型改写数字人应用（代码版）">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html">
+    <meta name="twitter:title" content="第04节：基于多个大模型改写数字人应用（代码版）">
+    <meta name="twitter:url" content="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="冰河">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="冰河，冰河技术, 编程语言，开发技术，分布式，微服务，高并发，高可用，高可扩展，高可维护，JVM技术，MySQL，分布式数据库，分布式事务，云原生，大数据，云计算，渗透技术，各种面试题，面试技巧">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ab589ae6.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1766917024153" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-791.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-1.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-23.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-24.js?v=1766917024153" as="script"><link rel="preload" href="/assets/js/cg-25.js?v=1766917024153" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ab589ae6.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1766917024153">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">冰河技术</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2025-05-18-chapter00.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          渗透核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  渗透实战技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/redis-plugin/start/2025-10-20-start.html" class="nav-link">
+  手写高性能Redis组件
+</a></li><li class="dropdown-subitem"><a href="/md/project/sensitive/start/2025-09-08-start.html" class="nav-link">
+  手写高性能脱敏组件
+</a></li><li class="dropdown-subitem"><a href="/md/project/threadpool/start/2025-08-26-start.html" class="nav-link">
+  手写线程池项目
+</a></li><li class="dropdown-subitem"><a href="/md/project/sql/start/2025-08-12-start.html" class="nav-link">
+  手写高性能SQL引擎
+</a></li><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统（新）
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥AI大模型" class="dropdown-title"><span class="title">🔥AI大模型</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/project/ai/dk/v1/start/2025-10-25-start.html" class="nav-link">
+  🔥实战AI大模型(新)
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/all/all.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><a href="/md/study/concurrent/concurrent_road.html" class="nav-link">
+  ♻学习路线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="踩坑经历" class="dropdown-title"><span class="title">踩坑经历</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          面试必问系列
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/interview/2022-04-18-001-面试必问-聊聊JVM性能调优.html" class="nav-link">
+  面试必问
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="核心技术" class="dropdown-title"><span class="title">核心技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          架构与模式
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/design/java/2023-07-09-《Java极简设计模式》第01章-单例模式.html" class="nav-link">
+  Java极简设计模式
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          Java核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/java/java8/2022-03-31-001-Java8有哪些新特性呢？.html" class="nav-link">
+  Java8新特性
+</a></li><li class="dropdown-subitem"><a href="/md/core/spring/ioc/2022-04-04-001-聊聊Spring注解驱动开发那些事儿.html" class="nav-link">
+  IOC核心技术
+</a></li><li class="dropdown-subitem"><a href="/md/core/jvm/2025-05-18-chapter00.html" class="nav-link">
+  JVM调优技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          容器化核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/docker/2023-09-10-《容器化核心设计》第01章-制作Java基础docker镜像.html" class="nav-link">
+  Dockek核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          分布式存储
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mycat/2023-08-11-《Mycat核心技术》第01章-互联网大厂有哪些分库分表的思路和技.html" class="nav-link">
+  Mycat核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据库核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/mysql/base/2022-08-25-MySQL索引底层技术.html" class="nav-link">
+  MySQL基础篇
+</a></li></ul></li><li class="dropdown-item"><h4>
+          服务器核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/core/nginx/2023-07-23-《Nginx核心技术》第01章-安装Nginx.html" class="nav-link">
+  Nginx核心技术
+</a></li></ul></li><li class="dropdown-item"><h4>
+          渗透核心技术
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/hack/environment/2022-04-17-001-安装Kali系统.html" class="nav-link">
+  渗透实战技术
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="并发编程" class="dropdown-title"><span class="title">并发编程</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/concurrent/bottom/default.html" class="nav-link">
+  底层技术
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/source/2020-03-30-001-一文搞懂线程与多线程.html" class="nav-link">
+  源码分析
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/basics/2020-03-30-001-明明中断了线程，却为何不起作用呢？.html" class="nav-link">
+  基础案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/ActualCombat/default.html" class="nav-link">
+  实战案例
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/interview/default.html" class="nav-link">
+  面试
+</a></li><li class="dropdown-item"><!----> <a href="/md/concurrent/framework/default.html" class="nav-link">
+  系统架构
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="框架源码" class="dropdown-title"><span class="title">框架源码</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  Spring6核心技术
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="分布式" class="dropdown-title"><span class="title">分布式</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          分布式事务
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/distributed/transaction/transaction-video-001.html" class="nav-link">
+  分布式事务系列视频
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="微服务" class="dropdown-title"><span class="title">微服务</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/microservices/springboot/default.html" class="nav-link">
+  SpringBoot
+</a></li><li class="dropdown-item"><!----> <a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  SpringCloudAlibaba
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥项目实战" class="dropdown-title"><span class="title">🔥项目实战</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          中间件项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/redis-plugin/start/2025-10-20-start.html" class="nav-link">
+  手写高性能Redis组件
+</a></li><li class="dropdown-subitem"><a href="/md/project/sensitive/start/2025-09-08-start.html" class="nav-link">
+  手写高性能脱敏组件
+</a></li><li class="dropdown-subitem"><a href="/md/project/threadpool/start/2025-08-26-start.html" class="nav-link">
+  手写线程池项目
+</a></li><li class="dropdown-subitem"><a href="/md/project/sql/start/2025-08-12-start.html" class="nav-link">
+  手写高性能SQL引擎
+</a></li><li class="dropdown-subitem"><a href="/md/project/gateway/start/2024-05-19-start.html" class="nav-link">
+  手写高性能Polaris网关
+</a></li><li class="dropdown-subitem"><a href="/md/middleware/rpc/2022-08-24-我设计了一款TPS百万级别的RPC框架.html" class="nav-link">
+  手写高性能RPC项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          高并发项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/project/im/start/2023-11-20-start.html" class="nav-link">
+  分布式IM即时通讯系统（新）
+</a></li><li class="dropdown-subitem"><a href="/md/project/seckill/2023-04-16-《Seckill秒杀系统》开篇-我要手把手教你搭建一个抗瞬时百万流量的秒杀系统.html" class="nav-link">
+  分布式Seckill秒杀系统
+</a></li><li class="dropdown-subitem"><a href="/md/core/design/concurrent/2023-09-17-start.html" class="nav-link">
+  实战高并发设计模式
+</a></li></ul></li><li class="dropdown-item"><h4>
+          微服务项目
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/microservices/springcloudalibaba/2022-04-02-SpringCloudAlibaba专栏开篇.html" class="nav-link">
+  简易电商脚手架项目
+</a></li></ul></li><li class="dropdown-item"><h4>
+          手撕源码
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/frame/spring/ioc/2022-12-02-《Spring核心技术》开篇-我要带你一步步调试Spring6.0源码啦.html" class="nav-link">
+  手撕Spring6源码
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="🔥AI大模型" class="dropdown-title"><span class="title">🔥AI大模型</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/project/ai/dk/v1/start/2025-10-25-start.html" class="nav-link">
+  🔥实战AI大模型(新)
+</a></li></ul></div></div><div class="nav-item"><a href="/md/zsxq/introduce.html" class="nav-link">
+  🌍知识星球
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="📚书籍" class="dropdown-title"><span class="title">📚书籍</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          总览
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/all/2023-03-26-书籍汇总.html" class="nav-link">
+  《书籍汇总》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          出版图书
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-06-17-深入理解高并发编程.html" class="nav-link">
+  《深入理解高并发编程：核心原理与案例实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-27-深入理解高并发编程-JDK核心技术.html" class="nav-link">
+  《深入理解高并发编程：JDK核心技术》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2023-02-03-深入高平行開發.html" class="nav-link">
+  《深入高平行開發：深度原理&amp;專案實戰》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-深入理解分布式事务.html" class="nav-link">
+  《深入理解分布式事务：原理与实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-MySQL技术大全.html" class="nav-link">
+  《MySQL技术大全：开发、优化与运维实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/book/2022-03-29-海量数据处理与大数据技术实战.html" class="nav-link">
+  《海量数据处理与大数据技术实战》
+</a></li></ul></li><li class="dropdown-item"><h4>
+          电子书籍
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-11-27-concurrent-design-mode.html" class="nav-link">
+  《实战高并发设计模式》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-10-31《深入理解高并发编程（第2版）》打包发布.html" class="nav-link">
+  《深入理解高并发编程(第2版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-深入理解高并发编程-第1版.html" class="nav-link">
+  《深入理解高并发编程(第1版)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-12-05-《从零开始手写RPC框架》电子书发布.html" class="nav-link">
+  《从零开始手写RPC框架(基础篇)》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-07-25-十大篇章-共26个章节-332页-打包发布.html" class="nav-link">
+  《SpringCloud Alibaba实战》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-03-30-《冰河的渗透实战笔记》电子书，442页，37万字，正式发布.html" class="nav-link">
+  《冰河的渗透实战笔记》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2022-11-14-《MySQL核心知识手册》-打包发布.html" class="nav-link">
+  《MySQL核心知识手册》
+</a></li><li class="dropdown-subitem"><a href="/md/knowledge/pdf/2023-01-28-《Spring IOC核心技术》共27章-19万字-打包发布.html" class="nav-link">
+  《Spring IOC核心技术》
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/about-me.html" class="nav-link">
+  关于自己
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/study/default.html" class="nav-link">
+  关于学习
+</a></li><li class="dropdown-item"><!----> <a href="/md/about/job/default.html" class="nav-link">
+  关于职场
+</a></li></ul></div></div><div class="nav-item"><a href="https://space.bilibili.com/517638832" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  B站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/binghe001/BingheGuide" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>开篇：专栏介绍</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/start/2025-10-25-start.html" class="sidebar-link">开篇：实战AI大模型专栏正式开撸</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第01部分：DeepSeek API实战</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/api/2025-10-26-chapter01.html" class="sidebar-link">第01节：实战Java和Python调用DeepSeek API</a></li><li><a href="/md/project/ai/dk/v1/api/2025-11-01-chapter02.html" class="sidebar-link">第02节：DeepSeek API流式调用实战</a></li><li><a href="/md/project/ai/dk/v1/api/2025-11-14-chapter03.html" class="sidebar-link">第03节：基于SpringAI实现智能问答系统</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第02部分：部署AI大模型</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/deploy/2025-11-18-chapter01.html" class="sidebar-link">第01节：DeepSeek本地部署+知识库+联网搜索</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-22-chapter02.html" class="sidebar-link">第02节：DeepSeek R1蒸馏模型组本地部署与调用</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-23-chapter03.html" class="sidebar-link">第03节：DeepSeek R1蒸馏模型组Ollama调用</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-24-chapter04.html" class="sidebar-link">第04节：基于Windows系统部署DeepSeek多模态生成模型</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-25-chapter05.html" class="sidebar-link">第05节：基于Ubuntu系统部署DeepSeek多模态生成模型</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-26-chapter06.html" class="sidebar-link">第06节：基于Ollama+OpenWebUI和DeepSeek-R1本地部署AI对话系统</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-11-30-chapter07.html" class="sidebar-link">第07节：Sealos Cloud+K8S一键脚本部署</a></li><li><a href="/md/project/ai/dk/v1/deploy/2025-12-01-chapter08.html" class="sidebar-link">第08节：私有化部署Sealos Cloud+Devbox+Minio</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第03部分：生成AI应用</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/app/2025-12-02-chapter01.html" class="sidebar-link">第01节：构建生成式AI应用-安装Ollama+Dify</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-03-chapter02.html" class="sidebar-link">第02节：构建生成式AI应用-接入DeepSeek大模型</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-04-chapter03.html" class="sidebar-link">第03节：通过Ollama+Dify+DeepSeek+searxng创建Agent应用</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-05-chapter04.html" class="sidebar-link">第04节：通过Ollama+Dify+Qwen3创建Agent应用</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-06-chapter05.html" class="sidebar-link">第05节：通过Dify实现构建AI图片生成应用</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-07-chapter06.html" class="sidebar-link">第06节：基于Dify+llama3+Stable Diffusion搭建AI图片生成应用</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-08-chapter07.html" class="sidebar-link">第07节：基于Dify+deepseekR1搭建文章理解助手</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-09-chapter08.html" class="sidebar-link">第08节：基于Dify+deepseekR1搭建智能客服机器人</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-10-chapter09.html" class="sidebar-link">第09节：基于MCP插件加入高德地图MCP Server</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-11-chapter10.html" class="sidebar-link">第10节：搭建云IDE平台并安装Dify</a></li><li><a href="/md/project/ai/dk/v1/app/2025-12-12-chapter11.html" class="sidebar-link">第11节：基于ACE-Step搭建生成式AI音乐应用</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>第04部分：AI数字人应用</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/number/2025-12-13-chapter01.html" class="sidebar-link">第01节：实践QEMU-KVM 虚拟化</a></li><li><a href="/md/project/ai/dk/v1/number/2025-12-14-chapter02.html" class="sidebar-link">第02节：基于Dify chatflow工作流生成专业级提示词</a></li><li><a href="/md/project/ai/dk/v1/number/2025-12-15-chapter03.html" class="sidebar-link">第03节：基于Awesome-Digital-Human-Live打造AI数字人</a></li><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html" aria-current="page" class="active sidebar-link">第04节：基于多个大模型改写数字人应用（代码版）</a></li><li><a href="/md/project/ai/dk/v1/number/2025-12-17-chapter05.html" class="sidebar-link">第05节：基于开源数字人硅基heygem生成AI数字人</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>第05部分：增强与优化</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/optimize/2025-12-18-chapter01.html" class="sidebar-link">第01节：增强优化ComfyUI并安装插件</a></li><li><a href="/md/project/ai/dk/v1/optimize/2025-12-19-chapter02.html" class="sidebar-link">第02节：从源码到Docker部署Qwen3-VL接口</a></li><li><a href="/md/project/ai/dk/v1/optimize/2025-12-20-chapter03.html" class="sidebar-link">第03节：分离部署Duix.Avatar服务端和客户端</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>专栏总结</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/project/ai/dk/v1/summary/2025-12-23-summary.html" class="sidebar-link">总结：实战AI大模型整体专栏总结</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><h1 id="《实战ai大模型》ai数字人应用-第04节-基于多个大模型改写数字人应用-代码版"><a href="#《实战ai大模型》ai数字人应用-第04节-基于多个大模型改写数字人应用-代码版" class="header-anchor">#</a> 《实战AI大模型》AI数字人应用-第04节：基于多个大模型改写数字人应用（代码版）</h1> <p>作者：冰河
+<br>星球：<a href="http://m6z.cn/6aeFbs" target="_blank" rel="noopener noreferrer">http://m6z.cn/6aeFbs<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>博客：<a href="https://binghe.gitcode.host" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>文章汇总：<a href="https://binghe.gitcode.host/md/all/all.html" target="_blank" rel="noopener noreferrer">https://binghe.gitcode.host/md/all/all.html<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <br>源码获取地址：<a href="https://t.zsxq.com/0dhvFs5oR" target="_blank" rel="noopener noreferrer">https://t.zsxq.com/0dhvFs5oR<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p><strong>大家好，我是冰河~~</strong></p> <p>今天，带着大家一起基于CHATTTS + whisper-tiny + qwen3:8b多个大模型改写数字人应用，开始今天的正题。</p> <h2 id="一、环境搭建与项目初始化"><a href="#一、环境搭建与项目初始化" class="header-anchor">#</a> 一、环境搭建与项目初始化</h2> <h3 id="_1-1-硬件与系统要求"><a href="#_1-1-硬件与系统要求" class="header-anchor">#</a> 1.1 硬件与系统要求</h3> <ul><li><strong>操作系统</strong>：Ubuntu 22.04 LTS（推荐）或 Windows WSL2</li> <li><strong>GPU</strong>：NVIDIA RTX 4090/3090 (24GB显存) 或 RTX 4080/3080 (16GB显存)</li> <li><strong>显存要求</strong>：至少16GB，Qwen3:8b需要约10GB，其他模型约2-3GB</li> <li><strong>存储空间</strong>：至少50GB可用空间</li> <li><strong>内存</strong>：32GB RAM</li></ul> <h3 id="_1-2-创建项目目录结构"><a href="#_1-2-创建项目目录结构" class="header-anchor">#</a> 1.2 创建项目目录结构</h3> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 创建项目主目录</span>
+<span class="token function">mkdir</span> ~/ai-digital-human <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> ~/ai-digital-human
+
+<span class="token comment"># 创建完整的目录结构</span>
+<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> <span class="token punctuation">{</span>models,src/<span class="token punctuation">{</span>asr,tts,llm,api<span class="token punctuation">}</span>,data/<span class="token punctuation">{</span>audio_input,audio_output<span class="token punctuation">}</span>,logs,configs,docker<span class="token punctuation">}</span>
+
+<span class="token comment"># 创建虚拟环境</span>
+python3.10 <span class="token parameter variable">-m</span> venv venv
+<span class="token builtin class-name">source</span> venv/bin/activate
+
+<span class="token comment"># 创建 requirements.txt</span>
+<span class="token function">cat</span> <span class="token operator">&gt;</span> requirements.txt <span class="token operator">&lt;&lt;</span> <span class="token string">'EOF'
+torch&gt;=2.0.0
+torchaudio&gt;=2.0.0
+transformers&gt;=4.36.0
+openai-whisper&gt;=20231117
+fastapi&gt;=0.104.0
+uvicorn[standard]&gt;=0.24.0
+pydub&gt;=0.25.1
+soundfile&gt;=0.12.1
+numpy&gt;=1.24.0
+scipy&gt;=1.11.0
+pydantic&gt;=2.5.0
+websockets&gt;=12.0
+python-multipart&gt;=0.0.6
+sentencepiece&gt;=0.1.99
+accelerate&gt;=0.24.0
+einops&gt;=0.7.0
+safetensors&gt;=0.4.0
+gradio&gt;=4.0.0
+langchain&gt;=0.0.350
+EOF</span>
+
+<span class="token comment"># 安装PyTorch（根据CUDA版本选择）</span>
+pip3 <span class="token function">install</span> torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+<span class="token comment"># 安装其他依赖</span>
+pip <span class="token function">install</span> <span class="token parameter variable">-r</span> requirements.txt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><h3 id="_1-3-配置系统环境"><a href="#_1-3-配置系统环境" class="header-anchor">#</a> 1.3 配置系统环境</h3> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># 安装系统依赖</span>
+<span class="token function">sudo</span> <span class="token function">apt</span> update <span class="token operator">&amp;&amp;</span> <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> <span class="token punctuation">\</span>
+    ffmpeg <span class="token punctuation">\</span>
+    libsndfile1 <span class="token punctuation">\</span>
+    portaudio19-dev <span class="token punctuation">\</span>
+    python3-dev <span class="token punctuation">\</span>
+    build-essential <span class="token punctuation">\</span>
+    git-lfs <span class="token punctuation">\</span>
+    nvidia-cuda-toolkit <span class="token punctuation">\</span>
+    nvidia-driver-535
+
+<span class="token comment"># 配置Git LFS（用于大文件下载）</span>
+<span class="token function">git</span> lfs <span class="token function">install</span>
+
+<span class="token comment"># 创建模型下载脚本</span>
+<span class="token function">cat</span> <span class="token operator">&gt;</span> download_models.sh <span class="token operator">&lt;&lt;</span> <span class="token string">'EOF'
+#!/bin/bash
+MODEL_DIR=&quot;models&quot;
+
+# 创建模型子目录
+mkdir -p $MODEL_DIR/{whisper,chattts,qwen}
+
+echo &quot;开始下载模型文件...&quot;
+
+# 1. 下载whisper-tiny（自动下载）
+echo &quot;准备whisper-tiny模型...&quot;
+
+# 2. 下载ChatTTS
+echo &quot;克隆ChatTTS仓库...&quot;
+cd $MODEL_DIR/chattts
+git clone https://github.com/2noise/ChatTTS.git
+cd ChatTTS
+pip install -r requirements.txt
+
+# 3. 下载Qwen3-8B（使用Hugging Face）
+echo &quot;下载Qwen3-8B模型...&quot;
+cd ../../$MODEL_DIR/qwen
+git clone https://huggingface.co/Qwen/Qwen3-8B-Instruct
+
+echo &quot;模型下载完成！&quot;
+EOF</span>
+
+<span class="token function">chmod</span> +x download_models.sh
+./download_models.sh
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br></div></div><h2 id="二、核心模型部署"><a href="#二、核心模型部署" class="header-anchor">#</a> 二、核心模型部署</h2> <h3 id="_2-1-部署-whisper-tiny-语音识别"><a href="#_2-1-部署-whisper-tiny-语音识别" class="header-anchor">#</a> 2.1 部署 Whisper-tiny 语音识别</h3> <div class="language-bash line-numbers-mode"><pre class="language-bash"><code><span class="token comment"># src/asr/whisper_asr.py</span>
+<span class="token function">import</span> whisper
+<span class="token function">import</span> numpy as np
+from typing <span class="token function">import</span> Optional, Dict
+<span class="token function">import</span> torch
+<span class="token function">import</span> logging
+
+class WhisperASR:
+    def __init__<span class="token punctuation">(</span>self, model_size: str <span class="token operator">=</span> <span class="token string">&quot;tiny&quot;</span>, device: str <span class="token operator">=</span> <span class="token string">&quot;cuda&quot;</span><span class="token punctuation">)</span>:
+        <span class="token string">&quot;&quot;</span>&quot;
+        初始化Whisper ASR模型
+        
+        Args:
+            model_size: 模型大小 <span class="token punctuation">(</span>tiny, base, small, medium, large<span class="token punctuation">)</span>
+            device: 运行设备 <span class="token punctuation">(</span>cuda 或 cpu<span class="token punctuation">)</span>
+        <span class="token string">&quot;&quot;</span>&quot;
+        self.logger <span class="token operator">=</span> logging.getLogger<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+        self.device <span class="token operator">=</span> device <span class="token keyword">if</span> torch.cuda.is_available<span class="token punctuation">(</span><span class="token punctuation">)</span> and device <span class="token operator">==</span> <span class="token string">&quot;cuda&quot;</span> <span class="token keyword">else</span> <span class="token string">&quot;cpu&quot;</span>
+        
+        self.logger.info<span class="token punctuation">(</span>f<span class="token string">&quot;正在加载Whisper-{model_size}模型到 {self.device}...&quot;</span><span class="token punctuation">)</span>
+        self.model <span class="token operator">=</span> whisper.load_model<span class="token punctuation">(</span>model_size, <span class="token assign-left variable">device</span><span class="token operator">=</span>self.device<span class="token punctuation">)</span>
+        self.logger.info<span class="token punctuation">(</span><span class="token string">&quot;Whisper模型加载完成！&quot;</span><span class="token punctuation">)</span>
+        
+        <span class="token comment"># 支持的语言代码映射</span>
+        self.language_codes <span class="token operator">=</span> <span class="token punctuation">{</span>
+            <span class="token string">&quot;中文&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;zh&quot;</span>,
+            <span class="token string">&quot;英语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;en&quot;</span>,
+            <span class="token string">&quot;日语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;ja&quot;</span>,
+            <span class="token string">&quot;韩语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;ko&quot;</span>,
+            <span class="token string">&quot;法语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;fr&quot;</span>,
+            <span class="token string">&quot;西班牙语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;es&quot;</span>,
+            <span class="token string">&quot;德语&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;de&quot;</span>
+        <span class="token punctuation">}</span>
+    
+    def transcribe<span class="token punctuation">(</span>
+        self,
+        audio_path: str,
+        language: Optional<span class="token punctuation">[</span>str<span class="token punctuation">]</span> <span class="token operator">=</span> None,
+        task: str <span class="token operator">=</span> <span class="token string">&quot;transcribe&quot;</span>,
+        temperature: float <span class="token operator">=</span> <span class="token number">0.0</span>,
+        beam_size: int <span class="token operator">=</span> <span class="token number">5</span>,
+        **kwargs
+    <span class="token punctuation">)</span> -<span class="token operator">&gt;</span> Dict:
+        <span class="token string">&quot;&quot;</span>&quot;
+        转录音频文件
+        
+        Args:
+            audio_path: 音频文件路径
+            language: 语言代码 <span class="token punctuation">(</span>zh, en, ja等<span class="token punctuation">)</span>
+            task: 任务类型 <span class="token punctuation">(</span>transcribe 或 translate<span class="token punctuation">)</span>
+            temperature: 采样温度
+            beam_size: beam search大小
+            
+        Returns:
+            包含转录结果的字典
+        <span class="token string">&quot;&quot;</span>&quot;
+        try:
+            <span class="token comment"># 加载音频</span>
+            audio <span class="token operator">=</span> whisper.load_audio<span class="token punctuation">(</span>audio_path<span class="token punctuation">)</span>
+            audio <span class="token operator">=</span> whisper.pad_or_trim<span class="token punctuation">(</span>audio<span class="token punctuation">)</span>
+            
+            <span class="token comment"># 生成mel spectrogram</span>
+            mel <span class="token operator">=</span> whisper.log_mel_spectrogram<span class="token punctuation">(</span>audio, <span class="token assign-left variable">n_mels</span><span class="token operator">=</span><span class="token number">128</span><span class="token punctuation">)</span>.to<span class="token punctuation">(</span>self.model.device<span class="token punctuation">)</span>
+            
+            <span class="token comment"># 检测语言（如果未指定）</span>
+            <span class="token keyword">if</span> language is None:
+                _, probs <span class="token operator">=</span> self.model.detect_language<span class="token punctuation">(</span>mel<span class="token punctuation">)</span>
+                language <span class="token operator">=</span> max<span class="token punctuation">(</span>probs, <span class="token assign-left variable">key</span><span class="token operator">=</span>probs.get<span class="token punctuation">)</span>
+                self.logger.info<span class="token punctuation">(</span>f<span class="token string">&quot;检测到语言: {language}, 置信度: {probs[language]:.2f}&quot;</span><span class="token punctuation">)</span>
+            
+            <span class="token comment"># 解码选项</span>
+            options <span class="token operator">=</span> whisper.DecodingOptions<span class="token punctuation">(</span>
+                <span class="token assign-left variable">language</span><span class="token operator">=</span>language,
+                <span class="token assign-left variable">task</span><span class="token operator">=</span>task,
+                <span class="token assign-left variable">temperature</span><span class="token operator">=</span>temperature,
+                <span class="token assign-left variable">beam_size</span><span class="token operator">=</span>beam_size,
+                <span class="token assign-left variable">fp16</span><span class="token operator">=</span>self.device <span class="token operator">==</span> <span class="token string">&quot;cuda&quot;</span>,
+                **kwargs
+            <span class="token punctuation">)</span>
+            
+            <span class="token comment"># 执行转录</span>
+            result <span class="token operator">=</span> whisper.decode<span class="token punctuation">(</span>self.model, mel, options<span class="token punctuation">)</span>
+            
+            <span class="token comment"># 完整转录（带时间戳）</span>
+            full_result <span class="token operator">=</span> self.model.transcribe<span class="token punctuation">(</span>
+                audio_path,
+                <span class="token assign-left variable">language</span><span class="token operator">=</span>language,
+                <span class="token assign-left variable">task</span><span class="token operator">=</span>task,
+                <span class="token assign-left variable">temperature</span><span class="token operator">=</span>temperature,
+                **kwargs
+            <span class="token punctuation">)</span>
+            
+            <span class="token builtin class-name">return</span> <span class="token punctuation">{</span>
+                <span class="token string">&quot;text&quot;</span><span class="token builtin class-name">:</span> result.text,
+                <span class="token string">&quot;language&quot;</span><span class="token builtin class-name">:</span> language,
+                <span class="token string">&quot;segments&quot;</span><span class="token builtin class-name">:</span> full_result.get<span class="token punctuation">(</span><span class="token string">&quot;segments&quot;</span>, <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>,
+                <span class="token string">&quot;confidence&quot;</span><span class="token builtin class-name">:</span> np.exp<span class="token punctuation">(</span>result.audio_features.mean<span class="token punctuation">(</span><span class="token punctuation">)</span>.item<span class="token punctuation">(</span><span class="token punctuation">))</span>,
+                <span class="token string">&quot;success&quot;</span><span class="token builtin class-name">:</span> True
+            <span class="token punctuation">}</span>
+            
+        except Exception as e:
+            self.logger.error<span class="token punctuation">(</span>f<span class="token string">&quot;转录失败: {str(e)}&quot;</span><span class="token punctuation">)</span>
+            <span class="token builtin class-name">return</span> <span class="token punctuation">{</span>
+                <span class="token string">&quot;text&quot;</span><span class="token builtin class-name">:</span> <span class="token string">&quot;&quot;</span>,
+                <span class="token string">&quot;language&quot;</span><span class="token builtin class-name">:</span> language or <span class="token string">&quot;unknown&quot;</span>,
+                <span class="token string">&quot;segments&quot;</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>,
+                <span class="token string">&quot;confidence&quot;</span><span class="token builtin class-name">:</span> <span class="token number">0.0</span>,
+                <span class="token string">&quot;success&quot;</span><span class="token builtin class-name">:</span> False,
+                <span class="token string">&quot;error&quot;</span><span class="token builtin class-name">:</span> str<span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+    
+    def realtime_transcribe<span class="token punctuation">(</span>self, audio_chunk: np.ndarray<span class="token punctuation">)</span> -<span class="token operator">&gt;</span> str:
+        <span class="token string">&quot;&quot;</span>&quot;
+        实时转录音频片段
+        
+        Args:
+            audio_chunk: 音频数据数组
+            
+        Returns:
+            转录文本
+        <span class="token string">&quot;&quot;</span>&quot;
+        <span class="token comment"># 这里可以扩展为实时转录逻辑</span>
+        pass
+    
+    def translate<span class="token punctuation">(</span>self, audio_path: str, target_lang: str <span class="token operator">=</span> <span class="token string">&quot;en&quot;</span><span class="token punctuation">)</span> -<span class="token operator">&gt;</span> Dict:
+        <span class="token string">&quot;&quot;</span>&quot;
+        翻译音频内容
+        
+        Args:
+            audio_path: 音频文件路径
+            target_lang: 目标语言代码
+            
+        Returns:
+            翻译结果
+        <span class="token string">&quot;&quot;</span>&quot;
+        <span class="token builtin class-name">return</span> self.transcribe<span class="token punctuation">(</span>audio_path, <span class="token assign-left variable">task</span><span class="token operator">=</span><span class="token string">&quot;translate&quot;</span>, <span class="token assign-left variable">language</span><span class="token operator">=</span>target_lang<span class="token punctuation">)</span>
+
+<span class="token comment"># 测试脚本</span>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">&quot;__main__&quot;</span><span class="token builtin class-name">:</span>
+    <span class="token function">import</span> sys
+    logging.basicConfig<span class="token punctuation">(</span>level<span class="token operator">=</span>logging.INFO<span class="token punctuation">)</span>
+    
+    asr <span class="token operator">=</span> WhisperASR<span class="token punctuation">(</span>model_size<span class="token operator">=</span><span class="token string">&quot;tiny&quot;</span><span class="token punctuation">)</span>
+    
+    <span class="token comment"># 测试转录</span>
+    <span class="token keyword">if</span> len<span class="token punctuation">(</span>sys.argv<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">1</span>:
+        result <span class="token operator">=</span> asr.transcribe<span class="token punctuation">(</span>sys.argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>, <span class="token assign-left variable">language</span><span class="token operator">=</span><span class="token string">&quot;zh&quot;</span><span class="token punctuation">)</span>
+        print<span class="token punctuation">(</span>f<span class="token string">&quot;转录结果: {result['text']}&quot;</span><span class="token punctuation">)</span>
+        print<span class="token punctuation">(</span>f<span class="token string">&quot;语言: {result['language']}&quot;</span><span class="token punctuation">)</span>
+        print<span class="token punctuation">(</span>f<span class="token string">&quot;置信度: {result['confidence']:.4f}&quot;</span><span class="token punctuation">)</span>
+    else:
+        print<span class="token punctuation">(</span><span class="token string">&quot;请提供音频文件路径&quot;</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br></div></div><h3 id="_2-2-部署-qwen3-8b-对话模型"><a href="#_2-2-部署-qwen3-8b-对话模型" class="header-anchor">#</a> 2.2 部署 Qwen3-8B 对话模型</h3> <h2 id="查看完整文章"><a href="#查看完整文章" class="header-anchor">#</a> 查看完整文章</h2> <p>加入<a href="https://public.zsxq.com/groups/48848484411888.html" target="_blank" rel="noopener noreferrer">冰河技术<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>知识星球，解锁完整技术文章、小册、视频与完整代码</p></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/binghe001/BingheGuide/edit/master/docs/md/project/ai/dk/v1/number/2025-12-16-chapter04.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2025/12/28</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/project/ai/dk/v1/number/2025-12-15-chapter03.html" class="prev">
+          第03节：基于Awesome-Digital-Human-Live打造AI数字人
+        </a></span> <span class="next"><a href="/md/project/ai/dk/v1/number/2025-12-17-chapter05.html">
+          第05节：基于开源数字人硅基heygem生成AI数字人
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">第04节：基于多个大模型改写数字人应用（代码版）</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#一、环境搭建与项目初始化" class="toc-sidebar-link">一、环境搭建与项目初始化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-1-硬件与系统要求" class="toc-sidebar-link">1.1 硬件与系统要求</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-2-创建项目目录结构" class="toc-sidebar-link">1.2 创建项目目录结构</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-3-配置系统环境" class="toc-sidebar-link">1.3 配置系统环境</a></li></ul></li><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#二、核心模型部署" class="toc-sidebar-link">二、核心模型部署</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_2-1-部署-whisper-tiny-语音识别" class="toc-sidebar-link">2.1 部署 Whisper-tiny 语音识别</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_2-2-部署-qwen3-8b-对话模型" class="toc-sidebar-link">2.2 部署 Qwen3-8B 对话模型</a></li></ul></li><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#查看完整文章" class="toc-sidebar-link">查看完整文章</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">第04节：基于多个大模型改写数字人应用（代码版）</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#一、环境搭建与项目初始化" class="toc-sidebar-link">一、环境搭建与项目初始化</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-1-硬件与系统要求" class="toc-sidebar-link">1.1 硬件与系统要求</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-2-创建项目目录结构" class="toc-sidebar-link">1.2 创建项目目录结构</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_1-3-配置系统环境" class="toc-sidebar-link">1.3 配置系统环境</a></li></ul></li><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#二、核心模型部署" class="toc-sidebar-link">二、核心模型部署</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_2-1-部署-whisper-tiny-语音识别" class="toc-sidebar-link">2.1 部署 Whisper-tiny 语音识别</a></li><li class="toc-sidebar-sub-header"><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#_2-2-部署-qwen3-8b-对话模型" class="toc-sidebar-link">2.2 部署 Qwen3-8B 对话模型</a></li></ul></li><li><a href="/md/project/ai/dk/v1/number/2025-12-16-chapter04.html#查看完整文章" class="toc-sidebar-link">查看完整文章</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://binghe.gitcode.host/md/project/ai/dk/v1/number/2025-12-16-chapter04.html" style="margin:10px;">
+                可以<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/xingqiu.png" width="25px" class="nozoom"> <span class="show-txt">星球</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">实战项目<span style="font-size:8px;color:red;">「SpringCloud Alibaba实战项目」</span>、专属电子书、问题解答、简历指导、技术分享、晋升指导、视频课程</span> <img height="180px" src="/images/personal/xingqiu.png" style="margin:10px;"> <b>知识星球</b>：冰河技术
+            </div></div></div></div> <div class="option-box"><img src="/images/system/wexin4.png" width="25px" class="nozoom"> <span class="show-txt">读者群</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">添加冰河微信<span style="color:red;">(hacker_binghe)</span>进冰河技术学习交流圈「无任何套路」</span> <img src="/images/personal/hacker_binghe.jpg" height="180px" style="margin:10px;">
+                PS：添加时请备注<b>读者加群</b>，谢谢！
+              </div></div></div></div> <div class="option-box"><img src="/images/system/download-2.png" width="25px" class="nozoom"> <span class="show-txt">下资料</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">扫描公众号，回复<span style="color:red;">“1024”</span>下载<span style="color:red;">100GB+</span>学习技术资料、PDF书籍、实战项目、简历模板等「无任何套路」</span> <img src="/images/personal/qrcode.png" height="180px" style="margin:10px;"> <b>公众号:</b> 冰河技术
+              </div></div></div></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/encourage-head.png" style="margin:5px;"> <br>1. 不靠它生存但仍希望得到你的鼓励；
+                <br>2. 时刻警醒自己保持技术人的初心；
+              </div></div></div></div> <div title="第03节：基于Awesome-Digital-Human-Live打造AI数字人" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/project/ai/dk/v1/number/2025-12-15-chapter03.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="第05节：基于开源数字人硅基heygem生成AI数字人" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/project/ai/dk/v1/number/2025-12-17-chapter05.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">冰河技术</span> <br>发送：<span id="fustack-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/qrcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">星球会员</a></div><div class="redirect-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="redirect-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="redirect-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">跳转链接</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1766917024153" defer></script><script src="/assets/js/cg-3.js?v=1766917024153" defer></script><script src="/assets/js/cg-791.js?v=1766917024153" defer></script><script src="/assets/js/cg-1.js?v=1766917024153" defer></script><script src="/assets/js/cg-23.js?v=1766917024153" defer></script><script src="/assets/js/cg-24.js?v=1766917024153" defer></script><script src="/assets/js/cg-25.js?v=1766917024153" defer></script><script src="/assets/js/cg-app.js?v=1766917024153" defer></script>
+  </body>
+</html>
